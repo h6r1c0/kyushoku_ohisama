@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f4e78">
+<title>給食メイン量計算</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--text:#222;--muted:#68717a;--line:#d6d9dd;--accent:#1f4e78;--soft:#e3edf5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif}
+.wrap{max-width:760px;margin:auto;padding:14px}h1{font-size:22px;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;padding:11px 9px;border:1px solid #cfd4d9;border-radius:9px;background:#fff;color:var(--text);font-size:18px}
+.btn{border:0;border-radius:9px;padding:10px 12px;font-weight:800;font-family:inherit}.primary{background:var(--accent);color:#fff}.secondary{background:#e9ecef;color:#333}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.small{font-size:12px;color:var(--muted);line-height:1.5}.hidden{display:none}
+.inline-option{margin:10px auto 0;max-width:420px}.inline-option select{font-size:16px;padding:8px 10px}
+.result{text-align:center;padding:18px 4px}.total{font-size:14px;color:var(--muted)}.big{font-size:46px;font-weight:900;line-height:1.08;margin-top:5px}.sub{font-size:16px;color:#59636d;margin-top:8px;min-height:22px}.basis{font-size:14px;color:#444;border-top:1px solid #ddd;margin-top:12px;padding-top:10px;line-height:1.55}
+.editor-row{border-top:1px solid #e3e5e8;padding-top:12px;margin-top:12px}.box{border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:560px){.grid8,.grid5{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.big{font-size:42px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🍳 給食メイン量計算</h1>
+
+<div class="card">
+  <div class="section-head">
+    <div><strong>今日の人数</strong><div class="small">最初は基本人数が入っています。必要なところだけ直して使えます。</div></div>
+    <button class="btn secondary" onclick="resetCurrentCounts()">基本人数に戻す</button>
+  </div>
+  <div class="grid8" style="margin-top:10px">
+    <label>0歳<input id="c0" type="number" min="0"></label>
+    <label>1歳<input id="c1" type="number" min="0"></label>
+    <label>2歳<input id="c2" type="number" min="0"></label>
+    <label>3歳<input id="c3" type="number" min="0"></label>
+    <label>4歳<input id="c4" type="number" min="0"></label>
+    <label>5歳<input id="c5" type="number" min="0"></label>
+    <label>学童<input id="cg" type="number" min="0"></label>
+    <label>大人<input id="ca" type="number" min="0"></label>
+  </div>
+</div>
+
+<div class="card">
+  <label>メイン食材<select id="food"></select></label>
+
+  <div id="foodOptionWrap" class="inline-option hidden">
+    <label id="foodOptionLabel">サイズ</label>
+    <select id="foodOption"></select>
+  </div>
+
+  <div id="gakudoWrap" class="inline-option hidden">
+    <label>学童の1人量</label>
+    <select id="gakudoMode">
+      <option value="preschool">園児（3〜5歳）と同じ</option>
+      <option value="adult">大人と同じ</option>
+    </select>
+  </div>
+
+  <div class="result">
+    <div id="total" class="total"></div>
+    <div id="mainResult" class="big">—</div>
+    <div id="subResult" class="sub"></div>
+    <div id="basis" class="basis"></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-head">
+    <div><strong>基本人数の設定</strong><div class="small">年度替わり・保育体制変更のときだけ変更。</div></div>
+    <button class="btn secondary" onclick="toggle('defaultsEditor')">開く / 閉じる</button>
+  </div>
+  <div id="defaultsEditor" class="hidden editor-row">
+    <div class="grid8">
+      <label>0歳<input id="d0" type="number" min="0"></label>
+      <label>1歳<input id="d1" type="number" min="0"></label>
+      <label>2歳<input id="d2" type="number" min="0"></label>
+      <label>3歳<input id="d3" type="number" min="0"></label>
+      <label>4歳<input id="d4" type="number" min="0"></label>
+      <label>5歳<input id="d5" type="number" min="0"></label>
+      <label>学童<input id="dg" type="number" min="0"></label>
+      <label>大人<input id="da" type="number" min="0"></label>
+    </div>
+    <div class="actions"><button class="btn primary" onclick="saveDefaultCounts()">基本人数を保存</button></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-head">
+    <div><strong>食材・ルール編集</strong><div class="small">食材追加、1人量、サイズ違いを変更できます。</div></div>
+    <button class="btn secondary" onclick="toggleFoodEditor()">開く / 閉じる</button>
+  </div>
+
+  <div id="foodEditor" class="hidden editor-row">
+    <div class="grid2">
+      <label>食材名<input id="editName"></label>
+      <label>表示単位<input id="editUnit" placeholder="切れ／本／尾など"></label>
+    </div>
+    <div class="grid5" style="margin-top:8px">
+      <label>0歳<input id="r0" type="number" step="0.01" placeholder="未確認は空欄"></label>
+      <label>1歳<input id="r1" type="number" step="0.01" placeholder="未確認は空欄"></label>
+      <label>2歳<input id="r2" type="number" step="0.01"></label>
+      <label>3〜5歳<input id="rm" type="number" step="0.01"></label>
+      <label>大人<input id="ra" type="number" step="0.01"></label>
+    </div>
+    <div class="grid2" style="margin-top:8px">
+      <label>1発注単位で取れる量<input id="packSize" type="number" step="0.01" placeholder="例：1枚=5切れなら5"></label>
+      <label>発注単位<input id="packLabel" placeholder="枚／丁／パックなど"></label>
+    </div>
+    <label style="display:block;margin-top:8px">補足<input id="editNote"></label>
+
+    <div class="box">
+      <label style="display:flex;align-items:center;gap:8px;color:#333">
+        <input id="useOptions" type="checkbox" style="width:auto;margin:0">
+        サイズ・種類をその場で選べるようにする
+      </label>
+      <div id="optionSettings" class="hidden" style="margin-top:10px">
+        <label>オプション名<input id="optionTitle" value="サイズ"></label>
+        <div class="small" style="margin-top:6px">最大3つ。使わない行は空欄。</div>
+        <div id="variantRows"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" onclick="saveFood()">保存 / 更新</button>
+      <button class="btn secondary" onclick="clearFoodEditor()">新規入力</button>
+      <button class="btn secondary" onclick="deleteFood()">選択中を削除</button>
+    </div>
+  </div>
+</div>
+
+<div class="card small">
+  基本人数：0歳1・1歳0・2歳5・3歳4・4歳2・5歳5・学童0・大人8。学童が1人以上のときだけ「園児と同じ / 大人と同じ」をその場で選べます。
+  <div style="margin-top:8px;text-align:right;color:#8a9299">Ver. 0.5</div>
+</div>
+</div>
+
+<script>
+const DEFAULT_COUNTS={c0:1,c1:0,c2:5,c3:4,c4:2,c5:5,cg:0,ca:8};
+const DEFAULT_FOODS=[
+ {id:"chicken",name:"鶏もも",unit:"切れ",r0:0,r1:null,r2:1,rm:2,ra:3,packSize:5,packLabel:"枚",note:"0歳は食べない",optionTitle:"",variants:[]},
+ {id:"teba",name:"手羽元",unit:"本",r0:null,r1:null,r2:1,rm:2,ra:2,packSize:1,packLabel:"本",note:"0歳・1歳量は未確認",optionTitle:"サイズ",variants:[
+   {name:"大きめ",r0:null,r1:null,r2:1,rm:2,ra:2},{name:"小さめ",r0:null,r1:null,r2:1,rm:2,ra:3}]},
+ {id:"sasami",name:"ささみ",unit:"切れ",r0:0.333333,r1:null,r2:1,rm:2,ra:3,packSize:2,packLabel:"本",note:"0歳3人で約1本",optionTitle:"",variants:[]},
+ {id:"pork",name:"豚・生姜焼き用",unit:"枚",r0:null,r1:null,r2:1,rm:2,ra:3,packSize:1,packLabel:"枚",note:"0歳・1歳量は未確認",optionTitle:"",variants:[]},
+ {id:"saba",name:"サバ",unit:"切れ",r0:null,r1:null,r2:0.333333,rm:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳・1歳量は未確認",optionTitle:"",variants:[]},
+ {id:"shishamo",name:"ししゃも",unit:"尾",r0:null,r1:null,r2:1,rm:2,ra:3,packSize:1,packLabel:"尾",note:"0歳・1歳量は未確認",optionTitle:"サイズ",variants:[
+   {name:"標準",r0:null,r1:null,r2:1,rm:2,ra:3},{name:"小さめ",r0:null,r1:null,r2:1,rm:2,ra:4}]},
+ {id:"buri",name:"ブリ",unit:"切れ",r0:null,r1:null,r2:0.5,rm:1,ra:1,packSize:1,packLabel:"切れ",note:"2歳は1/2切れかも。未確定",optionTitle:"",variants:[]},
+ {id:"tofu",name:"豆腐",unit:"切れ",r0:1,r1:null,r2:1,rm:2,ra:3,packSize:8,packLabel:"丁",note:"",optionTitle:"",variants:[]}
+];
+let defaults={},foods=[],editingFoodId=null;
+
+function clone(v){return JSON.parse(JSON.stringify(v))}
+function num(id){return Math.max(0,Number(document.getElementById(id).value||0))}
+function nullable(id){const v=document.getElementById(id).value;return v===""?null:Number(v)}
+function fmt(n){const x=Number(n);if(Math.abs(x-1/3)<0.01)return"1/3";if(Math.abs(x-2/3)<0.01)return"2/3";if(Math.abs(x-.5)<.001)return"1/2";return String(Math.round(x*100)/100)}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function toggle(id){document.getElementById(id).classList.toggle("hidden")}
+
+function load(){
+  try{defaults=JSON.parse(localStorage.getItem("kyushokuDefaultCounts"))||clone(DEFAULT_COUNTS)}catch(e){defaults=clone(DEFAULT_COUNTS)}
+  defaults={...DEFAULT_COUNTS,...defaults};
+  try{foods=JSON.parse(localStorage.getItem("kyushokuFoodsV5"))||clone(DEFAULT_FOODS)}catch(e){foods=clone(DEFAULT_FOODS)}
+  if(!Array.isArray(foods)||!foods.length)foods=clone(DEFAULT_FOODS);
+  foods=foods.map(normalizeFood);
+}
+function normalizeFood(f){
+  return {
+    ...f,
+    r0:f.r0!==undefined?f.r0:(f.z!==undefined?f.z:null),
+    r1:f.r1!==undefined?f.r1:null,
+    r2:f.r2!==undefined?f.r2:(f.t!==undefined?f.t:0),
+    rm:f.rm!==undefined?f.rm:(f.m!==undefined?f.m:0),
+    ra:f.ra!==undefined?f.ra:(f.a!==undefined?f.a:0),
+    optionTitle:f.optionTitle||"",
+    variants:Array.isArray(f.variants)?f.variants.map(v=>({
+      ...v,r0:v.r0!==undefined?v.r0:(v.z!==undefined?v.z:null),r1:v.r1!==undefined?v.r1:null,
+      r2:v.r2!==undefined?v.r2:(v.t!==undefined?v.t:0),rm:v.rm!==undefined?v.rm:(v.m!==undefined?v.m:0),ra:v.ra!==undefined?v.ra:(v.a!==undefined?v.a:0)
+    })):[]
+  };
+}
+function saveFoods(){localStorage.setItem("kyushokuFoodsV5",JSON.stringify(foods))}
+function saveDefaults(){localStorage.setItem("kyushokuDefaultCounts",JSON.stringify(defaults))}
+
+function fillDefaultsEditor(){
+  ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(k=>document.getElementById("d"+k.slice(1)).value=defaults[k]);
+}
+function resetCurrentCounts(){
+  Object.keys(DEFAULT_COUNTS).forEach(k=>document.getElementById(k).value=defaults[k]??0);
+  update();
+}
+function saveDefaultCounts(){
+  defaults={c0:num("d0"),c1:num("d1"),c2:num("d2"),c3:num("d3"),c4:num("d4"),c5:num("d5"),cg:num("dg"),ca:num("da")};
+  saveDefaults();resetCurrentCounts();alert("基本人数を保存しました");
+}
+function counts(){return{c0:num("c0"),c1:num("c1"),c2:num("c2"),c3:num("c3"),c4:num("c4"),c5:num("c5"),cg:num("cg"),ca:num("ca")}}
+
+function renderFoods(keepId){
+  const s=document.getElementById("food"),old=keepId||s.value;s.innerHTML="";
+  foods.forEach(f=>{const o=document.createElement("option");o.value=f.id;o.textContent=f.name;s.appendChild(o)});
+  if(old&&foods.some(f=>f.id===old))s.value=old;
+  update();
+}
+function selectedFood(){return foods.find(f=>f.id===document.getElementById("food").value)||foods[0]}
+function renderFoodOption(f){
+  const w=document.getElementById("foodOptionWrap"),s=document.getElementById("foodOption");
+  if(!f.variants.length){w.classList.add("hidden");s.innerHTML="";return}
+  w.classList.remove("hidden");document.getElementById("foodOptionLabel").textContent=f.optionTitle||"オプション";
+  const old=s.value;s.innerHTML="";f.variants.forEach((v,i)=>{const o=document.createElement("option");o.value=i;o.textContent=v.name;s.appendChild(o)});
+  if(old!==""&&Number(old)<f.variants.length)s.value=old;
+}
+function activeRates(f){
+  const idx=Number(document.getElementById("foodOption").value||0);
+  return f.variants.length?(f.variants[idx]||f.variants[0]):f;
+}
+function update(){
+  if(!foods.length)return;
+  const c=counts(),f=selectedFood();renderFoodOption(f);
+  document.getElementById("gakudoWrap").classList.toggle("hidden",c.cg<1);
+  const r=activeRates(f),missing=[];
+  const rate=(key,label,count)=>{const v=r[key];if((v===null||v==="")&&count>0){missing.push(label);return 0}return Number(v||0)};
+  const r0=rate("r0","0歳",c.c0),r1=rate("r1","1歳",c.c1),r2=rate("r2","2歳",c.c2),rm=Number(r.rm||0),ra=Number(r.ra||0);
+  const gakudoRate=document.getElementById("gakudoMode").value==="adult"?ra:rm;
+  const units=r0*c.c0+r1*c.c1+r2*c.c2+rm*(c.c3+c.c4+c.c5)+gakudoRate*c.cg+ra*c.ca;
+  const pack=Number(f.packSize||1),qty=Math.ceil(units/pack),rem=qty*pack-units;
+  const people=c.c0+c.c1+c.c2+c.c3+c.c4+c.c5+c.cg+c.ca;
+  document.getElementById("total").textContent=`合計 ${people}人`;
+  document.getElementById("mainResult").textContent=`${qty}${f.packLabel||f.unit||""}`;
+  document.getElementById("subResult").textContent=`余り ${fmt(rem)}${f.unit||""}`+(missing.length?`・＋${missing.join("・")}分`:"");
+  const bits=[
+    `0歳:${r.r0==null?"未確認":fmt(r.r0)}${f.unit||""}`,
+    `1歳:${r.r1==null?"未確認":fmt(r.r1)}${f.unit||""}`,
+    `2歳:${fmt(r.r2)}${f.unit||""}`,
+    `3〜5歳:${fmt(r.rm)}${f.unit||""}`,
+    `大人:${fmt(r.ra)}${f.unit||""}`
+  ];
+  if(c.cg>0)bits.push(`学童:${document.getElementById("gakudoMode").value==="adult"?"大人と同じ":"3〜5歳と同じ"}`);
+  const notes=[];if(f.variants.length)notes.push(`${f.optionTitle||"オプション"}:${f.variants[Number(document.getElementById("foodOption").value||0)]?.name||f.variants[0].name}`);
+  if(f.note)notes.push(f.note);
+  document.getElementById("basis").textContent=bits.join(" ／ ")+(notes.length?"　※"+notes.join("　※"):"");
+}
+
+function buildVariantRows(){
+  const b=document.getElementById("variantRows");b.innerHTML="";
+  for(let i=0;i<3;i++){
+    const d=document.createElement("div");d.className="box";d.innerHTML=`
+      <strong>選択肢 ${i+1}</strong>
+      <label>表示名<input id="vName${i}"></label>
+      <div class="grid5" style="margin-top:8px">
+        <label>0歳<input id="v0_${i}" type="number" step="0.01"></label>
+        <label>1歳<input id="v1_${i}" type="number" step="0.01"></label>
+        <label>2歳<input id="v2_${i}" type="number" step="0.01"></label>
+        <label>3〜5歳<input id="vm_${i}" type="number" step="0.01"></label>
+        <label>大人<input id="va_${i}" type="number" step="0.01"></label>
+      </div>`;b.appendChild(d);
+  }
+}
+function setOptionSettings(){document.getElementById("optionSettings").classList.toggle("hidden",!document.getElementById("useOptions").checked)}
+function toggleFoodEditor(){toggle("foodEditor");if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()}
+function loadFoodEditor(){
+  const f=selectedFood();if(!f)return;editingFoodId=f.id;
+  document.getElementById("editName").value=f.name||"";document.getElementById("editUnit").value=f.unit||"";
+  [["r0","r0"],["r1","r1"],["r2","r2"],["rm","rm"],["ra","ra"]].forEach(([id,k])=>document.getElementById(id).value=f[k]==null?"":f[k]);
+  document.getElementById("packSize").value=f.packSize??1;document.getElementById("packLabel").value=f.packLabel||"";document.getElementById("editNote").value=f.note||"";
+  document.getElementById("useOptions").checked=f.variants.length>0;document.getElementById("optionTitle").value=f.optionTitle||"サイズ";setOptionSettings();
+  for(let i=0;i<3;i++){const v=f.variants[i];document.getElementById(`vName${i}`).value=v?.name||"";["0","1","2","m","a"].forEach(k=>{const key="r"+k;document.getElementById(`v${k}_${i}`).value=v&&v[key]!=null?v[key]:""})}
+}
+function clearFoodEditor(){
+  editingFoodId=null;["editName","editUnit","r0","r1","r2","rm","ra","packSize","packLabel","editNote"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("useOptions").checked=false;setOptionSettings();for(let i=0;i<3;i++){document.getElementById(`vName${i}`).value="";["0","1","2","m","a"].forEach(k=>document.getElementById(`v${k}_${i}`).value="")}
+}
+function saveFood(){
+  const name=document.getElementById("editName").value.trim();if(!name){alert("食材名を入力してください");return}
+  const item={id:editingFoodId||"food_"+Date.now(),name,unit:document.getElementById("editUnit").value.trim(),r0:nullable("r0"),r1:nullable("r1"),r2:nullable("r2"),rm:nullable("rm"),ra:nullable("ra"),
+    packSize:Number(document.getElementById("packSize").value||1),packLabel:document.getElementById("packLabel").value.trim(),note:document.getElementById("editNote").value.trim(),optionTitle:"",variants:[]};
+  if(document.getElementById("useOptions").checked){
+    item.optionTitle=document.getElementById("optionTitle").value.trim()||"サイズ";
+    for(let i=0;i<3;i++){const n=document.getElementById(`vName${i}`).value.trim();if(!n)continue;item.variants.push({name:n,r0:nullable(`v0_${i}`),r1:nullable(`v1_${i}`),r2:nullable(`v2_${i}`),rm:nullable(`vm_${i}`),ra:nullable(`va_${i}`)})}
+  }
+  const ix=foods.findIndex(f=>f.id===item.id);if(ix>=0)foods[ix]=item;else foods.push(item);editingFoodId=item.id;saveFoods();renderFoods(item.id);alert("食材ルールを保存しました");
+}
+function deleteFood(){if(!editingFoodId)return;if(!confirm("この食材を削除しますか？"))return;foods=foods.filter(f=>f.id!==editingFoodId);saveFoods();editingFoodId=null;renderFoods();clearFoodEditor()}
+
+function init(){
+  load();fillDefaultsEditor();resetCurrentCounts();buildVariantRows();renderFoods();
+  ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("input",update));
+  document.getElementById("food").addEventListener("change",()=>{update();if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()});
+  document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoMode").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
+  update();
+}
+init();
+</script>
+</body>
+</html>
