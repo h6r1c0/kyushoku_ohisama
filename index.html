@@ -242,9 +242,10 @@ function saveMaxCounts(){
 function counts(){return{c0:num("c0"),c1:num("c1"),c2:num("c2"),c3:num("c3"),c4:num("c4"),c5:num("c5"),cg:num("cg"),ca:num("ca")}}
 
 function renderFoods(keepId){
-  const s=document.getElementById("food"),old=keepId||s.value;s.innerHTML="";
+  const s=document.getElementById("food"),old=keepId||s.value||localStorage.getItem("kyushokuSelectedFoodId");s.innerHTML="";
   foods.forEach(f=>{const o=document.createElement("option");o.value=f.id;o.textContent=f.name;s.appendChild(o)});
   if(old&&foods.some(f=>f.id===old))s.value=old;
+  if(s.value)localStorage.setItem("kyushokuSelectedFoodId",s.value);
   update();
 }
 function selectedFood(){return foods.find(f=>f.id===document.getElementById("food").value)||foods[0]}
@@ -342,7 +343,7 @@ function deleteFood(){if(!editingFoodId)return;if(!confirm("この食材を削�
 function init(){
   load();renderCurrentCountOptions();fillDefaultsEditor();fillMaxEditor();resetCurrentCounts();buildVariantRows();renderFoods();
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("change",update));
-  document.getElementById("food").addEventListener("change",()=>{update();if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()});
+  document.getElementById("food").addEventListener("change",()=>{localStorage.setItem("kyushokuSelectedFoodId",document.getElementById("food").value);update();if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()});
   document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
   update();
 }
