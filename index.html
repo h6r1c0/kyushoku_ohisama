@@ -30,14 +30,14 @@ label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;p
     <button class="btn secondary" onclick="resetCurrentCounts()">基本人数に戻す</button>
   </div>
   <div class="grid8" style="margin-top:10px">
-    <label>0歳<input id="c0" type="number" min="0"></label>
-    <label>1歳<input id="c1" type="number" min="0"></label>
-    <label>2歳<input id="c2" type="number" min="0"></label>
-    <label>3歳<input id="c3" type="number" min="0"></label>
-    <label>4歳<input id="c4" type="number" min="0"></label>
-    <label>5歳<input id="c5" type="number" min="0"></label>
-    <label>学童<input id="cg" type="number" min="0"></label>
-    <label>大人<input id="ca" type="number" min="0"></label>
+    <label>0歳<select id="c0"></select></label>
+    <label>1歳<select id="c1"></select></label>
+    <label>2歳<select id="c2"></select></label>
+    <label>3歳<select id="c3"></select></label>
+    <label>4歳<select id="c4"></select></label>
+    <label>5歳<select id="c5"></select></label>
+    <label>学童<select id="cg"></select></label>
+    <label>大人<select id="ca"></select></label>
   </div>
 </div>
 
@@ -79,6 +79,22 @@ label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;p
       <label>大人<input id="da" type="number" min="0"></label>
     </div>
     <div class="actions"><button class="btn primary" onclick="saveDefaultCounts()">基本人数を保存</button></div>
+
+    <div class="box">
+      <strong>最大人数の設定</strong>
+      <div class="small">今日の人数で選べる数字の上限です。</div>
+      <div class="grid8" style="margin-top:8px">
+        <label>0歳<input id="m0" type="number" min="0" step="1"></label>
+        <label>1歳<input id="m1" type="number" min="0" step="1"></label>
+        <label>2歳<input id="m2" type="number" min="0" step="1"></label>
+        <label>3歳<input id="m3" type="number" min="0" step="1"></label>
+        <label>4歳<input id="m4" type="number" min="0" step="1"></label>
+        <label>5歳<input id="m5" type="number" min="0" step="1"></label>
+        <label>学童<input id="mg" type="number" min="0" step="1"></label>
+        <label>大人<input id="ma" type="number" min="0" step="1"></label>
+      </div>
+      <div class="actions"><button class="btn primary" onclick="saveMaxCounts()">最大人数を保存</button></div>
+    </div>
   </div>
 </div>
 
@@ -128,12 +144,13 @@ label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;p
 
 <div class="card small">
   基本人数：0歳1・1歳0・2歳5・3歳4・4歳2・5歳5・学童0・大人8。学童が1人以上のときだけ、その食材の「3〜5歳 / 大人」の1人量を数字で選べます。
-  <div style="margin-top:8px;text-align:right;color:#8a9299">Ver. 0.6</div>
+  <div style="margin-top:8px;text-align:right;color:#8a9299">Ver. 0.7</div>
 </div>
 </div>
 
 <script>
 const DEFAULT_COUNTS={c0:1,c1:0,c2:5,c3:4,c4:2,c5:5,cg:0,ca:8};
+const DEFAULT_MAX_COUNTS={c0:10,c1:10,c2:10,c3:10,c4:10,c5:10,cg:13,ca:13};
 const DEFAULT_FOODS=[
  {id:"chicken",name:"鶏もも",unit:"切れ",r0:0,r12:1,rm:2,rg:2,ra:3,packSize:5,packLabel:"枚",note:"0歳は食べない",optionTitle:"",variants:[]},
  {id:"teba",name:"手羽元",unit:"本",r0:null,r12:1,rm:2,rg:2,ra:2,packSize:1,packLabel:"本",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
@@ -146,7 +163,7 @@ const DEFAULT_FOODS=[
  {id:"buri",name:"ブリ",unit:"切れ",r0:null,r12:0.5,rm:1,rg:1,ra:1,packSize:1,packLabel:"切れ",note:"1〜2歳は1/2切れかも。未確定",optionTitle:"",variants:[]},
  {id:"tofu",name:"豆腐",unit:"切れ",r0:1,r12:1,rm:2,rg:2,ra:3,packSize:8,packLabel:"丁",note:"",optionTitle:"",variants:[]}
 ];
-let defaults={},foods=[],editingFoodId=null;
+let defaults={},maxCounts={},foods=[],editingFoodId=null;
 
 function clone(v){return JSON.parse(JSON.stringify(v))}
 function num(id){return Math.max(0,Number(document.getElementById(id).value||0))}
@@ -159,6 +176,8 @@ function stored(key){try{return JSON.parse(localStorage.getItem(key))}catch(e){r
 function load(){
   defaults=stored("kyushokuDefaultCounts")||clone(DEFAULT_COUNTS);
   defaults={...DEFAULT_COUNTS,...defaults};
+  maxCounts=stored("kyushokuMaxCounts")||clone(DEFAULT_MAX_COUNTS);
+  maxCounts={...DEFAULT_MAX_COUNTS,...maxCounts};
   foods=stored("kyushokuFoodsV6")||stored("kyushokuFoodsV5")||clone(DEFAULT_FOODS);
   if(!Array.isArray(foods)||!foods.length)foods=clone(DEFAULT_FOODS);
   foods=foods.map(normalizeFood);
@@ -184,17 +203,41 @@ function normalizeFood(f){
 }
 function saveFoods(){localStorage.setItem("kyushokuFoodsV6",JSON.stringify(foods))}
 function saveDefaults(){localStorage.setItem("kyushokuDefaultCounts",JSON.stringify(defaults))}
+function saveMaximums(){localStorage.setItem("kyushokuMaxCounts",JSON.stringify(maxCounts))}
+
+function renderCurrentCountOptions(){
+  Object.keys(DEFAULT_COUNTS).forEach(k=>{
+    const select=document.getElementById(k),old=select.value;
+    const max=Math.max(0,Math.floor(Number(maxCounts[k])||0));
+    select.innerHTML="";
+    for(let i=0;i<=max;i++){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);select.appendChild(option)}
+    const preferred=old!==""?Math.min(Number(old),max):Math.min(Number(defaults[k]||0),max);
+    select.value=String(preferred);
+  });
+}
 
 function fillDefaultsEditor(){
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(k=>document.getElementById("d"+k.slice(1)).value=defaults[k]);
+}
+function fillMaxEditor(){
+  ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(k=>document.getElementById("m"+k.slice(1)).value=maxCounts[k]);
 }
 function resetCurrentCounts(){
   Object.keys(DEFAULT_COUNTS).forEach(k=>document.getElementById(k).value=defaults[k]??0);
   update();
 }
 function saveDefaultCounts(){
-  defaults={c0:num("d0"),c1:num("d1"),c2:num("d2"),c3:num("d3"),c4:num("d4"),c5:num("d5"),cg:num("dg"),ca:num("da")};
+  const entered={c0:num("d0"),c1:num("d1"),c2:num("d2"),c3:num("d3"),c4:num("d4"),c5:num("d5"),cg:num("dg"),ca:num("da")};
+  const over=Object.keys(entered).filter(k=>entered[k]>maxCounts[k]);
+  if(over.length){alert("基本人数が最大人数を超えています。先に最大人数を変更してください。");return}
+  defaults=entered;
   saveDefaults();resetCurrentCounts();alert("基本人数を保存しました");
+}
+function saveMaxCounts(){
+  const entered={c0:Math.floor(num("m0")),c1:Math.floor(num("m1")),c2:Math.floor(num("m2")),c3:Math.floor(num("m3")),c4:Math.floor(num("m4")),c5:Math.floor(num("m5")),cg:Math.floor(num("mg")),ca:Math.floor(num("ma"))};
+  const under=Object.keys(entered).filter(k=>entered[k]<defaults[k]);
+  if(under.length){alert("最大人数が基本人数を下回っています。先に基本人数を変更してください。");return}
+  maxCounts=entered;saveMaximums();renderCurrentCountOptions();fillMaxEditor();update();alert("最大人数を保存しました");
 }
 function counts(){return{c0:num("c0"),c1:num("c1"),c2:num("c2"),c3:num("c3"),c4:num("c4"),c5:num("c5"),cg:num("cg"),ca:num("ca")}}
 
@@ -297,8 +340,8 @@ function saveFood(){
 function deleteFood(){if(!editingFoodId)return;if(!confirm("この食材を削除しますか？"))return;foods=foods.filter(f=>f.id!==editingFoodId);saveFoods();editingFoodId=null;renderFoods();clearFoodEditor()}
 
 function init(){
-  load();fillDefaultsEditor();resetCurrentCounts();buildVariantRows();renderFoods();
-  ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("input",update));
+  load();renderCurrentCountOptions();fillDefaultsEditor();fillMaxEditor();resetCurrentCounts();buildVariantRows();renderFoods();
+  ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("change",update));
   document.getElementById("food").addEventListener("change",()=>{update();if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()});
   document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
   update();
