@@ -51,10 +51,7 @@ label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;p
 
   <div id="gakudoWrap" class="inline-option hidden">
     <label>学童の1人量</label>
-    <select id="gakudoMode">
-      <option value="preschool">園児（3〜5歳）と同じ</option>
-      <option value="adult">大人と同じ</option>
-    </select>
+    <select id="gakudoRate"></select>
   </div>
 
   <div class="result">
@@ -98,9 +95,9 @@ label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;p
     </div>
     <div class="grid5" style="margin-top:8px">
       <label>0歳<input id="r0" type="number" step="0.01" placeholder="未確認は空欄"></label>
-      <label>1歳<input id="r1" type="number" step="0.01" placeholder="未確認は空欄"></label>
-      <label>2歳<input id="r2" type="number" step="0.01"></label>
+      <label>1〜2歳<input id="r12" type="number" step="0.01" placeholder="未確認は空欄"></label>
       <label>3〜5歳<input id="rm" type="number" step="0.01"></label>
+      <label>学童<input id="rg" type="number" step="0.01" placeholder="3〜5歳か大人の値"></label>
       <label>大人<input id="ra" type="number" step="0.01"></label>
     </div>
     <div class="grid2" style="margin-top:8px">
@@ -130,24 +127,24 @@ label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;p
 </div>
 
 <div class="card small">
-  基本人数：0歳1・1歳0・2歳5・3歳4・4歳2・5歳5・学童0・大人8。学童が1人以上のときだけ「園児と同じ / 大人と同じ」をその場で選べます。
-  <div style="margin-top:8px;text-align:right;color:#8a9299">Ver. 0.5</div>
+  基本人数：0歳1・1歳0・2歳5・3歳4・4歳2・5歳5・学童0・大人8。学童が1人以上のときだけ、その食材の「3〜5歳 / 大人」の1人量を数字で選べます。
+  <div style="margin-top:8px;text-align:right;color:#8a9299">Ver. 0.6</div>
 </div>
 </div>
 
 <script>
 const DEFAULT_COUNTS={c0:1,c1:0,c2:5,c3:4,c4:2,c5:5,cg:0,ca:8};
 const DEFAULT_FOODS=[
- {id:"chicken",name:"鶏もも",unit:"切れ",r0:0,r1:null,r2:1,rm:2,ra:3,packSize:5,packLabel:"枚",note:"0歳は食べない",optionTitle:"",variants:[]},
- {id:"teba",name:"手羽元",unit:"本",r0:null,r1:null,r2:1,rm:2,ra:2,packSize:1,packLabel:"本",note:"0歳・1歳量は未確認",optionTitle:"サイズ",variants:[
-   {name:"大きめ",r0:null,r1:null,r2:1,rm:2,ra:2},{name:"小さめ",r0:null,r1:null,r2:1,rm:2,ra:3}]},
- {id:"sasami",name:"ささみ",unit:"切れ",r0:0.333333,r1:null,r2:1,rm:2,ra:3,packSize:2,packLabel:"本",note:"0歳3人で約1本",optionTitle:"",variants:[]},
- {id:"pork",name:"豚・生姜焼き用",unit:"枚",r0:null,r1:null,r2:1,rm:2,ra:3,packSize:1,packLabel:"枚",note:"0歳・1歳量は未確認",optionTitle:"",variants:[]},
- {id:"saba",name:"サバ",unit:"切れ",r0:null,r1:null,r2:0.333333,rm:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳・1歳量は未確認",optionTitle:"",variants:[]},
- {id:"shishamo",name:"ししゃも",unit:"尾",r0:null,r1:null,r2:1,rm:2,ra:3,packSize:1,packLabel:"尾",note:"0歳・1歳量は未確認",optionTitle:"サイズ",variants:[
-   {name:"標準",r0:null,r1:null,r2:1,rm:2,ra:3},{name:"小さめ",r0:null,r1:null,r2:1,rm:2,ra:4}]},
- {id:"buri",name:"ブリ",unit:"切れ",r0:null,r1:null,r2:0.5,rm:1,ra:1,packSize:1,packLabel:"切れ",note:"2歳は1/2切れかも。未確定",optionTitle:"",variants:[]},
- {id:"tofu",name:"豆腐",unit:"切れ",r0:1,r1:null,r2:1,rm:2,ra:3,packSize:8,packLabel:"丁",note:"",optionTitle:"",variants:[]}
+ {id:"chicken",name:"鶏もも",unit:"切れ",r0:0,r12:1,rm:2,rg:2,ra:3,packSize:5,packLabel:"枚",note:"0歳は食べない",optionTitle:"",variants:[]},
+ {id:"teba",name:"手羽元",unit:"本",r0:null,r12:1,rm:2,rg:2,ra:2,packSize:1,packLabel:"本",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
+   {name:"大きめ",r0:null,r12:1,rm:2,rg:2,ra:2},{name:"小さめ",r0:null,r12:1,rm:2,rg:2,ra:3}]},
+ {id:"sasami",name:"ささみ",unit:"切れ",r0:0.333333,r12:1,rm:2,rg:2,ra:3,packSize:2,packLabel:"本",note:"0歳3人で約1本",optionTitle:"",variants:[]},
+ {id:"pork",name:"豚・生姜焼き用",unit:"枚",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"枚",note:"0歳量は未確認",optionTitle:"",variants:[]},
+ {id:"saba",name:"サバ",unit:"切れ",r0:null,r12:0.333333,rm:0.5,rg:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳量は未確認",optionTitle:"",variants:[]},
+ {id:"shishamo",name:"ししゃも",unit:"尾",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"尾",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
+   {name:"標準",r0:null,r12:1,rm:2,rg:2,ra:3},{name:"小さめ",r0:null,r12:1,rm:2,rg:2,ra:4}]},
+ {id:"buri",name:"ブリ",unit:"切れ",r0:null,r12:0.5,rm:1,rg:1,ra:1,packSize:1,packLabel:"切れ",note:"1〜2歳は1/2切れかも。未確定",optionTitle:"",variants:[]},
+ {id:"tofu",name:"豆腐",unit:"切れ",r0:1,r12:1,rm:2,rg:2,ra:3,packSize:8,packLabel:"丁",note:"",optionTitle:"",variants:[]}
 ];
 let defaults={},foods=[],editingFoodId=null;
 
@@ -157,30 +154,35 @@ function nullable(id){const v=document.getElementById(id).value;return v===""?nu
 function fmt(n){const x=Number(n);if(Math.abs(x-1/3)<0.01)return"1/3";if(Math.abs(x-2/3)<0.01)return"2/3";if(Math.abs(x-.5)<.001)return"1/2";return String(Math.round(x*100)/100)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function toggle(id){document.getElementById(id).classList.toggle("hidden")}
+function stored(key){try{return JSON.parse(localStorage.getItem(key))}catch(e){return null}}
 
 function load(){
-  try{defaults=JSON.parse(localStorage.getItem("kyushokuDefaultCounts"))||clone(DEFAULT_COUNTS)}catch(e){defaults=clone(DEFAULT_COUNTS)}
+  defaults=stored("kyushokuDefaultCounts")||clone(DEFAULT_COUNTS);
   defaults={...DEFAULT_COUNTS,...defaults};
-  try{foods=JSON.parse(localStorage.getItem("kyushokuFoodsV5"))||clone(DEFAULT_FOODS)}catch(e){foods=clone(DEFAULT_FOODS)}
+  foods=stored("kyushokuFoodsV6")||stored("kyushokuFoodsV5")||clone(DEFAULT_FOODS);
   if(!Array.isArray(foods)||!foods.length)foods=clone(DEFAULT_FOODS);
   foods=foods.map(normalizeFood);
+  saveFoods();
 }
 function normalizeFood(f){
+  const rm=f.rm!==undefined?f.rm:(f.m!==undefined?f.m:0);
+  const ra=f.ra!==undefined?f.ra:(f.a!==undefined?f.a:0);
   return {
     ...f,
     r0:f.r0!==undefined?f.r0:(f.z!==undefined?f.z:null),
-    r1:f.r1!==undefined?f.r1:null,
-    r2:f.r2!==undefined?f.r2:(f.t!==undefined?f.t:0),
-    rm:f.rm!==undefined?f.rm:(f.m!==undefined?f.m:0),
-    ra:f.ra!==undefined?f.ra:(f.a!==undefined?f.a:0),
+    r12:f.r12!==undefined?f.r12:(f.r2!==undefined?f.r2:(f.r1!==undefined?f.r1:(f.t!==undefined?f.t:null))),
+    rm,rg:f.rg!==undefined?f.rg:rm,ra,
     optionTitle:f.optionTitle||"",
     variants:Array.isArray(f.variants)?f.variants.map(v=>({
-      ...v,r0:v.r0!==undefined?v.r0:(v.z!==undefined?v.z:null),r1:v.r1!==undefined?v.r1:null,
-      r2:v.r2!==undefined?v.r2:(v.t!==undefined?v.t:0),rm:v.rm!==undefined?v.rm:(v.m!==undefined?v.m:0),ra:v.ra!==undefined?v.ra:(v.a!==undefined?v.a:0)
+      ...v,r0:v.r0!==undefined?v.r0:(v.z!==undefined?v.z:null),
+      r12:v.r12!==undefined?v.r12:(v.r2!==undefined?v.r2:(v.r1!==undefined?v.r1:(v.t!==undefined?v.t:null))),
+      rm:v.rm!==undefined?v.rm:(v.m!==undefined?v.m:rm),
+      rg:v.rg!==undefined?v.rg:(v.rm!==undefined?v.rm:(v.m!==undefined?v.m:rm)),
+      ra:v.ra!==undefined?v.ra:(v.a!==undefined?v.a:ra)
     })):[]
   };
 }
-function saveFoods(){localStorage.setItem("kyushokuFoodsV5",JSON.stringify(foods))}
+function saveFoods(){localStorage.setItem("kyushokuFoodsV6",JSON.stringify(foods))}
 function saveDefaults(){localStorage.setItem("kyushokuDefaultCounts",JSON.stringify(defaults))}
 
 function fillDefaultsEditor(){
@@ -214,15 +216,28 @@ function activeRates(f){
   const idx=Number(document.getElementById("foodOption").value||0);
   return f.variants.length?(f.variants[idx]||f.variants[0]):f;
 }
+function renderGakudoOptions(r,count){
+  const wrap=document.getElementById("gakudoWrap"),select=document.getElementById("gakudoRate");
+  wrap.classList.toggle("hidden",count<1);
+  if(count<1)return;
+  const old=select.value;
+  const rates=[r.rm,r.ra].filter(v=>v!==null&&v!==""&&Number.isFinite(Number(v))).map(Number);
+  const unique=[...new Set(rates)];
+  select.innerHTML="";
+  unique.forEach(v=>{const o=document.createElement("option");o.value=String(v);o.textContent=String(Math.round(v*100)/100);select.appendChild(o)});
+  const preferred=[old,r.rg==null?"":String(Number(r.rg)),unique.length?String(unique[0]):""].find(v=>v!==""&&unique.some(n=>String(n)===v));
+  if(preferred!==undefined)select.value=preferred;
+}
 function update(){
   if(!foods.length)return;
   const c=counts(),f=selectedFood();renderFoodOption(f);
-  document.getElementById("gakudoWrap").classList.toggle("hidden",c.cg<1);
   const r=activeRates(f),missing=[];
+  renderGakudoOptions(r,c.cg);
   const rate=(key,label,count)=>{const v=r[key];if((v===null||v==="")&&count>0){missing.push(label);return 0}return Number(v||0)};
-  const r0=rate("r0","0歳",c.c0),r1=rate("r1","1歳",c.c1),r2=rate("r2","2歳",c.c2),rm=Number(r.rm||0),ra=Number(r.ra||0);
-  const gakudoRate=document.getElementById("gakudoMode").value==="adult"?ra:rm;
-  const units=r0*c.c0+r1*c.c1+r2*c.c2+rm*(c.c3+c.c4+c.c5)+gakudoRate*c.cg+ra*c.ca;
+  const r0=rate("r0","0歳",c.c0),r12=rate("r12","1〜2歳",c.c1+c.c2),rm=rate("rm","3〜5歳",c.c3+c.c4+c.c5),ra=rate("ra","大人",c.ca);
+  const gakudoRate=c.cg>0?Number(document.getElementById("gakudoRate").value||0):0;
+  if(c.cg>0&&!document.getElementById("gakudoRate").options.length)missing.push("学童");
+  const units=r0*c.c0+r12*(c.c1+c.c2)+rm*(c.c3+c.c4+c.c5)+gakudoRate*c.cg+ra*c.ca;
   const pack=Number(f.packSize||1),qty=Math.ceil(units/pack),rem=qty*pack-units;
   const people=c.c0+c.c1+c.c2+c.c3+c.c4+c.c5+c.cg+c.ca;
   document.getElementById("total").textContent=`合計 ${people}人`;
@@ -230,12 +245,11 @@ function update(){
   document.getElementById("subResult").textContent=`余り ${fmt(rem)}${f.unit||""}`+(missing.length?`・＋${missing.join("・")}分`:"");
   const bits=[
     `0歳:${r.r0==null?"未確認":fmt(r.r0)}${f.unit||""}`,
-    `1歳:${r.r1==null?"未確認":fmt(r.r1)}${f.unit||""}`,
-    `2歳:${fmt(r.r2)}${f.unit||""}`,
-    `3〜5歳:${fmt(r.rm)}${f.unit||""}`,
-    `大人:${fmt(r.ra)}${f.unit||""}`
+    `1〜2歳:${r.r12==null?"未確認":fmt(r.r12)}${f.unit||""}`,
+    `3〜5歳:${r.rm==null?"未確認":fmt(r.rm)}${f.unit||""}`,
+    `学童:${c.cg>0?fmt(gakudoRate):r.rg==null?"未確認":fmt(r.rg)}${c.cg>0||r.rg!=null?f.unit||"":""}`,
+    `大人:${r.ra==null?"未確認":fmt(r.ra)}${f.unit||""}`
   ];
-  if(c.cg>0)bits.push(`学童:${document.getElementById("gakudoMode").value==="adult"?"大人と同じ":"3〜5歳と同じ"}`);
   const notes=[];if(f.variants.length)notes.push(`${f.optionTitle||"オプション"}:${f.variants[Number(document.getElementById("foodOption").value||0)]?.name||f.variants[0].name}`);
   if(f.note)notes.push(f.note);
   document.getElementById("basis").textContent=bits.join(" ／ ")+(notes.length?"　※"+notes.join("　※"):"");
@@ -249,9 +263,9 @@ function buildVariantRows(){
       <label>表示名<input id="vName${i}"></label>
       <div class="grid5" style="margin-top:8px">
         <label>0歳<input id="v0_${i}" type="number" step="0.01"></label>
-        <label>1歳<input id="v1_${i}" type="number" step="0.01"></label>
-        <label>2歳<input id="v2_${i}" type="number" step="0.01"></label>
+        <label>1〜2歳<input id="v12_${i}" type="number" step="0.01"></label>
         <label>3〜5歳<input id="vm_${i}" type="number" step="0.01"></label>
+        <label>学童<input id="vg_${i}" type="number" step="0.01"></label>
         <label>大人<input id="va_${i}" type="number" step="0.01"></label>
       </div>`;b.appendChild(d);
   }
@@ -261,22 +275,22 @@ function toggleFoodEditor(){toggle("foodEditor");if(!document.getElementById("fo
 function loadFoodEditor(){
   const f=selectedFood();if(!f)return;editingFoodId=f.id;
   document.getElementById("editName").value=f.name||"";document.getElementById("editUnit").value=f.unit||"";
-  [["r0","r0"],["r1","r1"],["r2","r2"],["rm","rm"],["ra","ra"]].forEach(([id,k])=>document.getElementById(id).value=f[k]==null?"":f[k]);
+  [["r0","r0"],["r12","r12"],["rm","rm"],["rg","rg"],["ra","ra"]].forEach(([id,k])=>document.getElementById(id).value=f[k]==null?"":f[k]);
   document.getElementById("packSize").value=f.packSize??1;document.getElementById("packLabel").value=f.packLabel||"";document.getElementById("editNote").value=f.note||"";
   document.getElementById("useOptions").checked=f.variants.length>0;document.getElementById("optionTitle").value=f.optionTitle||"サイズ";setOptionSettings();
-  for(let i=0;i<3;i++){const v=f.variants[i];document.getElementById(`vName${i}`).value=v?.name||"";["0","1","2","m","a"].forEach(k=>{const key="r"+k;document.getElementById(`v${k}_${i}`).value=v&&v[key]!=null?v[key]:""})}
+  for(let i=0;i<3;i++){const v=f.variants[i];document.getElementById(`vName${i}`).value=v?.name||"";["0","12","m","g","a"].forEach(k=>{const key="r"+k;document.getElementById(`v${k}_${i}`).value=v&&v[key]!=null?v[key]:""})}
 }
 function clearFoodEditor(){
-  editingFoodId=null;["editName","editUnit","r0","r1","r2","rm","ra","packSize","packLabel","editNote"].forEach(id=>document.getElementById(id).value="");
-  document.getElementById("useOptions").checked=false;setOptionSettings();for(let i=0;i<3;i++){document.getElementById(`vName${i}`).value="";["0","1","2","m","a"].forEach(k=>document.getElementById(`v${k}_${i}`).value="")}
+  editingFoodId=null;["editName","editUnit","r0","r12","rm","rg","ra","packSize","packLabel","editNote"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("useOptions").checked=false;setOptionSettings();for(let i=0;i<3;i++){document.getElementById(`vName${i}`).value="";["0","12","m","g","a"].forEach(k=>document.getElementById(`v${k}_${i}`).value="")}
 }
 function saveFood(){
   const name=document.getElementById("editName").value.trim();if(!name){alert("食材名を入力してください");return}
-  const item={id:editingFoodId||"food_"+Date.now(),name,unit:document.getElementById("editUnit").value.trim(),r0:nullable("r0"),r1:nullable("r1"),r2:nullable("r2"),rm:nullable("rm"),ra:nullable("ra"),
+  const item={id:editingFoodId||"food_"+Date.now(),name,unit:document.getElementById("editUnit").value.trim(),r0:nullable("r0"),r12:nullable("r12"),rm:nullable("rm"),rg:nullable("rg"),ra:nullable("ra"),
     packSize:Number(document.getElementById("packSize").value||1),packLabel:document.getElementById("packLabel").value.trim(),note:document.getElementById("editNote").value.trim(),optionTitle:"",variants:[]};
   if(document.getElementById("useOptions").checked){
     item.optionTitle=document.getElementById("optionTitle").value.trim()||"サイズ";
-    for(let i=0;i<3;i++){const n=document.getElementById(`vName${i}`).value.trim();if(!n)continue;item.variants.push({name:n,r0:nullable(`v0_${i}`),r1:nullable(`v1_${i}`),r2:nullable(`v2_${i}`),rm:nullable(`vm_${i}`),ra:nullable(`va_${i}`)})}
+    for(let i=0;i<3;i++){const n=document.getElementById(`vName${i}`).value.trim();if(!n)continue;item.variants.push({name:n,r0:nullable(`v0_${i}`),r12:nullable(`v12_${i}`),rm:nullable(`vm_${i}`),rg:nullable(`vg_${i}`),ra:nullable(`va_${i}`)})}
   }
   const ix=foods.findIndex(f=>f.id===item.id);if(ix>=0)foods[ix]=item;else foods.push(item);editingFoodId=item.id;saveFoods();renderFoods(item.id);alert("食材ルールを保存しました");
 }
@@ -286,7 +300,7 @@ function init(){
   load();fillDefaultsEditor();resetCurrentCounts();buildVariantRows();renderFoods();
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("input",update));
   document.getElementById("food").addEventListener("change",()=>{update();if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()});
-  document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoMode").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
+  document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
   update();
 }
 init();
