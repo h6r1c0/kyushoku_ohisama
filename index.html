@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#8fbd63">
-<title>給食メイン量計算</title>
+<title>給食メニュー量計算</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&display=swap');
 :root{--bg:#fffaf0;--card:#fff;--text:#3c4035;--muted:#6f7568;--line:#d8e4ca;--green:#86b95d;--green-dark:#527c38;--green-soft:#eef6e6;--orange:#f39a45;--orange-dark:#a94f17;--orange-soft:#fff0df}
@@ -22,13 +22,16 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .food-card{position:relative}.food-section-head{margin-bottom:9px}.all-foods-btn{min-width:70px;border:1px solid #efdaa0;border-radius:16px;background:#fff9df;color:#49833a;font-size:14px}.all-foods-btn[aria-pressed="true"]{background:#eef7df;box-shadow:inset 0 0 0 1px #d0e3b7}.food-filters{margin-bottom:10px}.food-filter-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.category-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:100%;height:92px;margin:0;border:1px solid #f8b9a8;border-radius:14px;background:#fce8e2;color:#b55222;font-family:inherit;font-size:15px;font-weight:800;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent}.category-chip[data-category="fish"]{border-color:#acd9f0;background:#dceefa;color:#176ea8}.category-chip[data-category="tofu"]{border-color:#f0dda5;background:#fff6d8;color:#a65a16}.category-chip[aria-pressed="true"]{border-width:3px;box-shadow:0 3px 9px rgba(63,83,46,.14);transform:translateY(-1px)}.category-icon{display:block;width:52px;height:48px;background-position:center;background-repeat:no-repeat;background-size:contain;font-size:0}.category-chip[data-category="meat"] .category-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 70 62'%3E%3Cpath d='M40 19l8-8c-1-4 2-8 6-8 2 0 3 1 4 3 4-1 7 2 6 6-1 3-3 5-6 5l-8 8' fill='%23fff' stroke='%23784c2c' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M44 19c7 8 3 22-8 29-12 8-28 5-34-5-6-11 3-25 17-30 10-4 19-1 25 6z' fill='%23eb9146' stroke='%23784c2c' stroke-width='4'/%3E%3Ccircle cx='15' cy='36' r='2.5' fill='%23bd6835'/%3E%3Ccircle cx='20' cy='25' r='2.5' fill='%23bd6835'/%3E%3Ccircle cx='27' cy='40' r='2.5' fill='%23bd6835'/%3E%3C/svg%3E")}.category-chip[data-category="fish"] .category-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 70 54'%3E%3Cpath d='M47 15L61 7v34l-14-8' fill='%232d82bd' stroke='%231b65a2' stroke-width='3.5' stroke-linejoin='round'/%3E%3Cpath d='M51 24c-7 14-20 20-33 15C9 36 3 30 1 24 3 18 9 12 18 9c13-5 26 1 33 15z' fill='%233d9dd4' stroke='%231b65a2' stroke-width='3.5' stroke-linejoin='round'/%3E%3Cpath d='M24 10c8 7 8 21 0 28 11 1 21-5 27-14-6-9-16-15-27-14z' fill='%232d82bd' opacity='.75'/%3E%3Ccircle cx='13' cy='20' r='3' fill='%23fff'/%3E%3C/svg%3E")}.category-chip[data-category="tofu"] .category-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 70 64'%3E%3Cpath d='M32 3L57 17 32 31 7 17z' fill='%23fffef8' stroke='%236c5946' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M7 17l25 14v24L7 41z' fill='%23fffdf4' stroke='%236c5946' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M57 17L32 31v24l25-14z' fill='%23f5edda' stroke='%236c5946' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E")}.selected-category-data{display:none!important}.current-food{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid #ead2a3;border-radius:13px;background:#fff;padding:10px 13px}.current-food-label{font-size:12px;color:#8c795d}.current-food-name{font-size:21px;font-weight:800;color:#3f4939}.food-choice-panel{position:absolute;z-index:20;width:min(310px,calc(100% - 28px));padding:10px;border:1px solid #e6c777;border-radius:14px;background:#fffdf7;box-shadow:0 8px 22px rgba(91,69,31,.22)}.food-choice-panel::before{content:"";position:absolute;top:-7px;left:var(--pointer-left,50%);width:12px;height:12px;border-left:1px solid #e6c777;border-top:1px solid #e6c777;background:#fffdf7;transform:translateX(-50%) rotate(45deg)}.food-choice-hint{position:relative;margin-bottom:7px;font-size:12px;color:#8b765b}.food-choice-list{position:relative;display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.food-choice{min-height:46px;padding:8px 10px;border:1px solid #dfd5bc;border-radius:11px;background:#fff;color:#4d5048;font-family:inherit;font-size:15px;font-weight:700;text-align:left}.food-choice[aria-current="true"]{border:2px solid var(--green);background:#f0f8e8;color:var(--green-dark)}.food-choice[aria-current="true"]::after{content:"選択中";float:right;margin-left:4px;color:#5d8b43;font-size:11px}.food-native-select{position:absolute!important;opacity:0;pointer-events:none}
 .variant-choice-list{display:grid;gap:7px;margin-top:5px}.variant-choice{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:50px;padding:8px 12px;border:1px solid #e7d5ad;border-radius:12px;background:#fff;font-family:inherit;text-align:left}.variant-choice[aria-pressed="true"]{border:2px solid var(--orange);background:#fff8e8}.variant-name{font-size:16px;font-weight:800;color:#514c42}.variant-diff{font-size:12px;color:#7a6548;text-align:right}.rate-fields{align-items:start}.rate-field select,.unit-control select{font-size:16px}.other-value{margin-top:6px!important;font-size:16px!important}.editor-help{margin-top:5px;font-size:11px;color:var(--muted)}
 .food-native-select{width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden;clip:rect(0 0 0 0)}
-.class-icon{background-image:url("kyushoku_today_people_icons_reference.png");background-size:266.1px 133.05px;mix-blend-mode:multiply}.class-kingyo{background-position:-15.75px -40.5px}.class-medaka{background-position:-77.25px -40.5px}.class-ahiru{background-position:-137.25px -40.5px}.class-tonbo{background-position:-197.7px -40.5px}.class-tsubame{background-position:-15.75px -78px}.class-kamoshika{background-position:-77.25px -78px}.class-randoseru{background-position:-137.7px -78px}.class-otona{background-position:-201px -78px}
+.class-icon{background-image:url("kyushoku_today_people_icons_reference.png");background-size:266.1px 133.05px;mix-blend-mode:multiply;filter:contrast(1.14) brightness(1.04) saturate(1.08)}.class-kingyo{background-position:-15.75px -40.5px}.class-medaka{background-position:-77.25px -40.5px}.class-ahiru{background-position:-137.25px -40.5px}.class-tonbo{background-position:-197.7px -40.5px}.class-tsubame{background-position:-15.75px -78px}.class-kamoshika{background-position:-77.25px -78px}.class-randoseru{background-position:-137.7px -78px}.class-otona{background-position:-201px -78px}
 .food-choice-panel{width:min(230px,calc(100% - 28px));padding:6px;border-radius:11px}.food-choice-hint{margin:1px 6px 5px}.food-choice-list{display:block;max-height:220px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}.food-choice{display:block;width:100%;min-height:38px;padding:8px 9px;border:0;border-radius:7px;background:transparent;font-size:15px}.food-choice+.food-choice{border-top:1px solid #eee4cf}.food-choice[aria-current="true"]{border:0;background:#edf6e5}.food-choice[aria-current="true"]::after{content:"✓";font-size:15px}
-.help-settings-icon{display:grid;place-items:center;border:3px solid #4b963b;border-radius:50%;color:#4b963b;font-size:21px;font-weight:900;line-height:1}.help-editor{display:grid;gap:7px}.help-editor.hidden{display:none}.help-topic{border:1px solid #dbe9d2;border-radius:11px;overflow:hidden;background:#fbfff8}.help-topic-button{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:46px;padding:9px 12px;border:0;background:#f3faed;color:#477b37;font:inherit;font-size:15px;font-weight:800;text-align:left}.help-topic-button .chevron{flex:0 0 10px;width:10px;height:10px;border-width:3px}.help-topic-button[aria-expanded="true"] .chevron{transform:rotate(225deg) translate(-2px,-2px)}.help-content{padding:10px 12px;border-top:1px solid #dbe9d2;color:#50574d;font-size:13px;line-height:1.75}.help-content ol,.help-content ul{margin:0;padding-left:1.45em}.help-content li+li{margin-top:3px}.help-content p{margin:0}.help-content p+p{margin-top:6px}.help-answers{display:grid;gap:7px;margin:0}.help-answers div{display:grid;gap:1px}.help-answers dt{font-weight:800;color:#527c38}.help-answers dd{margin:0;color:#596057}
+.help-settings-icon{display:grid;place-items:center;border:0;border-radius:0;color:#4b963b;font-size:24px;font-weight:900;line-height:1}.help-editor{display:grid;gap:7px}.help-editor.hidden{display:none}.help-topic{border:1px solid #dbe9d2;border-radius:11px;overflow:hidden;background:#fbfff8}.help-topic-button{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:46px;padding:9px 12px;border:0;background:#f3faed;color:#477b37;font:inherit;font-size:15px;font-weight:800;text-align:left}.help-topic-button .chevron{flex:0 0 10px;width:10px;height:10px;border-width:3px}.help-topic-button[aria-expanded="true"] .chevron{transform:rotate(225deg) translate(-2px,-2px)}.help-content{padding:10px 12px;border-top:1px solid #dbe9d2;color:#50574d;font-size:13px;line-height:1.75}.help-content ol,.help-content ul{margin:0;padding-left:1.45em}.help-content li+li{margin-top:3px}.help-content p{margin:0}.help-content p+p{margin-top:6px}.help-answers{display:grid;gap:7px;margin:0}.help-answers div{display:grid;gap:1px}.help-answers dt{font-weight:800;color:#527c38}.help-answers dd{margin:0;color:#596057}
+.app-header{overflow:visible;background:transparent;border:0;border-radius:0;padding:0;margin:0 0 5px;box-shadow:none}.brand-logo{width:238px;max-width:64vw;margin:0;padding:0 2px}.brand-topline{min-height:24px;padding:0 4px 3px 38px}.brand-topline::after{left:25px;height:2px}.brand-sprout{left:5px;top:0;width:35px;height:25px}.brand-kicker{font-size:12px;letter-spacing:.03em}.brand-main{justify-content:flex-start;gap:3px;margin-top:4px;padding-left:17px}.brand-npo{font-size:9px}.brand-name{font-size:20px}.brand-circles{gap:2px}.brand-circles span{width:24px;height:24px;font-size:17px;-webkit-text-stroke:.8px #278c46}.feature-tabs{display:flex;align-items:flex-end;margin:0 0 10px;padding-left:4px;border-bottom:3px solid #efc56f}.feature-tab{display:inline-flex;align-items:center;min-height:45px;padding:9px 17px 8px;border:1px solid #e6c46f;border-bottom:0;border-radius:15px 15px 0 0;background:#fff8e4;color:#4c633d;font-size:20px;font-weight:800;box-shadow:0 -2px 7px rgba(150,110,38,.05)}
+.food-filter-buttons>div,.all-foods-control{position:relative}.food-picker-select{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:.001;cursor:pointer}.food-picker-select:focus{outline:none}.category-control.single-food .food-picker-select{pointer-events:none}.category-control.single-food .category-chip{cursor:pointer}
 .result-card{border-color:#f1d99a;background:linear-gradient(145deg,#fff9e8,#fffdf6 72%);box-shadow:0 2px 8px rgba(181,130,45,.06)}.result{text-align:center;padding:2px 4px 0}.total{font-size:16px;color:#665d4d}.big{position:relative;display:inline-block;line-height:1;margin-top:5px;color:#4b8a31}.result-number{font-size:64px;font-weight:700}.result-unit{position:absolute;left:calc(100% + 8px);bottom:.12em;font-size:26px;font-weight:700;white-space:nowrap}.sub{font-size:16px;color:#655b4b;margin-top:10px;min-height:22px}.basis{margin-top:12px;padding:11px 10px;border:1px solid #f0dfb8;border-radius:13px;background:#fffdf5;font-size:14px;color:#526073;line-height:1.65}.basis-notes{margin-top:5px;color:#5b554b}.basis-notes:empty{display:none}
 .settings-card{padding:0 12px;border-color:#c7dfb7;border-radius:15px;background:linear-gradient(135deg,#eef8e8,#f8fff4);box-shadow:none;margin-bottom:8px}.settings-card>.section-head{min-height:58px}.settings-title{color:#478337;font-size:17px}.settings-icon{display:block;flex:0 0 34px;width:34px;height:34px;background-position:center;background-repeat:no-repeat;background-size:contain}.people-settings-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234b963b' d='M19.4 13a7.7 7.7 0 000-2l2.1-1.6-2-3.4-2.5 1a7.5 7.5 0 00-1.7-1L15 3.3h-4L10.6 6a7.5 7.5 0 00-1.7 1L6.5 6l-2 3.4L6.6 11a7.7 7.7 0 000 2l-2.1 1.6 2 3.4 2.4-1a7.5 7.5 0 001.7 1l.4 2.7h4l.4-2.7a7.5 7.5 0 001.7-1l2.4 1 2-3.4zM13 16a4 4 0 110-8 4 4 0 010 8z'/%3E%3C/svg%3E")}.food-settings-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234b963b' d='M6 2h9l5 5v15H6a3 3 0 01-3-3V5a3 3 0 013-3zm8 2v5h4l-4-5zM8 13h7v-2H8v2zm0 4h8v-2H8v2z'/%3E%3C/svg%3E")}.settings-card .editor-row{margin:0 -2px 12px;padding:12px;background:#fff;border:1px solid #dce9d4;border-radius:12px}.editor-row{border-top:1px solid #e1e8d9;padding-top:12px;margin-top:12px}.box{border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:8px;background:#fffefb}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.version{padding:6px 4px 12px;text-align:right;color:#8a9299;font-size:12px}
 @media(max-width:560px){.grid5{grid-template-columns:repeat(2,1fr)}.grid3,.grid2{grid-template-columns:1fr}.people-grid{grid-template-columns:repeat(4,1fr);gap:8px}.people-grid label{font-size:12px}.people-grid select{padding:10px 5px;font-size:18px}.result-number{font-size:60px}.result-unit{font-size:24px}.rate-fields{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:370px){.app-header{padding-left:9px;padding-right:9px}.brand-logo{padding-left:0;padding-right:0}.brand-topline{padding-left:58px}.brand-sprout{left:8px}.brand-topline::after{left:37px}.brand-kicker{letter-spacing:.02em}.brand-main{gap:3px}.app-title{font-size:20px}}
+@media(max-width:370px){.app-header{padding:0}.brand-logo{padding:0 2px}.brand-topline{padding:0 4px 3px 38px}.brand-sprout{left:5px}.brand-topline::after{left:25px}.brand-main{padding-left:17px}}
 </style>
 </head>
 <body>
@@ -42,8 +45,8 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
       <span class="brand-circles" aria-label="保育園"><span>保</span><span>育</span><span>園</span></span>
     </div>
   </div>
-  <div class="app-title">給食メイン量計算</div>
 </header>
+<div class="feature-tabs" role="tablist" aria-label="機能"><div class="feature-tab" role="tab" aria-selected="true">給食メニュー量計算</div></div>
 
 <div class="card daily-card people-card">
   <div class="section-head daily-section-head">
@@ -65,21 +68,17 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 <div class="card daily-card food-card">
   <div class="section-head daily-section-head food-section-head">
     <div class="daily-title"><span class="section-icon meal-icon" aria-hidden="true"></span><strong>メイン食材を選ぶ</strong></div>
-    <button id="allFoodsButton" type="button" class="btn all-foods-btn" aria-pressed="true" onclick="setFoodFilter('',this)">全部</button>
+    <div class="all-foods-control"><button id="allFoodsButton" type="button" class="btn all-foods-btn" aria-pressed="true">全部</button><select id="allFoodsSelect" class="food-picker-select" data-category="" aria-label="すべての食材から選ぶ" onchange="selectFoodFromNative(this)"></select></div>
   </div>
   <div class="food-filters">
     <div class="food-filter-buttons" role="group" aria-label="メイン食材の分類">
-      <button type="button" class="category-chip" data-category="meat" aria-pressed="false" onclick="setFoodFilter('meat',this)"><span class="category-icon" aria-hidden="true"></span><span>肉</span></button>
-      <button type="button" class="category-chip" data-category="fish" aria-pressed="false" onclick="setFoodFilter('fish',this)"><span class="category-icon" aria-hidden="true"></span><span>魚</span></button>
-      <button type="button" class="category-chip" data-category="tofu" aria-pressed="false" onclick="setFoodFilter('tofu',this)"><span class="category-icon" aria-hidden="true"></span><span>豆腐</span></button>
+      <div class="category-control" data-category="meat"><button type="button" class="category-chip" data-category="meat" aria-pressed="false"><span class="category-icon" aria-hidden="true"></span><span>肉</span></button><select id="meatFoodsSelect" class="food-picker-select" data-category="meat" aria-label="肉の食材を選ぶ" onchange="selectFoodFromNative(this)"></select></div>
+      <div class="category-control" data-category="fish"><button type="button" class="category-chip" data-category="fish" aria-pressed="false"><span class="category-icon" aria-hidden="true"></span><span>魚</span></button><select id="fishFoodsSelect" class="food-picker-select" data-category="fish" aria-label="魚の食材を選ぶ" onchange="selectFoodFromNative(this)"></select></div>
+      <div class="category-control" data-category="tofu"><button type="button" class="category-chip" data-category="tofu" aria-pressed="false" onclick="selectSingleCategoryFood('tofu')"><span class="category-icon" aria-hidden="true"></span><span>豆腐</span></button><select id="tofuFoodsSelect" class="food-picker-select" data-category="tofu" aria-label="豆腐の食材を選ぶ" onchange="selectFoodFromNative(this)"></select></div>
     </div>
   </div>
   <div class="current-food" aria-live="polite"><span class="current-food-label">現在の食材</span><span id="currentFoodName" class="current-food-name"></span></div>
   <select id="food" class="food-native-select" aria-hidden="true" tabindex="-1"></select>
-  <div id="foodChoicePanel" class="food-choice-panel hidden">
-    <div id="foodChoiceHint" class="food-choice-hint"></div>
-    <div id="foodChoiceList" class="food-choice-list"></div>
-  </div>
   <div id="foodCategory" class="selected-category-data hidden" data-category=""><span id="foodCategoryIcon"></span><span id="foodCategoryLabel"></span></div>
 
   <div id="foodOptionWrap" class="inline-option hidden">
@@ -254,7 +253,7 @@ const RATE_CHOICES=[
 ];
 const UNIT_CHOICES=["切れ","個","本","枚","尾","丁","g"];
 const RATE_FIELDS=[{key:"r0",label:"0歳"},{key:"r12",label:"1〜2歳"},{key:"rm",label:"3〜5歳"},{key:"rg",label:"学童"},{key:"ra",label:"大人"}];
-let defaults={},maxCounts={},foods=[],editingFoodId=null,activeFoodCategory="",foodChoicesOpen=false,foodChoiceAnchor=null;
+let defaults={},maxCounts={},foods=[],editingFoodId=null,activeFoodCategory="";
 
 function clone(v){return JSON.parse(JSON.stringify(v))}
 function num(id){return Math.max(0,Number(document.getElementById(id).value||0))}
@@ -367,43 +366,44 @@ function updateFoodFilterButtons(){
   document.querySelectorAll(".category-chip").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.category===activeFoodCategory)));
   document.getElementById("allFoodsButton").setAttribute("aria-pressed",String(!activeFoodCategory));
 }
-function setFoodFilter(category,anchor){
-  activeFoodCategory=category;foodChoiceAnchor=anchor;
-  const categoryFoods=category?foods.filter(f=>f.category===category):foods;
-  if(category==="tofu"&&categoryFoods.length===1){updateFoodFilterButtons();selectFoodCandidate(categoryFoods[0].id);return}
-  foodChoicesOpen=true;renderFoods();
+function fillFoodPicker(select,category,promptText){
+  const listedFoods=category?foods.filter(f=>f.category===category):foods;
+  select.innerHTML="";
+  const prompt=document.createElement("option");prompt.value="";prompt.textContent=promptText;prompt.disabled=true;prompt.selected=true;select.appendChild(prompt);
+  listedFoods.forEach(f=>{const option=document.createElement("option");option.value=f.id;option.textContent=f.name;select.appendChild(option)});
+  select.value="";
+  return listedFoods;
+}
+function renderFoodPickers(){
+  fillFoodPicker(document.getElementById("allFoodsSelect"),"","食材を選ぶ");
+  fillFoodPicker(document.getElementById("meatFoodsSelect"),"meat","肉から選ぶ");
+  fillFoodPicker(document.getElementById("fishFoodsSelect"),"fish","魚から選ぶ");
+  const tofuFoods=fillFoodPicker(document.getElementById("tofuFoodsSelect"),"tofu","豆腐から選ぶ");
+  const tofuControl=document.getElementById("tofuFoodsSelect").closest(".category-control"),single=tofuFoods.length===1;
+  tofuControl.classList.toggle("single-food",single);
+  document.getElementById("tofuFoodsSelect").disabled=single;
+}
+function selectFoodFromNative(select){
+  const id=select.value;if(!id)return;
+  activeFoodCategory=select.dataset.category||"";updateFoodFilterButtons();selectFoodCandidate(id);select.value="";
+}
+function selectSingleCategoryFood(category){
+  const listedFoods=foods.filter(f=>f.category===category);if(listedFoods.length!==1)return;
+  activeFoodCategory=category;updateFoodFilterButtons();selectFoodCandidate(listedFoods[0].id);
 }
 function renderFoods(keepId){
   const s=document.getElementById("food"),old=keepId||s.value||localStorage.getItem(SELECTED_FOOD_KEY);
-  if(keepId&&activeFoodCategory&&!foods.some(f=>f.id===keepId&&f.category===activeFoodCategory))activeFoodCategory="";
-  let listedFoods=activeFoodCategory?foods.filter(f=>f.category===activeFoodCategory):foods;
-  if(!listedFoods.length){activeFoodCategory="";listedFoods=foods}
   updateFoodFilterButtons();s.innerHTML="";
   foods.forEach(f=>{const o=document.createElement("option");o.value=f.id;o.textContent=f.name;s.appendChild(o)});
   if(old&&foods.some(f=>f.id===old))s.value=old;
-  renderFoodChoices(listedFoods);
+  renderFoodPickers();
   document.getElementById("currentFoodName").textContent=selectedFood()?.name||"";
   saveSelectedFood();
   update();
 }
-function renderFoodChoices(listedFoods){
-  const panel=document.getElementById("foodChoicePanel"),list=document.getElementById("foodChoiceList"),selectedId=document.getElementById("food").value;
-  panel.classList.toggle("hidden",!foodChoicesOpen);list.innerHTML="";
-  document.getElementById("foodChoiceHint").textContent=activeFoodCategory?`${CATEGORY_META[activeFoodCategory]?.label||""}の食材から選んでください`:`すべての食材から選んでください`;
-  listedFoods.forEach(f=>{const button=document.createElement("button");button.type="button";button.className="food-choice";button.textContent=f.name;button.setAttribute("aria-current",String(f.id===selectedId));button.onclick=()=>selectFoodCandidate(f.id);list.appendChild(button)});
-  if(foodChoicesOpen)positionFoodChoicePanel();
-}
-function positionFoodChoicePanel(){
-  const panel=document.getElementById("foodChoicePanel"),card=document.querySelector(".food-card"),anchor=foodChoiceAnchor;if(!anchor)return;
-  const cardRect=card.getBoundingClientRect(),anchorRect=anchor.getBoundingClientRect(),panelRect=panel.getBoundingClientRect();
-  const left=Math.max(14,Math.min(anchorRect.left-cardRect.left+anchorRect.width/2-panelRect.width/2,cardRect.width-panelRect.width-14));
-  panel.style.left=`${left}px`;panel.style.top=`${anchorRect.bottom-cardRect.top+7}px`;
-  panel.style.setProperty("--pointer-left",`${Math.max(14,Math.min(anchorRect.left-cardRect.left+anchorRect.width/2-left,panelRect.width-14))}px`);
-}
 function selectFoodCandidate(id){
   const select=document.getElementById("food");if(!foods.some(f=>f.id===id))return;
-  select.value=id;foodChoicesOpen=false;foodChoiceAnchor=null;saveSelectedFood();document.getElementById("currentFoodName").textContent=selectedFood().name;update();
-  document.getElementById("foodChoicePanel").classList.add("hidden");
+  select.value=id;saveSelectedFood();document.getElementById("currentFoodName").textContent=selectedFood().name;update();
   if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor();
 }
 function selectedFood(){return foods.find(f=>f.id===document.getElementById("food").value)||foods[0]}
