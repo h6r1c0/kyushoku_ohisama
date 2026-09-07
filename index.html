@@ -325,7 +325,7 @@ function update(){
     `0歳:${r.r0==null?"未確認":fmt(r.r0)}${f.unit||""}`,
     `1〜2歳:${r.r12==null?"未確認":fmt(r.r12)}${f.unit||""}`,
     `3〜5歳:${r.rm==null?"未確認":fmt(r.rm)}${f.unit||""}`,
-    `学童:${c.cg>0?fmt(gakudoRate):r.rg==null?"未確認":fmt(r.rg)}${c.cg>0||r.rg!=null?f.unit||"":""}`,
+    `学童:${c.cg>0?fmt(gakudoRate)+(f.unit||""):"－"}`,
     `大人:${r.ra==null?"未確認":fmt(r.ra)}${f.unit||""}`
   ];
   const notes=[];if(f.variants.length)notes.push(`${f.optionTitle||"オプション"}:${f.variants[Number(document.getElementById("foodOption").value||0)]?.name||f.variants[0].name}`);
