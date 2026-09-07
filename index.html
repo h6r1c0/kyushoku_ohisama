@@ -152,6 +152,7 @@ label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;p
 const DEFAULT_COUNTS={c0:1,c1:0,c2:5,c3:4,c4:2,c5:5,cg:0,ca:8};
 const DEFAULT_MAX_COUNTS={c0:5,c1:3,c2:6,c3:5,c4:3,c5:6,cg:10,ca:13};
 const SELECTED_FOOD_KEY="kyushokuSelectedFoodId";
+const HOKKE_MIGRATION_KEY="kyushokuHokkeAddedV1";
 const DEFAULT_FOODS=[
  {id:"chicken",name:"鶏もも",unit:"切れ",r0:0,r12:1,rm:2,rg:2,ra:3,packSize:5,packLabel:"枚",note:"0歳は食べない",optionTitle:"",variants:[]},
  {id:"teba",name:"手羽元",unit:"本",r0:null,r12:1,rm:2,rg:2,ra:2,packSize:1,packLabel:"本",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
@@ -159,6 +160,7 @@ const DEFAULT_FOODS=[
  {id:"sasami",name:"ささみ",unit:"切れ",r0:0.333333,r12:1,rm:2,rg:2,ra:3,packSize:2,packLabel:"本",note:"0歳3人で約1本",optionTitle:"",variants:[]},
  {id:"pork",name:"豚・生姜焼き用",unit:"枚",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"枚",note:"0歳量は未確認",optionTitle:"",variants:[]},
  {id:"saba",name:"サバ",unit:"切れ",r0:null,r12:0.333333,rm:0.5,rg:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳量は未確認",optionTitle:"",variants:[]},
+ {id:"hokke",name:"ホッケ",unit:"切れ",r0:null,r12:0.333333,rm:0.5,rg:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳量は未確認",optionTitle:"",variants:[]},
  {id:"shishamo",name:"ししゃも",unit:"尾",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"尾",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
    {name:"標準",r0:null,r12:1,rm:2,rg:2,ra:3},{name:"小さめ",r0:null,r12:1,rm:2,rg:2,ra:4}]},
  {id:"buri",name:"ブリ",unit:"切れ",r0:null,r12:0.5,rm:1,rg:1,ra:1,packSize:1,packLabel:"切れ",note:"1〜2歳は1/2切れかも。未確定",optionTitle:"",variants:[]},
@@ -182,7 +184,18 @@ function load(){
   foods=savedFoodsV6||savedFoodsV5||clone(DEFAULT_FOODS);
   if(!Array.isArray(foods)||!foods.length)foods=clone(DEFAULT_FOODS);
   foods=foods.map(normalizeFood);
-  if(!Array.isArray(savedFoodsV6)||!savedFoodsV6.length)saveFoods();
+  const needsHokkeMigration=localStorage.getItem(HOKKE_MIGRATION_KEY)!=="1";
+  const addedHokke=needsHokkeMigration&&addHokkeIfMissing();
+  if(needsHokkeMigration)localStorage.setItem(HOKKE_MIGRATION_KEY,"1");
+  if(addedHokke||!Array.isArray(savedFoodsV6)||!savedFoodsV6.length)saveFoods();
+}
+function addHokkeIfMissing(){
+  if(foods.some(f=>f.id==="hokke"))return false;
+  const saba=foods.find(f=>f.id==="saba")||DEFAULT_FOODS.find(f=>f.id==="saba");
+  const hokke={...clone(saba),id:"hokke",name:"ホッケ"};
+  const sabaIndex=foods.findIndex(f=>f.id==="saba");
+  foods.splice(sabaIndex>=0?sabaIndex+1:foods.length,0,hokke);
+  return true;
 }
 function normalizeFood(f){
   const rm=f.rm!==undefined?f.rm:(f.m!==undefined?f.m:0);
