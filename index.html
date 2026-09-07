@@ -7,32 +7,28 @@
 <title>給食メイン量計算</title>
 <style>
 :root{--bg:#fffaf0;--card:#fff;--text:#3c4035;--muted:#6f7568;--line:#d8e4ca;--green:#86b95d;--green-dark:#527c38;--green-soft:#eef6e6;--orange:#f39a45;--orange-dark:#a94f17;--orange-soft:#fff0df}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif}
-.wrap{max-width:760px;margin:auto;padding:14px}.app-header{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-top:6px solid var(--green);border-radius:20px;padding:12px 14px 14px;margin-bottom:12px;box-shadow:0 3px 12px rgba(94,126,61,.08)}
-.brand-top{color:var(--green-dark);font-size:13px;font-weight:800;letter-spacing:.08em}.brand-main{display:flex;align-items:center;gap:7px;margin-top:3px;white-space:nowrap}.brand-npo{color:var(--green-dark);font-size:13px}.brand-name{color:#6c9f48;font-size:31px;font-weight:900;letter-spacing:.04em;line-height:1}.brand-circles{display:flex;gap:3px}.brand-circles span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--orange);color:#fff;font-size:22px;font-weight:900;text-shadow:0 1px 1px rgba(112,55,12,.55)}.brand-type{position:absolute;right:14px;top:11px;background:var(--orange-soft);color:var(--orange-dark);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:800;letter-spacing:.08em}.app-title{margin-top:10px;padding-top:9px;border-top:2px dotted #dce8cf;font-size:21px;font-weight:900;color:#45493e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:ui-rounded,"Hiragino Maru Gothic ProN","Hiragino Maru Gothic Pro","Yu Gothic","Meiryo",sans-serif;letter-spacing:.01em}
+.wrap{max-width:760px;margin:auto;padding:14px}.app-header{overflow:hidden;background:#fff;border:1px solid var(--line);border-top:6px solid var(--green);border-radius:20px;padding:9px 12px 11px;margin-bottom:12px;box-shadow:0 3px 12px rgba(94,126,61,.08)}
+.brand-logo{width:100%;max-width:380px;aspect-ratio:4.5/1;margin:0 auto;overflow:hidden;border-radius:10px;background:#fff}.brand-logo img{display:block;width:100%;height:auto;transform:translateY(-29.2%)}.app-title{margin-top:7px;padding-top:7px;border-top:2px dotted #dce8cf;font-size:21px;font-weight:900;color:#45493e;text-align:center}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 9px rgba(94,126,61,.06)}
 .grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;padding:11px 9px;border:1px solid #cbd9bd;border-radius:11px;background:#fff;color:var(--text);font-size:18px}input:focus,select:focus{outline:3px solid var(--orange-soft);border-color:var(--orange)}
+strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;padding:11px 9px;border:1px solid #cbd9bd;border-radius:11px;background:#fff;color:var(--text);font:inherit;font-size:18px}input:focus,select:focus{outline:3px solid var(--orange-soft);border-color:var(--orange)}
 .btn{border:0;border-radius:12px;padding:10px 12px;font-weight:800;font-family:inherit}.primary{background:var(--orange);color:#4b2d17}.secondary{background:var(--green-soft);color:var(--green-dark)}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.small{font-size:12px;color:var(--muted);line-height:1.5}.hidden{display:none}
 .inline-option{margin:10px auto 0;max-width:420px}.inline-option select{font-size:16px;padding:8px 10px}
-.food-heading{display:flex;align-items:flex-end;gap:8px}.food-heading label{flex:1}.category-chip{display:flex;align-items:center;justify-content:center;gap:4px;min-width:66px;height:44px;margin-bottom:0;border-radius:12px;background:var(--green-soft);color:var(--green-dark);font-size:13px;font-weight:900}.category-chip.hidden{display:none}.category-chip[data-category="fish"]{background:#e9f5f4;color:#327b78}.category-chip[data-category="tofu"]{background:var(--orange-soft);color:var(--orange-dark)}.category-icon{font-size:21px;line-height:1}.category-chip[data-category="tofu"] .category-icon{display:grid;place-items:center;width:23px;height:21px;border:2px solid currentColor;border-radius:4px;font-size:0}.category-chip[data-category="tofu"] .category-icon::after{content:"";width:7px;height:7px;border:1.5px solid currentColor;border-radius:50%}
+.food-heading{display:flex;align-items:flex-end;gap:8px}.food-heading label{flex:1}.category-chip{display:flex;align-items:center;justify-content:center;gap:4px;min-width:66px;height:44px;margin-bottom:0;border-radius:12px;background:var(--green-soft);color:var(--green-dark);font-size:13px;font-weight:900}.category-chip.hidden{display:none}.category-chip[data-category="fish"]{background:#e9f5f4;color:#327b78}.category-chip[data-category="tofu"]{background:var(--orange-soft);color:var(--orange-dark)}.category-icon{font-size:21px;line-height:1}.category-chip[data-category="tofu"] .category-icon{position:relative;display:block;width:24px;height:19px;border:2px solid currentColor;border-radius:4px;background:#fff;box-shadow:3px -3px 0 -1px #fff,3px -3px 0 1px currentColor;font-size:0}
 .result{text-align:center;padding:18px 4px}.total{font-size:14px;color:var(--muted)}.big{font-size:46px;font-weight:900;line-height:1.08;margin-top:5px;color:var(--green-dark)}.sub{font-size:16px;color:#59636d;margin-top:8px;min-height:22px}.basis{font-size:14px;color:#444;border-top:1px solid #e1e8d9;margin-top:12px;padding-top:10px;line-height:1.55}
 .editor-row{border-top:1px solid #e1e8d9;padding-top:12px;margin-top:12px}.box{border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:8px;background:#fffefb}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-@media(max-width:560px){.brand-name{font-size:27px}.brand-circles span{width:34px;height:34px;font-size:20px}.brand-npo{display:none}.brand-type{font-size:10px}.grid8,.grid5{grid-template-columns:repeat(2,1fr)}.grid3,.grid2{grid-template-columns:1fr}.big{font-size:42px}}
-@media(max-width:370px){.brand-name{font-size:24px}.brand-circles span{width:30px;height:30px;font-size:18px}.brand-main{gap:5px}.brand-type{position:static;display:inline-block;margin-top:6px}}
+@media(max-width:560px){.grid8,.grid5{grid-template-columns:repeat(2,1fr)}.grid3,.grid2{grid-template-columns:1fr}.big{font-size:42px}}
+@media(max-width:370px){.app-header{padding-left:9px;padding-right:9px}.app-title{font-size:20px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header class="app-header">
-  <div class="brand-top">さくらさくらんぼ保育</div>
-  <div class="brand-main">
-    <span class="brand-npo">NPO法人</span>
-    <span class="brand-name">おひさま</span>
-    <span class="brand-circles" aria-label="保育園"><span>保</span><span>育</span><span>園</span></span>
+  <div class="brand-logo">
+    <img src="ohisama_pamphlet.jpg" alt="さくらさくらんぼ保育 NPO法人 おひさま保育園 企業主導型保育">
   </div>
-  <div class="brand-type">企業主導型保育</div>
   <div class="app-title">給食メイン量計算</div>
 </header>
 
