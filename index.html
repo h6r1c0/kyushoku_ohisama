@@ -3,26 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1f4e78">
+<meta name="theme-color" content="#8fbd63">
 <title>給食メイン量計算</title>
 <style>
-:root{--bg:#f5f6f8;--card:#fff;--text:#222;--muted:#68717a;--line:#d6d9dd;--accent:#1f4e78}
+:root{--bg:#fffaf0;--card:#fff;--text:#3c4035;--muted:#6f7568;--line:#d8e4ca;--green:#86b95d;--green-dark:#527c38;--green-soft:#eef6e6;--orange:#f39a45;--orange-dark:#a94f17;--orange-soft:#fff0df}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif}
-.wrap{max-width:760px;margin:auto;padding:14px}h1{font-size:22px;margin:0 0 12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
-.grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;padding:11px 9px;border:1px solid #cfd4d9;border-radius:9px;background:#fff;color:var(--text);font-size:18px}
-.btn{border:0;border-radius:9px;padding:10px 12px;font-weight:800;font-family:inherit}.primary{background:var(--accent);color:#fff}.secondary{background:#e9ecef;color:#333}
+.wrap{max-width:760px;margin:auto;padding:14px}.app-header{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-top:6px solid var(--green);border-radius:20px;padding:12px 14px 14px;margin-bottom:12px;box-shadow:0 3px 12px rgba(94,126,61,.08)}
+.brand-top{color:var(--green-dark);font-size:13px;font-weight:800;letter-spacing:.08em}.brand-main{display:flex;align-items:center;gap:7px;margin-top:3px;white-space:nowrap}.brand-npo{color:var(--green-dark);font-size:13px}.brand-name{color:#6c9f48;font-size:31px;font-weight:900;letter-spacing:.04em;line-height:1}.brand-circles{display:flex;gap:3px}.brand-circles span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--orange);color:#fff;font-size:22px;font-weight:900;text-shadow:0 1px 1px rgba(112,55,12,.55)}.brand-type{position:absolute;right:14px;top:11px;background:var(--orange-soft);color:var(--orange-dark);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:800;letter-spacing:.08em}.app-title{margin-top:10px;padding-top:9px;border-top:2px dotted #dce8cf;font-size:21px;font-weight:900;color:#45493e}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 9px rgba(94,126,61,.06)}
+.grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;padding:11px 9px;border:1px solid #cbd9bd;border-radius:11px;background:#fff;color:var(--text);font-size:18px}input:focus,select:focus{outline:3px solid var(--orange-soft);border-color:var(--orange)}
+.btn{border:0;border-radius:12px;padding:10px 12px;font-weight:800;font-family:inherit}.primary{background:var(--orange);color:#4b2d17}.secondary{background:var(--green-soft);color:var(--green-dark)}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.small{font-size:12px;color:var(--muted);line-height:1.5}.hidden{display:none}
 .inline-option{margin:10px auto 0;max-width:420px}.inline-option select{font-size:16px;padding:8px 10px}
-.result{text-align:center;padding:18px 4px}.total{font-size:14px;color:var(--muted)}.big{font-size:46px;font-weight:900;line-height:1.08;margin-top:5px}.sub{font-size:16px;color:#59636d;margin-top:8px;min-height:22px}.basis{font-size:14px;color:#444;border-top:1px solid #ddd;margin-top:12px;padding-top:10px;line-height:1.55}
-.editor-row{border-top:1px solid #e3e5e8;padding-top:12px;margin-top:12px}.box{border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-@media(max-width:560px){.grid8,.grid5{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.big{font-size:42px}}
+.food-heading{display:flex;align-items:flex-end;gap:8px}.food-heading label{flex:1}.category-chip{display:flex;align-items:center;justify-content:center;gap:4px;min-width:66px;height:44px;margin-bottom:0;border-radius:12px;background:var(--green-soft);color:var(--green-dark);font-size:13px;font-weight:900}.category-chip.hidden{display:none}.category-chip[data-category="fish"]{background:#e9f5f4;color:#327b78}.category-chip[data-category="tofu"]{background:var(--orange-soft);color:var(--orange-dark)}.category-icon{font-size:21px;line-height:1}.category-chip[data-category="tofu"] .category-icon{display:grid;place-items:center;width:23px;height:21px;border:2px solid currentColor;border-radius:4px;font-size:0}.category-chip[data-category="tofu"] .category-icon::after{content:"";width:7px;height:7px;border:1.5px solid currentColor;border-radius:50%}
+.result{text-align:center;padding:18px 4px}.total{font-size:14px;color:var(--muted)}.big{font-size:46px;font-weight:900;line-height:1.08;margin-top:5px;color:var(--green-dark)}.sub{font-size:16px;color:#59636d;margin-top:8px;min-height:22px}.basis{font-size:14px;color:#444;border-top:1px solid #e1e8d9;margin-top:12px;padding-top:10px;line-height:1.55}
+.editor-row{border-top:1px solid #e1e8d9;padding-top:12px;margin-top:12px}.box{border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:8px;background:#fffefb}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:560px){.brand-name{font-size:27px}.brand-circles span{width:34px;height:34px;font-size:20px}.brand-npo{display:none}.brand-type{font-size:10px}.grid8,.grid5{grid-template-columns:repeat(2,1fr)}.grid3,.grid2{grid-template-columns:1fr}.big{font-size:42px}}
+@media(max-width:370px){.brand-name{font-size:24px}.brand-circles span{width:30px;height:30px;font-size:18px}.brand-main{gap:5px}.brand-type{position:static;display:inline-block;margin-top:6px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<h1>🍳 給食メイン量計算</h1>
+<header class="app-header">
+  <div class="brand-top">さくらさくらんぼ保育</div>
+  <div class="brand-main">
+    <span class="brand-npo">NPO法人</span>
+    <span class="brand-name">おひさま</span>
+    <span class="brand-circles" aria-label="保育園"><span>保</span><span>育</span><span>園</span></span>
+  </div>
+  <div class="brand-type">企業主導型保育</div>
+  <div class="app-title">給食メイン量計算</div>
+</header>
 
 <div class="card">
   <div class="section-head">
@@ -42,7 +54,10 @@ label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;p
 </div>
 
 <div class="card">
-  <label>メイン食材<select id="food"></select></label>
+  <div class="food-heading">
+    <div id="foodCategory" class="category-chip hidden" data-category=""><span id="foodCategoryIcon" class="category-icon"></span><span id="foodCategoryLabel"></span></div>
+    <label>メイン食材<select id="food"></select></label>
+  </div>
 
   <div id="foodOptionWrap" class="inline-option hidden">
     <label id="foodOptionLabel">サイズ</label>
@@ -105,8 +120,14 @@ label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;p
   </div>
 
   <div id="foodEditor" class="hidden editor-row">
-    <div class="grid2">
+    <div class="grid3">
       <label>食材名<input id="editName"></label>
+      <label>分類<select id="editCategory">
+        <option value="">選択してください</option>
+        <option value="meat">肉</option>
+        <option value="fish">魚</option>
+        <option value="tofu">豆腐</option>
+      </select></label>
       <label>表示単位<input id="editUnit" placeholder="切れ／本／尾など"></label>
     </div>
     <div class="grid5" style="margin-top:8px">
@@ -155,23 +176,28 @@ const SELECTED_FOOD_KEY="kyushokuSelectedFoodId";
 const HOKKE_MIGRATION_KEY="kyushokuHokkeAddedV1";
 const AJI_HIRAKI_MIGRATION_KEY="kyushokuAjiHirakiAddedV1";
 const DEFAULT_FOODS=[
- {id:"chicken",name:"鶏もも",unit:"切れ",r0:0,r12:1,rm:2,rg:2,ra:3,packSize:5,packLabel:"枚",note:"0歳は食べない",optionTitle:"",variants:[]},
- {id:"teba",name:"手羽元",unit:"本",r0:null,r12:1,rm:2,rg:2,ra:2,packSize:1,packLabel:"本",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
+ {id:"chicken",name:"鶏もも",category:"meat",unit:"切れ",r0:0,r12:1,rm:2,rg:2,ra:3,packSize:5,packLabel:"枚",note:"0歳は食べない",optionTitle:"",variants:[]},
+ {id:"teba",name:"手羽元",category:"meat",unit:"本",r0:null,r12:1,rm:2,rg:2,ra:2,packSize:1,packLabel:"本",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
    {name:"大きめ",r0:null,r12:1,rm:2,rg:2,ra:2},{name:"小さめ",r0:null,r12:1,rm:2,rg:2,ra:3}]},
- {id:"sasami",name:"ささみ",unit:"切れ",r0:0.333333,r12:1,rm:2,rg:2,ra:3,packSize:2,packLabel:"本",note:"0歳3人で約1本",optionTitle:"",variants:[]},
- {id:"pork",name:"豚・生姜焼き用",unit:"枚",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"枚",note:"0歳量は未確認",optionTitle:"",variants:[]},
- {id:"saba",name:"サバ",unit:"切れ",r0:null,r12:0.333333,rm:0.5,rg:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳量は未確認",optionTitle:"",variants:[]},
- {id:"hokke",name:"ホッケ",unit:"切れ",r0:null,r12:0.333333,rm:0.5,rg:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳量は未確認",optionTitle:"",variants:[]},
- {id:"aji_hiraki",name:"アジの開き",unit:"尾",r0:null,r12:0.5,rm:1,rg:1,ra:1,packSize:1,packLabel:"尾",note:"0歳量は未確認",optionTitle:"",variants:[]},
- {id:"shishamo",name:"ししゃも",unit:"尾",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"尾",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
+ {id:"sasami",name:"ささみ",category:"meat",unit:"切れ",r0:0.333333,r12:1,rm:2,rg:2,ra:3,packSize:2,packLabel:"本",note:"0歳3人で約1本",optionTitle:"",variants:[]},
+ {id:"pork",name:"豚・生姜焼き用",category:"meat",unit:"枚",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"枚",note:"0歳量は未確認",optionTitle:"",variants:[]},
+ {id:"saba",name:"サバ",category:"fish",unit:"切れ",r0:null,r12:0.333333,rm:0.5,rg:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳量は未確認",optionTitle:"",variants:[]},
+ {id:"hokke",name:"ホッケ",category:"fish",unit:"切れ",r0:null,r12:0.333333,rm:0.5,rg:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳量は未確認",optionTitle:"",variants:[]},
+ {id:"aji_hiraki",name:"アジの開き",category:"fish",unit:"尾",r0:null,r12:0.5,rm:1,rg:1,ra:1,packSize:1,packLabel:"尾",note:"0歳量は未確認",optionTitle:"",variants:[]},
+ {id:"shishamo",name:"ししゃも",category:"fish",unit:"尾",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"尾",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
    {name:"標準",r0:null,r12:1,rm:2,rg:2,ra:3},{name:"小さめ",r0:null,r12:1,rm:2,rg:2,ra:4}]},
- {id:"buri",name:"ブリ",unit:"切れ",r0:null,r12:0.5,rm:1,rg:1,ra:1,packSize:1,packLabel:"切れ",note:"1〜2歳は1/2切れかも。未確定",optionTitle:"",variants:[]},
- {id:"tofu",name:"豆腐",unit:"切れ",r0:1,r12:1,rm:2,rg:2,ra:3,packSize:8,packLabel:"丁",note:"",optionTitle:"",variants:[]}
+ {id:"buri",name:"ブリ",category:"fish",unit:"切れ",r0:null,r12:0.5,rm:1,rg:1,ra:1,packSize:1,packLabel:"切れ",note:"1〜2歳は1/2切れかも。未確定",optionTitle:"",variants:[]},
+ {id:"tofu",name:"豆腐",category:"tofu",unit:"切れ",r0:1,r12:1,rm:2,rg:2,ra:3,packSize:8,packLabel:"丁",note:"",optionTitle:"",variants:[]}
 ];
 const FOOD_ADDITIONS=[
  {id:"hokke",migrationKey:HOKKE_MIGRATION_KEY,copyFromId:"saba",afterId:"saba"},
  {id:"aji_hiraki",migrationKey:AJI_HIRAKI_MIGRATION_KEY,afterId:"hokke"}
 ];
+const CATEGORY_META={
+ meat:{icon:"🍖",label:"肉"},
+ fish:{icon:"🐟",label:"魚"},
+ tofu:{icon:"",label:"豆腐"}
+};
 let defaults={},maxCounts={},foods=[],editingFoodId=null;
 
 function clone(v){return JSON.parse(JSON.stringify(v))}
@@ -216,8 +242,10 @@ function addNewDefaultFoods(){
 function normalizeFood(f){
   const rm=f.rm!==undefined?f.rm:(f.m!==undefined?f.m:0);
   const ra=f.ra!==undefined?f.ra:(f.a!==undefined?f.a:0);
+  const defaultFood=DEFAULT_FOODS.find(item=>item.id===f.id);
   return {
     ...f,
+    category:f.category||defaultFood?.category||"",
     r0:f.r0!==undefined?f.r0:(f.z!==undefined?f.z:null),
     r12:f.r12!==undefined?f.r12:(f.r2!==undefined?f.r2:(f.r1!==undefined?f.r1:(f.t!==undefined?f.t:null))),
     rm,rg:f.rg!==undefined?f.rg:rm,ra,
@@ -283,6 +311,13 @@ function renderFoods(keepId){
   update();
 }
 function selectedFood(){return foods.find(f=>f.id===document.getElementById("food").value)||foods[0]}
+function renderFoodCategory(f){
+  const chip=document.getElementById("foodCategory"),meta=CATEGORY_META[f.category];
+  chip.classList.toggle("hidden",!meta);
+  chip.dataset.category=meta?f.category:"";
+  document.getElementById("foodCategoryIcon").textContent=meta?.icon||"";
+  document.getElementById("foodCategoryLabel").textContent=meta?.label||"";
+}
 function renderFoodOption(f){
   const w=document.getElementById("foodOptionWrap"),s=document.getElementById("foodOption");
   if(!f.variants.length){w.classList.add("hidden");s.innerHTML="";return}
@@ -308,7 +343,7 @@ function renderGakudoOptions(r,count){
 }
 function update(){
   if(!foods.length)return;
-  const c=counts(),f=selectedFood();renderFoodOption(f);
+  const c=counts(),f=selectedFood();renderFoodCategory(f);renderFoodOption(f);
   const r=activeRates(f),missing=[];
   renderGakudoOptions(r,c.cg);
   const rate=(key,label,count)=>{const v=r[key];if((v===null||v==="")&&count>0){missing.push(label);return 0}return Number(v||0)};
@@ -352,19 +387,20 @@ function setOptionSettings(){document.getElementById("optionSettings").classList
 function toggleFoodEditor(){toggle("foodEditor");if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()}
 function loadFoodEditor(){
   const f=selectedFood();if(!f)return;editingFoodId=f.id;
-  document.getElementById("editName").value=f.name||"";document.getElementById("editUnit").value=f.unit||"";
+  document.getElementById("editName").value=f.name||"";document.getElementById("editCategory").value=f.category||"";document.getElementById("editUnit").value=f.unit||"";
   [["r0","r0"],["r12","r12"],["rm","rm"],["rg","rg"],["ra","ra"]].forEach(([id,k])=>document.getElementById(id).value=f[k]==null?"":f[k]);
   document.getElementById("packSize").value=f.packSize??1;document.getElementById("packLabel").value=f.packLabel||"";document.getElementById("editNote").value=f.note||"";
   document.getElementById("useOptions").checked=f.variants.length>0;document.getElementById("optionTitle").value=f.optionTitle||"サイズ";setOptionSettings();
   for(let i=0;i<3;i++){const v=f.variants[i];document.getElementById(`vName${i}`).value=v?.name||"";["0","12","m","g","a"].forEach(k=>{const key="r"+k;document.getElementById(`v${k}_${i}`).value=v&&v[key]!=null?v[key]:""})}
 }
 function clearFoodEditor(){
-  editingFoodId=null;["editName","editUnit","r0","r12","rm","rg","ra","packSize","packLabel","editNote"].forEach(id=>document.getElementById(id).value="");
+  editingFoodId=null;["editName","editCategory","editUnit","r0","r12","rm","rg","ra","packSize","packLabel","editNote"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("useOptions").checked=false;setOptionSettings();for(let i=0;i<3;i++){document.getElementById(`vName${i}`).value="";["0","12","m","g","a"].forEach(k=>document.getElementById(`v${k}_${i}`).value="")}
 }
 function saveFood(){
   const name=document.getElementById("editName").value.trim();if(!name){alert("食材名を入力してください");return}
-  const item={id:editingFoodId||"food_"+Date.now(),name,unit:document.getElementById("editUnit").value.trim(),r0:nullable("r0"),r12:nullable("r12"),rm:nullable("rm"),rg:nullable("rg"),ra:nullable("ra"),
+  const category=document.getElementById("editCategory").value;if(!CATEGORY_META[category]){alert("分類を選択してください");return}
+  const item={id:editingFoodId||"food_"+Date.now(),name,category,unit:document.getElementById("editUnit").value.trim(),r0:nullable("r0"),r12:nullable("r12"),rm:nullable("rm"),rg:nullable("rg"),ra:nullable("ra"),
     packSize:Number(document.getElementById("packSize").value||1),packLabel:document.getElementById("packLabel").value.trim(),note:document.getElementById("editNote").value.trim(),optionTitle:"",variants:[]};
   if(document.getElementById("useOptions").checked){
     item.optionTitle=document.getElementById("optionTitle").value.trim()||"サイズ";
