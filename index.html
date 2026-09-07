@@ -11,14 +11,14 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Maru Gothic Pro",sans-serif;letter-spacing:.01em}
 .wrap{max-width:760px;margin:auto;padding:14px}.app-header{overflow:hidden;background:#fff;border:1px solid var(--line);border-top:6px solid var(--green);border-radius:20px;padding:9px 12px 11px;margin-bottom:12px;box-shadow:0 3px 12px rgba(94,126,61,.08)}
 .brand-logo{width:100%;max-width:470px;margin:0 auto;padding:1px 4px 2px}.brand-topline{position:relative;display:flex;align-items:flex-end;min-height:43px;padding:0 8px 5px 66px}.brand-topline::after{content:"";position:absolute;left:43px;right:0;bottom:0;height:3px;border-radius:3px;background:var(--orange)}.brand-sprout{position:absolute;left:14px;top:1px;width:58px;height:42px;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58 42'%3E%3Cg fill='%23fff8d9' stroke='%23f39a45' stroke-width='2.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M28.5 18.5C19 19 8 15.5 4 7.5 13 2 24 4.5 28.5 18.5z'/%3E%3Cpath d='M29.5 18C34 6 45 1.5 54 5.5 52.5 14.5 42 19.5 29.5 18z'/%3E%3C/g%3E%3Cpath d='M29 18c-1 8-.2 15.5 0 23' fill='none' stroke='%23f39a45' stroke-width='2.7' stroke-linecap='round'/%3E%3C/svg%3E");z-index:1}.brand-kicker{position:relative;z-index:1;color:#278c46;font-size:clamp(15px,4.6vw,21px);font-weight:700;letter-spacing:.05em;line-height:1.15;white-space:nowrap}.brand-main{display:flex;align-items:center;justify-content:center;gap:clamp(4px,1.5vw,8px);margin-top:7px;white-space:nowrap}.brand-npo{color:#278c46;font-size:clamp(13px,3.7vw,18px);font-weight:700}.brand-name{color:#278c46;font-size:clamp(27px,7.3vw,40px);font-weight:800;letter-spacing:-.04em;line-height:1}.brand-circles{display:flex;gap:3px}.brand-circles span{display:grid;place-items:center;width:clamp(36px,9.5vw,49px);height:clamp(36px,9.5vw,49px);border-radius:50%;background:var(--orange);color:#fff;font-size:clamp(25px,6.8vw,35px);font-weight:800;line-height:1;-webkit-text-stroke:1.5px #278c46;paint-order:stroke fill;text-shadow:0 1px 0 rgba(255,255,255,.45)}.app-title{margin-top:7px;padding:7px 4px 0;border-top:2px dotted #dce8cf;font-size:21px;font-weight:800;color:#45493e;text-align:left}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 9px rgba(94,126,61,.06)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 9px rgba(94,126,61,.06)}.daily-card{border-color:#efd7aa;border-top:4px solid #efb85f;background:linear-gradient(180deg,#fffaf0 0,#fff 72px);box-shadow:0 3px 11px rgba(176,121,38,.08)}.daily-card select{border-color:#e6cfaa}.daily-card select:focus{border-color:#e8aa45;outline-color:#fff0d3}.daily-card strong,.food-card .food-heading label{color:#8d5b18}
 .grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,select{width:100%;margin-top:5px;padding:11px 9px;border:1px solid #cbd9bd;border-radius:11px;background:#fff;color:var(--text);font:inherit;font-size:18px}input:focus,select:focus{outline:3px solid var(--orange-soft);border-color:var(--orange)}
-.btn{border:0;border-radius:12px;padding:10px 12px;font-weight:800;font-family:inherit}.primary{background:var(--orange);color:#4b2d17}.secondary{background:var(--green-soft);color:var(--green-dark)}.toggle-btn{flex:0 0 auto;min-width:max-content;padding:10px 11px;font-size:13px;white-space:nowrap}
+.btn{border:0;border-radius:12px;padding:10px 12px;font-weight:800;font-family:inherit}.primary{background:var(--orange);color:#4b2d17}.secondary{background:var(--green-soft);color:var(--green-dark)}.toggle-btn{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;padding:0}.chevron{width:11px;height:11px;border-right:3px solid currentColor;border-bottom:3px solid currentColor;transform:rotate(45deg) translate(-2px,-2px);transition:transform .18s ease}.toggle-btn[aria-expanded="true"] .chevron{transform:rotate(225deg) translate(-2px,-2px)}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.small{font-size:12px;color:var(--muted);line-height:1.5}.hidden{display:none}
 .inline-option{margin:10px auto 0;max-width:420px}.inline-option select{font-size:16px;padding:8px 10px}
-.food-heading{display:flex;align-items:flex-end;gap:8px}.food-heading label{flex:1}.category-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:72px;height:62px;margin-bottom:0;border:2px solid #ff8b75;border-radius:15px;background:#fbe7df;color:#c66026;font-size:13px;font-weight:800;line-height:1}.category-chip.hidden{display:none}.category-chip[data-category="fish"]{border-color:#48abe2;background:#dceef8;color:#1977b4}.category-chip[data-category="tofu"]{border-color:#f3ad2c;background:#fff1d5;color:#bd7419}.category-icon{display:block;width:36px;height:32px;background-position:center;background-repeat:no-repeat;background-size:contain;font-size:0}.category-chip[data-category="meat"] .category-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 70 62'%3E%3Cpath d='M40 19l8-8c-1-4 2-8 6-8 2 0 3 1 4 3 4-1 7 2 6 6-1 3-3 5-6 5l-8 8' fill='%23fff' stroke='%23784c2c' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M44 19c7 8 3 22-8 29-12 8-28 5-34-5-6-11 3-25 17-30 10-4 19-1 25 6z' fill='%23eb9146' stroke='%23784c2c' stroke-width='4'/%3E%3Ccircle cx='15' cy='36' r='2.5' fill='%23bd6835'/%3E%3Ccircle cx='20' cy='25' r='2.5' fill='%23bd6835'/%3E%3Ccircle cx='27' cy='40' r='2.5' fill='%23bd6835'/%3E%3C/svg%3E")}.category-chip[data-category="fish"] .category-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 70 54'%3E%3Cpath d='M47 15L61 7v34l-14-8' fill='%232d82bd' stroke='%231b65a2' stroke-width='3.5' stroke-linejoin='round'/%3E%3Cpath d='M51 24c-7 14-20 20-33 15C9 36 3 30 1 24 3 18 9 12 18 9c13-5 26 1 33 15z' fill='%233d9dd4' stroke='%231b65a2' stroke-width='3.5' stroke-linejoin='round'/%3E%3Cpath d='M24 10c8 7 8 21 0 28 11 1 21-5 27-14-6-9-16-15-27-14z' fill='%232d82bd' opacity='.75'/%3E%3Ccircle cx='13' cy='20' r='3' fill='%23fff'/%3E%3C/svg%3E")}.category-chip[data-category="tofu"] .category-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 70 64'%3E%3Cpath d='M32 3L57 17 32 31 7 17z' fill='%23fffef8' stroke='%236c5946' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M7 17l25 14v24L7 41z' fill='%23fffdf4' stroke='%236c5946' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M57 17L32 31v24l25-14z' fill='%23f5edda' stroke='%236c5946' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E")}
-.result{text-align:center;padding:18px 4px}.total{font-size:14px;color:var(--muted)}.big{display:flex;align-items:baseline;justify-content:center;gap:5px;line-height:1.05;margin-top:5px;color:var(--green-dark)}.result-number{font-size:52px;font-weight:800}.result-unit{font-size:25px;font-weight:700}.sub{font-size:16px;color:#59636d;margin-top:8px;min-height:22px}.basis{font-size:14px;color:#444;border-top:1px solid #e1e8d9;margin-top:12px;padding-top:10px;line-height:1.6}.basis-notes{margin-top:6px}.basis-notes:empty{display:none}.default-summary{line-height:1.7;word-spacing:.08em}
+.food-filters{margin-bottom:11px}.food-filter-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}.filter-hint{font-size:11px;color:var(--muted)}.food-filter-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.food-heading label{display:block}.category-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;height:68px;margin:0;border:2px solid #ff8b75;border-radius:15px;background:#fbe7df;color:#c66026;font-family:inherit;font-size:13px;font-weight:800;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent}.category-chip[data-category="fish"]{border-color:#48abe2;background:#dceef8;color:#1977b4}.category-chip[data-category="tofu"]{border-color:#f3ad2c;background:#fff1d5;color:#bd7419}.category-chip[aria-pressed="true"]{box-shadow:inset 0 0 0 2px #fff,0 3px 8px rgba(63,83,46,.16);transform:translateY(-1px)}.category-icon{display:block;width:38px;height:35px;background-position:center;background-repeat:no-repeat;background-size:contain;font-size:0}.category-chip[data-category="meat"] .category-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 70 62'%3E%3Cpath d='M40 19l8-8c-1-4 2-8 6-8 2 0 3 1 4 3 4-1 7 2 6 6-1 3-3 5-6 5l-8 8' fill='%23fff' stroke='%23784c2c' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M44 19c7 8 3 22-8 29-12 8-28 5-34-5-6-11 3-25 17-30 10-4 19-1 25 6z' fill='%23eb9146' stroke='%23784c2c' stroke-width='4'/%3E%3Ccircle cx='15' cy='36' r='2.5' fill='%23bd6835'/%3E%3Ccircle cx='20' cy='25' r='2.5' fill='%23bd6835'/%3E%3Ccircle cx='27' cy='40' r='2.5' fill='%23bd6835'/%3E%3C/svg%3E")}.category-chip[data-category="fish"] .category-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 70 54'%3E%3Cpath d='M47 15L61 7v34l-14-8' fill='%232d82bd' stroke='%231b65a2' stroke-width='3.5' stroke-linejoin='round'/%3E%3Cpath d='M51 24c-7 14-20 20-33 15C9 36 3 30 1 24 3 18 9 12 18 9c13-5 26 1 33 15z' fill='%233d9dd4' stroke='%231b65a2' stroke-width='3.5' stroke-linejoin='round'/%3E%3Cpath d='M24 10c8 7 8 21 0 28 11 1 21-5 27-14-6-9-16-15-27-14z' fill='%232d82bd' opacity='.75'/%3E%3Ccircle cx='13' cy='20' r='3' fill='%23fff'/%3E%3C/svg%3E")}.category-chip[data-category="tofu"] .category-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 70 64'%3E%3Cpath d='M32 3L57 17 32 31 7 17z' fill='%23fffef8' stroke='%236c5946' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M7 17l25 14v24L7 41z' fill='%23fffdf4' stroke='%236c5946' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M57 17L32 31v24l25-14z' fill='%23f5edda' stroke='%236c5946' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E")}.selected-category-data{display:none!important}
+.result{text-align:center;padding:18px 4px}.total{font-size:14px;color:var(--muted)}.big{position:relative;display:inline-block;line-height:1.05;margin-top:5px;color:var(--green-dark)}.result-number{font-size:52px;font-weight:800}.result-unit{position:absolute;left:calc(100% + 7px);bottom:.13em;font-size:25px;font-weight:700;white-space:nowrap}.sub{font-size:16px;color:#59636d;margin-top:8px;min-height:22px}.basis{font-size:14px;color:#444;border-top:1px solid #e1e8d9;margin-top:12px;padding-top:10px;line-height:1.6}.basis-notes{margin-top:6px}.basis-notes:empty{display:none}.default-summary{line-height:1.7;word-spacing:.08em}
 .editor-row{border-top:1px solid #e1e8d9;padding-top:12px;margin-top:12px}.box{border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:8px;background:#fffefb}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 @media(max-width:560px){.grid8,.grid5{grid-template-columns:repeat(2,1fr)}.grid3,.grid2{grid-template-columns:1fr}.result-number{font-size:50px}.result-unit{font-size:23px}}
 @media(max-width:370px){.app-header{padding-left:9px;padding-right:9px}.brand-logo{padding-left:0;padding-right:0}.brand-topline{padding-left:58px}.brand-sprout{left:8px}.brand-topline::after{left:37px}.brand-kicker{letter-spacing:.02em}.brand-main{gap:3px}.app-title{font-size:20px}}
@@ -38,7 +38,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
   <div class="app-title">給食メイン量計算</div>
 </header>
 
-<div class="card">
+<div class="card daily-card people-card">
   <div class="section-head">
     <div><strong>今日の人数</strong><div class="small">最初は基本人数が入っています。必要なところだけ直して使えます。</div></div>
     <button class="btn secondary" onclick="resetCurrentCounts()">基本人数に戻す</button>
@@ -55,11 +55,19 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
   </div>
 </div>
 
-<div class="card">
+<div class="card daily-card food-card">
+  <div class="food-filters">
+    <div class="food-filter-head"><strong>分類で絞る</strong><span class="filter-hint">もう一度押すと全食材</span></div>
+    <div class="food-filter-buttons" role="group" aria-label="メイン食材の分類">
+      <button type="button" class="category-chip" data-category="meat" aria-pressed="false" onclick="setFoodFilter('meat')"><span class="category-icon" aria-hidden="true"></span><span>肉</span></button>
+      <button type="button" class="category-chip" data-category="fish" aria-pressed="false" onclick="setFoodFilter('fish')"><span class="category-icon" aria-hidden="true"></span><span>魚</span></button>
+      <button type="button" class="category-chip" data-category="tofu" aria-pressed="false" onclick="setFoodFilter('tofu')"><span class="category-icon" aria-hidden="true"></span><span>豆腐</span></button>
+    </div>
+  </div>
   <div class="food-heading">
-    <div id="foodCategory" class="category-chip hidden" data-category=""><span id="foodCategoryIcon" class="category-icon"></span><span id="foodCategoryLabel"></span></div>
     <label>メイン食材<select id="food"></select></label>
   </div>
+  <div id="foodCategory" class="selected-category-data hidden" data-category=""><span id="foodCategoryIcon"></span><span id="foodCategoryLabel"></span></div>
 
   <div id="foodOptionWrap" class="inline-option hidden">
     <label id="foodOptionLabel">サイズ</label>
@@ -82,7 +90,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 <div class="card">
   <div class="section-head">
     <div><strong>基本人数の設定</strong><div class="small">年度替わり・保育体制変更のときだけ変更。</div></div>
-    <button class="btn secondary toggle-btn" onclick="toggle('defaultsEditor')">開く / 閉じる</button>
+    <button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="defaultsEditor" aria-label="基本人数の設定を開く" data-label="基本人数の設定" onclick="toggleSection('defaultsEditor',this)"><span class="chevron" aria-hidden="true"></span></button>
   </div>
   <div id="defaultsEditor" class="hidden editor-row">
     <div class="grid8">
@@ -118,7 +126,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 <div class="card">
   <div class="section-head">
     <div><strong>食材・ルール編集</strong><div class="small">食材追加、1人量、サイズ違いを変更できます。</div></div>
-    <button class="btn secondary toggle-btn" onclick="toggleFoodEditor()">開く / 閉じる</button>
+    <button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="foodEditor" aria-label="食材・ルール編集を開く" data-label="食材・ルール編集" onclick="toggleFoodEditor(this)"><span class="chevron" aria-hidden="true"></span></button>
   </div>
 
   <div id="foodEditor" class="hidden editor-row">
@@ -200,13 +208,18 @@ const CATEGORY_META={
  fish:{icon:"🐟",label:"魚"},
  tofu:{icon:"",label:"豆腐"}
 };
-let defaults={},maxCounts={},foods=[],editingFoodId=null;
+let defaults={},maxCounts={},foods=[],editingFoodId=null,activeFoodCategory="";
 
 function clone(v){return JSON.parse(JSON.stringify(v))}
 function num(id){return Math.max(0,Number(document.getElementById(id).value||0))}
 function nullable(id){const v=document.getElementById(id).value;return v===""?null:Number(v)}
 function fmt(n){const x=Number(n);if(Math.abs(x-1/3)<0.01)return"1/3";if(Math.abs(x-2/3)<0.01)return"2/3";if(Math.abs(x-.5)<.001)return"1/2";return String(Math.round(x*100)/100)}
 function toggle(id){document.getElementById(id).classList.toggle("hidden")}
+function toggleSection(id,button){
+  const panel=document.getElementById(id),opening=panel.classList.contains("hidden");
+  panel.classList.toggle("hidden");button.setAttribute("aria-expanded",String(opening));
+  button.setAttribute("aria-label",`${button.dataset.label}を${opening?"閉じる":"開く"}`);return opening;
+}
 function stored(key){try{return JSON.parse(localStorage.getItem(key))}catch(e){return null}}
 
 function load(){
@@ -305,10 +318,20 @@ function saveMaxCounts(){
 }
 function counts(){return{c0:num("c0"),c1:num("c1"),c2:num("c2"),c3:num("c3"),c4:num("c4"),c5:num("c5"),cg:num("cg"),ca:num("ca")}}
 
+function updateFoodFilterButtons(){
+  document.querySelectorAll(".category-chip").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.category===activeFoodCategory)));
+}
+function setFoodFilter(category){
+  activeFoodCategory=activeFoodCategory===category?"":category;renderFoods();
+}
 function renderFoods(keepId){
-  const s=document.getElementById("food"),old=keepId||s.value||localStorage.getItem(SELECTED_FOOD_KEY);s.innerHTML="";
-  foods.forEach(f=>{const o=document.createElement("option");o.value=f.id;o.textContent=f.name;s.appendChild(o)});
-  if(old&&foods.some(f=>f.id===old))s.value=old;
+  const s=document.getElementById("food"),old=keepId||s.value||localStorage.getItem(SELECTED_FOOD_KEY);
+  if(keepId&&activeFoodCategory&&!foods.some(f=>f.id===keepId&&f.category===activeFoodCategory))activeFoodCategory="";
+  let listedFoods=activeFoodCategory?foods.filter(f=>f.category===activeFoodCategory):foods;
+  if(!listedFoods.length){activeFoodCategory="";listedFoods=foods}
+  updateFoodFilterButtons();s.innerHTML="";
+  listedFoods.forEach(f=>{const o=document.createElement("option");o.value=f.id;o.textContent=f.name;s.appendChild(o)});
+  if(old&&listedFoods.some(f=>f.id===old))s.value=old;
   saveSelectedFood();
   update();
 }
@@ -358,7 +381,7 @@ function update(){
   document.getElementById("total").textContent=`合計 ${people}人`;
   document.getElementById("resultNumber").textContent=qty;
   document.getElementById("resultUnit").textContent=f.packLabel||f.unit||"";
-  document.getElementById("subResult").textContent=`余り ${fmt(rem)}${f.unit||""}`+(missing.length?`・＋${missing.join("・")}分`:"");
+  document.getElementById("subResult").textContent=`余り ${fmt(rem)}${f.unit||""}`+(missing.length?` ＋${missing.join("・")}分`:"");
   const bits=[
     `0歳:${r.r0==null?"未確認":fmt(r.r0)+(f.unit||"")}`,
     `1〜2歳:${r.r12==null?"未確認":fmt(r.r12)}${f.unit||""}`,
@@ -388,7 +411,7 @@ function buildVariantRows(){
   }
 }
 function setOptionSettings(){document.getElementById("optionSettings").classList.toggle("hidden",!document.getElementById("useOptions").checked)}
-function toggleFoodEditor(){toggle("foodEditor");if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()}
+function toggleFoodEditor(button){if(toggleSection("foodEditor",button))loadFoodEditor()}
 function loadFoodEditor(){
   const f=selectedFood();if(!f)return;editingFoodId=f.id;
   document.getElementById("editName").value=f.name||"";document.getElementById("editCategory").value=f.category||"";document.getElementById("editUnit").value=f.unit||"";
