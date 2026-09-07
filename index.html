@@ -153,6 +153,7 @@ const DEFAULT_COUNTS={c0:1,c1:0,c2:5,c3:4,c4:2,c5:5,cg:0,ca:8};
 const DEFAULT_MAX_COUNTS={c0:5,c1:3,c2:6,c3:5,c4:3,c5:6,cg:10,ca:13};
 const SELECTED_FOOD_KEY="kyushokuSelectedFoodId";
 const HOKKE_MIGRATION_KEY="kyushokuHokkeAddedV1";
+const AJI_HIRAKI_MIGRATION_KEY="kyushokuAjiHirakiAddedV1";
 const DEFAULT_FOODS=[
  {id:"chicken",name:"鶏もも",unit:"切れ",r0:0,r12:1,rm:2,rg:2,ra:3,packSize:5,packLabel:"枚",note:"0歳は食べない",optionTitle:"",variants:[]},
  {id:"teba",name:"手羽元",unit:"本",r0:null,r12:1,rm:2,rg:2,ra:2,packSize:1,packLabel:"本",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
@@ -161,10 +162,15 @@ const DEFAULT_FOODS=[
  {id:"pork",name:"豚・生姜焼き用",unit:"枚",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"枚",note:"0歳量は未確認",optionTitle:"",variants:[]},
  {id:"saba",name:"サバ",unit:"切れ",r0:null,r12:0.333333,rm:0.5,rg:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳量は未確認",optionTitle:"",variants:[]},
  {id:"hokke",name:"ホッケ",unit:"切れ",r0:null,r12:0.333333,rm:0.5,rg:0.5,ra:0.666667,packSize:1,packLabel:"切れ",note:"0歳量は未確認",optionTitle:"",variants:[]},
+ {id:"aji_hiraki",name:"アジの開き",unit:"尾",r0:null,r12:0.5,rm:1,rg:1,ra:1,packSize:1,packLabel:"尾",note:"0歳量は未確認",optionTitle:"",variants:[]},
  {id:"shishamo",name:"ししゃも",unit:"尾",r0:null,r12:1,rm:2,rg:2,ra:3,packSize:1,packLabel:"尾",note:"0歳量は未確認",optionTitle:"サイズ",variants:[
    {name:"標準",r0:null,r12:1,rm:2,rg:2,ra:3},{name:"小さめ",r0:null,r12:1,rm:2,rg:2,ra:4}]},
  {id:"buri",name:"ブリ",unit:"切れ",r0:null,r12:0.5,rm:1,rg:1,ra:1,packSize:1,packLabel:"切れ",note:"1〜2歳は1/2切れかも。未確定",optionTitle:"",variants:[]},
  {id:"tofu",name:"豆腐",unit:"切れ",r0:1,r12:1,rm:2,rg:2,ra:3,packSize:8,packLabel:"丁",note:"",optionTitle:"",variants:[]}
+];
+const FOOD_ADDITIONS=[
+ {id:"hokke",migrationKey:HOKKE_MIGRATION_KEY,copyFromId:"saba",afterId:"saba"},
+ {id:"aji_hiraki",migrationKey:AJI_HIRAKI_MIGRATION_KEY,afterId:"hokke"}
 ];
 let defaults={},maxCounts={},foods=[],editingFoodId=null;
 
@@ -184,18 +190,28 @@ function load(){
   foods=savedFoodsV6||savedFoodsV5||clone(DEFAULT_FOODS);
   if(!Array.isArray(foods)||!foods.length)foods=clone(DEFAULT_FOODS);
   foods=foods.map(normalizeFood);
-  const needsHokkeMigration=localStorage.getItem(HOKKE_MIGRATION_KEY)!=="1";
-  const addedHokke=needsHokkeMigration&&addHokkeIfMissing();
-  if(needsHokkeMigration)localStorage.setItem(HOKKE_MIGRATION_KEY,"1");
-  if(addedHokke||!Array.isArray(savedFoodsV6)||!savedFoodsV6.length)saveFoods();
+  const addedFoods=addNewDefaultFoods();
+  if(addedFoods||!Array.isArray(savedFoodsV6)||!savedFoodsV6.length)saveFoods();
 }
-function addHokkeIfMissing(){
-  if(foods.some(f=>f.id==="hokke"))return false;
-  const saba=foods.find(f=>f.id==="saba")||DEFAULT_FOODS.find(f=>f.id==="saba");
-  const hokke={...clone(saba),id:"hokke",name:"ホッケ"};
-  const sabaIndex=foods.findIndex(f=>f.id==="saba");
-  foods.splice(sabaIndex>=0?sabaIndex+1:foods.length,0,hokke);
-  return true;
+function addNewDefaultFoods(){
+  let changed=false;
+  FOOD_ADDITIONS.forEach(addition=>{
+    if(localStorage.getItem(addition.migrationKey)==="1")return;
+    if(!foods.some(f=>f.id===addition.id)){
+      const template=addition.copyFromId
+        ?foods.find(f=>f.id===addition.copyFromId)||DEFAULT_FOODS.find(f=>f.id===addition.copyFromId)
+        :DEFAULT_FOODS.find(f=>f.id===addition.id);
+      const defaultFood=DEFAULT_FOODS.find(f=>f.id===addition.id);
+      if(template&&defaultFood){
+        const food={...clone(template),id:defaultFood.id,name:defaultFood.name};
+        const afterIndex=foods.findIndex(f=>f.id===addition.afterId);
+        foods.splice(afterIndex>=0?afterIndex+1:foods.length,0,food);
+        changed=true;
+      }
+    }
+    localStorage.setItem(addition.migrationKey,"1");
+  });
+  return changed;
 }
 function normalizeFood(f){
   const rm=f.rm!==undefined?f.rm:(f.m!==undefined?f.m:0);
