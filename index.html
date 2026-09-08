@@ -108,26 +108,37 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 
 /* 今回の調整対象だけを上書き。固定済みのロゴ・クラスアイコン形状は維持する。 */
 .app-header{margin:-10px 0 25px -15px}
-.feature-tab{background:linear-gradient(180deg,#f1b15d 0%,#ffe8c9 58%,var(--feature-surface) 100%)}
+.feature-shell{--feature-border:#f0cf9a;--feature-surface:#fffaf3;background:var(--feature-surface);box-shadow:0 4px 16px rgba(104,84,51,.05)}
+.feature-panel{padding:13px 5px 3px}
+.feature-tab{border-color:#e3a54c;background:#f2bc70;color:#68401d}
 .people-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 204 164'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop stop-color='%23ffad35'/%3E%3Cstop offset='1' stop-color='%23f79425'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop stop-color='%23ffd18a'/%3E%3Cstop offset='1' stop-color='%23f7bc62'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='148' cy='69' r='19' fill='url(%23b)'/%3E%3Cpath d='M118 133v-18c0-18 13-32 30-32s30 14 30 32v18z' fill='url(%23b)'/%3E%3Ccircle cx='82' cy='50' r='28' fill='url(%23a)'/%3E%3Cpath d='M39 133v-17c0-26 18-45 43-45s43 19 43 45v17z' fill='url(%23a)'/%3E%3C/svg%3E")}
+.school-cell{display:flex;flex-direction:column;align-items:stretch;padding-bottom:0;transition:min-height .18s ease}
+.school-meal-toggle{position:static;align-self:flex-start;min-height:29px;margin:1px 0 0 14px;padding:3px 4px;font-size:10px}
+.fruit-adult-control{display:inline-flex;align-self:flex-start;flex:0 0 auto;max-height:34px;min-height:34px;margin:0 0 0 14px;padding:2px 3px;border:0;background:transparent;font-size:10px;overflow:hidden;opacity:1;transition:max-height .18s ease,min-height .18s ease,opacity .13s ease}
+.fruit-adult-control.hidden{display:inline-flex;max-height:0;min-height:0;padding-top:0;padding-bottom:0;opacity:0;visibility:hidden;pointer-events:none}
+.fruit-adult-control .people-summary-icon{flex-basis:14px;width:14px;height:14px}
+.fruit-adult-control select{width:34px;padding:3px 2px;font-size:12px}
+.people-footer{justify-content:flex-end;margin-top:4px}
 .rice-summary .people-summary-icon{filter:none;mix-blend-mode:normal}
 .inline-option{margin-left:12px;margin-right:4px}
 .variant-choice{align-items:center;line-height:1.2}
 .variant-name,.variant-diff{display:inline-flex;align-items:center;line-height:1.2}
-.result-main{padding-bottom:0}
-.big{grid-template-areas:none;align-items:end;row-gap:0}
-.result-number{grid-area:auto;grid-column:1;grid-row:1/3;align-self:end;line-height:.9}
-.result-unit{grid-area:auto;grid-column:2;grid-row:1;align-self:end;line-height:1}
-.sub{grid-area:auto;grid-column:2;grid-row:2;align-self:end;line-height:1.35}
-.basis{margin-top:0}
+.result-main{padding:6px 14px 2px}
+.big{display:flex;width:100%;align-items:baseline;gap:0;margin-top:0;line-height:1}
+.result-number{grid-area:auto;align-self:auto;line-height:.9;transform:translateY(-1px)}
+.result-unit{grid-area:auto;align-self:auto;margin-left:5px;line-height:1}
+.sub{grid-area:auto;align-self:auto;min-height:0;margin:0 0 0 12px;line-height:1.25}
+.sub:empty{display:none}
+.basis{margin-top:3px}
 .basis-notes{line-height:1.35}
+@media(max-width:370px){.school-meal-toggle,.fruit-adult-control{margin-left:8px}.fruit-adult-control{gap:2px}.fruit-adult-control .person-unit{display:none}.result-main{padding-left:11px;padding-right:11px}.result-unit{margin-left:4px}.sub{margin-left:7px;font-size:11px}}
 </style>
 </head>
 <body>
 <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
   <defs>
     <filter id="rice-white-visibility" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
-      <feColorMatrix type="matrix" values="1 0 0 0 .1  0 1 0 0 .1  0 0 1 0 .1  -4 -4 -4 0 12"/>
+      <feColorMatrix type="matrix" values="1.5 0 0 0 -.5  0 1.5 0 0 -.5  0 0 1.5 0 -.5  -4 -4 -4 0 12"/>
       <feComponentTransfer><feFuncA type="linear" slope="3.4"/></feComponentTransfer>
     </filter>
     <symbol id="class-icon-kingyo" viewBox="0 0 291 245">
@@ -197,10 +208,10 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
     <div class="school-cell" aria-label="学童の人数と給食設定">
       <label class="school-count"><span class="class-label"><svg class="class-icon class-randoseru" viewBox="0 0 260 251" aria-hidden="true"><use href="#class-icon-randoseru"/></svg>学童</span><select id="cg"></select></label>
       <label class="school-meal-toggle"><input id="cgEats" type="checkbox">食べる</label>
+      <label class="fruit-adult-control" aria-label="学童についてくる果物用の大人人数"><svg class="people-summary-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#summary-icon-cherry"/></svg><span class="school-helper-label">大人</span><select id="fruitAdult"></select><span class="person-unit">人</span></label>
     </div>
   </div>
   <div class="people-footer">
-    <label class="fruit-adult-control" aria-label="学童についてくる果物用の大人人数"><svg class="people-summary-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#summary-icon-cherry"/></svg><span class="school-helper-label">大人</span><select id="fruitAdult"></select><span class="person-unit">人</span></label>
     <div class="people-summary" aria-live="polite">
       <span class="people-summary-item" aria-label="全食数"><span class="people-summary-all">全</span><strong id="allMealCount">0</strong></span>
       <span class="people-summary-item" aria-label="果物を用意する人数"><svg class="people-summary-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#summary-icon-cherry"/></svg><strong id="fruitCount">0</strong></span>
@@ -670,7 +681,11 @@ function update(){
   document.getElementById("riceNote").classList.toggle("hidden",c.c0<3);
   document.getElementById("resultNumber").textContent=qty;
   document.getElementById("resultUnit").textContent=f.packLabel||f.unit||"";
-  document.getElementById("subResult").textContent=`余り ${fmt(rem)}${f.unit||""}`+(missing.length?` ＋${missing.join("・")}分`:"");
+  const hasFractionalRate=["r0","r12","rm","rg","ra"].some(key=>r[key]!=null&&Number.isFinite(Number(r[key]))&&!Number.isInteger(Number(r[key])));
+  const remainderIsMeaningful=pack>1||hasFractionalRate,remainderParts=[];
+  if(rem>0.00001||remainderIsMeaningful)remainderParts.push(`余り ${fmt(rem)}${f.unit||""}`);
+  if(missing.length)remainderParts.push(`＋${missing.join("・")}分`);
+  document.getElementById("subResult").textContent=remainderParts.join(" ");
   const rateText=value=>value==null?"未確認":fmt(value)+(f.unit||"");
   document.getElementById("basisR0").textContent=rateText(r.r0);
   document.getElementById("basisR12").textContent=rateText(r.r12);
