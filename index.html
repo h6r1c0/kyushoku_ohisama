@@ -34,6 +34,43 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 @media(max-width:560px){.grid5{grid-template-columns:repeat(2,1fr)}.grid3,.grid2{grid-template-columns:1fr}.regular-people-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.regular-people-grid label,.school-count{font-size:12px}.regular-people-grid select,.school-count select{padding:10px 5px;font-size:18px}.result-number{font-size:62px}.result-unit{font-size:23px}.rate-fields{grid-template-columns:repeat(2,1fr)}.basis-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.basis-item{min-height:68px}.basis-icon{width:25px;height:22px}}
 @media(max-width:370px){.feature-tab{min-height:38px;padding:6px 14px 5px;font-size:16px}.school-group{grid-template-columns:minmax(66px,.82fr) minmax(72px,.9fr) minmax(110px,1.45fr);gap:6px;padding:7px}.school-meal-toggle,.fruit-adult-control{padding:4px;font-size:11px}.fruit-adult-control{gap:3px}.fruit-adult-control .people-summary-icon{display:none}.people-summary{gap:10px;font-size:13px}.people-summary-item{gap:3px}.people-summary-item strong{font-size:16px}.people-summary-icon{flex-basis:18px;width:18px;height:18px}}
 .settings-title strong{color:inherit}
+
+/* 量計算タブ内の仕上げ調整。確定済みのクラス／米素材自体は変更しない。 */
+:root{--bg:#f8fafb}
+.wrap{padding:10px 12px 14px}
+.app-header{margin:0 0 23px -4px}
+.brand-logo-frame{width:172px;height:37px}
+.brand-logo{transform:scale(.365)}
+.feature-shell{--feature-border:#e9b45f;--feature-surface:#fffdfa;margin-top:40px;background:var(--feature-surface);box-shadow:0 3px 13px rgba(89,79,61,.04)}
+.feature-tab{background:linear-gradient(180deg,#eca447 0 6px,#fff0da 6px 72%,var(--feature-surface) 100%);color:#74451c;box-shadow:none}
+.feature-tab::after{bottom:-2px;height:3px;background:var(--feature-surface)}
+.people-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='18' cy='15' r='7.5' fill='%23f4a12a'/%3E%3Ccircle cx='34' cy='18' r='6' fill='%23ffc25b'/%3E%3Cpath d='M4 40c0-9 5.8-15 14-15s14 6 14 15z' fill='%23f4a12a'/%3E%3Cpath d='M27 40c.1-7 4.4-12 10.5-12 5.8 0 9.5 4.8 9.5 12z' fill='%23ffc25b'/%3E%3Cpath d='M26.5 29.5c2.7 2.2 4.3 5.8 4.3 10.5h-5.3c.3-4.4-.5-7.8-2.4-10.5z' fill='%23e68f20' opacity='.6'/%3E%3C/svg%3E")}
+.school-group{display:grid;grid-template-columns:max-content max-content;justify-content:start;align-items:center;gap:6px 8px;margin-top:9px;padding:8px 0 0;border:0;border-top:1px dashed #ead8b8;border-radius:0;background:transparent}
+.school-count{display:grid;grid-template-columns:auto 58px;align-items:center;gap:5px;min-width:0}
+.school-count select{margin-top:0}
+.school-meal-toggle{justify-content:flex-start;min-height:40px;padding:3px 8px;border:0;background:#fffaf1;font-size:12px}
+.school-meal-toggle input{accent-color:var(--orange)}
+.fruit-adult-control{grid-column:1/-1;justify-self:end;min-height:36px;padding:2px 6px;border-color:#eadfc9;background:#fffdf8;font-size:11px}
+.fruit-adult-control.hidden{display:none}
+.fruit-adult-control select{margin-top:0}
+.rice-summary .people-summary-icon{overflow:hidden;border:1px solid #e3d9c7;border-radius:50%;background:#fff;filter:contrast(1.12);mix-blend-mode:normal}
+.current-food{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:0;padding:8px 13px 9px}
+.current-food-name{line-height:1.25}
+.result{text-align:left}
+.result-main{display:flex;flex-direction:column;align-items:flex-start;padding:7px 14px 8px}
+.total{display:none}
+.big{display:flex;align-items:baseline;margin-top:0}
+.result-unit{position:static;margin-left:7px;font-size:25px}
+.sub{margin-top:7px;color:#4b8a31;font-weight:700;text-align:left}
+.basis{margin-top:0;padding:3px 7px 5px;border-radius:0;background:transparent}
+.basis-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}
+.basis-item{gap:0;min-height:57px;padding:3px 1px;border-radius:0;background:transparent}
+.basis-icon{width:25px;height:22px}
+.basis-age{font-size:9px}
+.basis-value{font-size:13px}
+.basis-notes{margin-top:1px;padding:3px 5px 0;border-top:0;font-size:10px}
+@media(max-width:560px){.basis-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.basis-item{min-height:57px}.basis-icon{width:24px;height:21px}}
+@media(max-width:370px){.school-group{grid-template-columns:max-content max-content;gap:5px 6px;padding-top:7px}.school-count{grid-template-columns:auto 54px}.school-meal-toggle{padding:2px 5px}.basis{padding-right:3px;padding-left:3px}.basis-value{font-size:12px}.basis-age{font-size:8.5px}.result-main{padding-left:11px}.people-summary{gap:9px}}
 </style>
 </head>
 <body>
@@ -149,7 +186,6 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 <div class="card result-card">
   <div class="result">
     <div class="result-main">
-      <div id="total" class="total"></div>
       <div id="mainResult" class="big"><span id="resultNumber" class="result-number">—</span><span id="resultUnit" class="result-unit"></span></div>
       <div id="subResult" class="sub"></div>
     </div>
@@ -324,7 +360,7 @@ const CLASS_ICON_META={
   3:{id:"#class-icon-tonbo",viewBox:"0 0 339 243"},4:{id:"#class-icon-tsubame",viewBox:"0 0 322 246"},5:{id:"#class-icon-kamoshika",viewBox:"0 0 205 248"},
   school:{id:"#class-icon-randoseru",viewBox:"0 0 260 251"},adult:{id:"#class-icon-otona",viewBox:"0 0 184 250"}
 };
-let defaults={},maxCounts={},foods=[],editingFoodId=null,activeFoodCategory="";
+let defaults={},maxCounts={},foods=[],editingFoodId=null,activeFoodCategory="",adultCountBeforeSchoolMeal=null;
 
 function clone(v){return JSON.parse(JSON.stringify(v))}
 function num(id){return Math.max(0,Number(document.getElementById(id).value||0))}
@@ -434,7 +470,7 @@ function fillMaxEditor(){
 }
 function resetCurrentCounts(){
   Object.keys(DEFAULT_COUNTS).forEach(k=>document.getElementById(k).value=defaults[k]??0);
-  document.getElementById("cgEats").checked=false;document.getElementById("fruitAdult").value=String(SCHOOL_ADULT_DEFAULT);
+  adultCountBeforeSchoolMeal=null;document.getElementById("cgEats").checked=false;document.getElementById("fruitAdult").value=String(SCHOOL_ADULT_DEFAULT);document.querySelector(".fruit-adult-control").classList.remove("hidden");trimTemporaryCountOptions("ca");
   update();
 }
 function saveDefaultCounts(){
@@ -451,6 +487,25 @@ function saveMaxCounts(){
   maxCounts=entered;saveMaximums();renderCurrentCountOptions();fillMaxEditor();update();alert("最大人数を保存しました");
 }
 function counts(){return{c0:num("c0"),c1:num("c1"),c2:num("c2"),c3:num("c3"),c4:num("c4"),c5:num("c5"),cg:num("cg"),ca:num("ca"),fruitAdult:num("fruitAdult")}}
+function setCountSelectValue(id,value){
+  const select=document.getElementById(id),target=Math.max(0,Math.floor(Number(value)||0));
+  for(let i=0;i<=target;i++)if(![...select.options].some(option=>Number(option.value)===i)){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);select.appendChild(option)}
+  select.value=String(target);
+}
+function trimTemporaryCountOptions(id){
+  const select=document.getElementById(id),current=num(id),limit=Math.max(current,Math.floor(Number(maxCounts[id])||0));
+  [...select.options].forEach(option=>{if(Number(option.value)>limit)option.remove()});
+}
+function handleSchoolMealChange(){
+  const eating=document.getElementById("cgEats").checked,fruitAdultControl=document.querySelector(".fruit-adult-control");
+  if(eating){
+    if(adultCountBeforeSchoolMeal===null)adultCountBeforeSchoolMeal=num("ca");
+    setCountSelectValue("ca",adultCountBeforeSchoolMeal+num("fruitAdult"));
+  }else if(adultCountBeforeSchoolMeal!==null){
+    setCountSelectValue("ca",adultCountBeforeSchoolMeal);adultCountBeforeSchoolMeal=null;trimTemporaryCountOptions("ca");
+  }
+  fruitAdultControl.classList.toggle("hidden",eating);update();
+}
 
 function updateFoodFilterButtons(){
   document.querySelectorAll(".category-chip").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.category===activeFoodCategory)));
@@ -545,13 +600,12 @@ function update(){
   const units=r0*c.c0+r12*(c.c1+c.c2)+rm*(c.c3+c.c4+c.c5)+gakudoRate*schoolMealCount+ra*c.ca;
   const pack=Number(f.packSize||1),qty=Math.ceil(units/pack),rem=qty*pack-units;
   const people=c.c0+c.c1+c.c2+c.c3+c.c4+c.c5+schoolMealCount+c.ca;
-  const fruitPeople=c.c3+c.c4+c.c5+c.cg+c.ca+c.fruitAdult;
+  const fruitPeople=c.c3+c.c4+c.c5+c.cg+c.ca+(document.getElementById("cgEats").checked?0:c.fruitAdult);
   const rice=Math.ceil((people/3)*2)/2;
   document.getElementById("allMealCount").textContent=people;
   document.getElementById("fruitCount").textContent=fruitPeople;
   document.getElementById("riceAmount").textContent=`${fmt(rice)}合`;
   document.getElementById("riceNote").classList.toggle("hidden",c.c0<3);
-  document.getElementById("total").textContent=`合計 ${people}人`;
   document.getElementById("resultNumber").textContent=qty;
   document.getElementById("resultUnit").textContent=f.packLabel||f.unit||"";
   document.getElementById("subResult").textContent=`余り ${fmt(rem)}${f.unit||""}`+(missing.length?` ＋${missing.join("・")}分`:"");
@@ -634,7 +688,7 @@ function deleteFood(){if(!editingFoodId)return;if(!confirm("この食材を削�
 function init(){
   setupAppChrome();load();renderCurrentCountOptions();fillDefaultsEditor();fillMaxEditor();buildEditorControls();buildVariantRows();renderFoods();
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("change",update));
-  document.getElementById("cgEats").addEventListener("change",update);document.getElementById("fruitAdult").addEventListener("change",update);
+  document.getElementById("cgEats").addEventListener("change",handleSchoolMealChange);document.getElementById("fruitAdult").addEventListener("change",update);
   document.getElementById("food").addEventListener("change",()=>{saveSelectedFood();update();if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()});
   document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
 }
