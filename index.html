@@ -71,6 +71,40 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .basis-notes{margin-top:1px;padding:3px 5px 0;border-top:0;font-size:10px}
 @media(max-width:560px){.basis-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.basis-item{min-height:57px}.basis-icon{width:24px;height:21px}}
 @media(max-width:370px){.school-group{grid-template-columns:max-content max-content;gap:5px 6px;padding-top:7px}.school-count{grid-template-columns:auto 54px}.school-meal-toggle{padding:2px 5px}.basis{padding-right:3px;padding-left:3px}.basis-value{font-size:12px}.basis-age{font-size:8.5px}.result-main{padding-left:11px}.people-summary{gap:9px}}
+
+/* 省スペース表示：固定済みアイコン素材の内容には手を加えない。 */
+.app-header{margin:-7px 0 25px -10px}
+.feature-tabs{bottom:calc(100% - 1px)}
+.feature-tab::after{display:none}
+.people-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='17' cy='14' r='7.5' fill='%23f4a12a'/%3E%3Ccircle cx='34' cy='17' r='6.2' fill='%23ffc25b'/%3E%3Cellipse cx='17' cy='37' rx='14' ry='12' fill='%23f4a12a'/%3E%3Cellipse cx='35' cy='39' rx='11.5' ry='10' fill='%23ffc25b'/%3E%3C/svg%3E")}
+.regular-people-grid{align-items:start}
+.school-cell{position:relative;min-width:0;padding-bottom:18px}
+.school-count{display:block;min-width:0}
+.school-count select{width:100%;margin-top:5px}
+.school-meal-toggle{position:absolute;right:0;bottom:-1px;display:flex;align-items:center;gap:3px;min-height:22px;padding:0 2px;border:0;background:transparent;font-size:10px;line-height:1}
+.school-meal-toggle input{width:16px;height:16px}
+.people-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:5px;padding-top:5px;border-top:1px dashed #ead8b8}
+.fruit-adult-control{display:inline-flex;flex:0 0 auto;min-height:30px;margin:0;padding:0;border:0;background:transparent}
+.fruit-adult-control.hidden{display:none}
+.fruit-adult-control select{width:41px;padding:4px 3px}
+.people-summary{flex:0 0 auto;margin:0 0 0 auto;padding:0;gap:11px}
+.rice-summary .people-summary-icon{overflow:visible;border:0;border-radius:0;background:transparent;filter:contrast(1.75) brightness(1.04);mix-blend-mode:multiply}
+.inline-option{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:7px;max-width:none;margin-top:8px}
+.inline-option.hidden{display:none}
+.inline-option>label{margin:0;white-space:nowrap}
+.variant-choice-list{display:flex;gap:6px;margin:0;min-width:0}
+.variant-choice{display:flex;flex:1 1 0;justify-content:center;gap:4px;min-width:0;min-height:40px;padding:5px 7px;white-space:nowrap}
+.variant-name{font-size:14px}
+.variant-diff{font-size:10px;text-align:left}
+.result-main{padding:7px 14px 5px}
+.big{display:grid;grid-template-columns:auto auto;grid-template-areas:"number unit" ". remainder";align-items:baseline;column-gap:8px;row-gap:1px}
+.result-number{grid-area:number}
+.result-unit{grid-area:unit;margin:0}
+.sub{grid-area:remainder;margin:0;color:#4b8a31;font-size:14px;white-space:nowrap}
+.basis{margin:2px 8px 0;padding:5px 4px 4px;border-radius:13px;background:rgba(255,255,255,.55)}
+.basis-item{min-height:53px}
+.basis-notes{margin:3px 14px 0;padding:0;color:#746d60;font-size:10px}
+@media(max-width:370px){.people-footer{gap:5px}.people-summary{gap:8px}.fruit-adult-control{font-size:10px}.fruit-adult-control .people-summary-icon{display:block;flex-basis:16px;width:16px;height:16px}.inline-option{gap:5px}.variant-choice-list{gap:4px}.variant-choice{padding:5px 4px}.variant-name{font-size:12px}.variant-diff{font-size:9px}.sub{font-size:12px}.basis{margin-left:5px;margin-right:5px}}
 </style>
 </head>
 <body>
@@ -140,16 +174,18 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
     <label><span class="class-label"><svg class="class-icon class-tsubame" viewBox="0 0 322 246" aria-hidden="true"><use href="#class-icon-tsubame"/></svg>4歳</span><select id="c4"></select></label>
     <label><span class="class-label"><svg class="class-icon class-kamoshika" viewBox="0 0 205 248" aria-hidden="true"><use href="#class-icon-kamoshika"/></svg>5歳</span><select id="c5"></select></label>
     <label><span class="class-label"><svg class="class-icon class-otona" viewBox="0 0 184 250" aria-hidden="true"><use href="#class-icon-otona"/></svg>大人</span><select id="ca"></select></label>
+    <div class="school-cell" aria-label="学童の人数と給食設定">
+      <label class="school-count"><span class="class-label"><svg class="class-icon class-randoseru" viewBox="0 0 260 251" aria-hidden="true"><use href="#class-icon-randoseru"/></svg>学童</span><select id="cg"></select></label>
+      <label class="school-meal-toggle"><input id="cgEats" type="checkbox">食べる</label>
+    </div>
   </div>
-  <div class="school-group" aria-label="学童の人数と補助設定">
-    <label class="school-count"><span class="class-label"><svg class="class-icon class-randoseru" viewBox="0 0 260 251" aria-hidden="true"><use href="#class-icon-randoseru"/></svg>学童</span><select id="cg"></select></label>
-    <label class="school-meal-toggle"><input id="cgEats" type="checkbox">食べる</label>
-    <label class="fruit-adult-control" aria-label="学童についてくる大人の人数"><svg class="people-summary-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#summary-icon-cherry"/></svg><span class="school-helper-label">大人</span><select id="fruitAdult"></select><span class="person-unit">人</span></label>
-  </div>
-  <div class="people-summary" aria-live="polite">
-    <span class="people-summary-item" aria-label="全食数"><span class="people-summary-all">全</span><strong id="allMealCount">0</strong></span>
-    <span class="people-summary-item" aria-label="果物を用意する人数"><svg class="people-summary-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#summary-icon-cherry"/></svg><strong id="fruitCount">0</strong></span>
-    <span class="people-summary-item rice-summary" aria-label="炊飯量の目安"><svg class="people-summary-icon" viewBox="0 0 180 249" aria-hidden="true"><use href="#summary-icon-rice"/></svg><strong id="riceAmount">0合</strong></span>
+  <div class="people-footer">
+    <label class="fruit-adult-control" aria-label="学童についてくる果物用の大人人数"><svg class="people-summary-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#summary-icon-cherry"/></svg><span class="school-helper-label">大人</span><select id="fruitAdult"></select><span class="person-unit">人</span></label>
+    <div class="people-summary" aria-live="polite">
+      <span class="people-summary-item" aria-label="全食数"><span class="people-summary-all">全</span><strong id="allMealCount">0</strong></span>
+      <span class="people-summary-item" aria-label="果物を用意する人数"><svg class="people-summary-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#summary-icon-cherry"/></svg><strong id="fruitCount">0</strong></span>
+      <span class="people-summary-item rice-summary" aria-label="炊飯量の目安"><svg class="people-summary-icon" viewBox="0 0 180 249" aria-hidden="true"><use href="#summary-icon-rice"/></svg><strong id="riceAmount">0合</strong></span>
+    </div>
   </div>
   <div id="riceNote" class="rice-note hidden">※お母さんが多い場合は＋1合</div>
 </div>
@@ -186,8 +222,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 <div class="card result-card">
   <div class="result">
     <div class="result-main">
-      <div id="mainResult" class="big"><span id="resultNumber" class="result-number">—</span><span id="resultUnit" class="result-unit"></span></div>
-      <div id="subResult" class="sub"></div>
+      <div id="mainResult" class="big"><span id="resultNumber" class="result-number">—</span><span id="resultUnit" class="result-unit"></span><div id="subResult" class="sub"></div></div>
     </div>
     <div id="basis" class="basis">
       <div id="basisRates" class="basis-grid">
@@ -197,8 +232,8 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
         <div class="basis-item" data-icon="school"><svg class="basis-icon" aria-hidden="true"><use/></svg><span class="basis-age">学童</span><strong id="basisRg" class="basis-value">—</strong></div>
         <div class="basis-item" data-icon="adult"><svg class="basis-icon" aria-hidden="true"><use/></svg><span class="basis-age">大人</span><strong id="basisRa" class="basis-value">—</strong></div>
       </div>
-      <div id="basisNotes" class="basis-notes"></div>
     </div>
+    <div id="basisNotes" class="basis-notes"></div>
   </div>
 </div>
 
@@ -565,7 +600,7 @@ function renderFoodOption(f){
   w.classList.remove("hidden");document.getElementById("foodOptionLabel").textContent=f.optionTitle||"オプション";
   const old=s.value;s.innerHTML="";f.variants.forEach((v,i)=>{const o=document.createElement("option");o.value=i;o.textContent=v.name;s.appendChild(o)});
   if(old!==""&&Number(old)<f.variants.length)s.value=old;
-  list.innerHTML="";f.variants.forEach((v,i)=>{const button=document.createElement("button");button.type="button";button.className="variant-choice";button.setAttribute("aria-pressed",String(Number(s.value||0)===i));const name=document.createElement("span");name.className="variant-name";name.textContent=v.name;button.appendChild(name);const diff=variantDifferenceText(f,v);if(diff){const detail=document.createElement("span");detail.className="variant-diff";detail.textContent=`※${diff}`;button.appendChild(detail)}button.onclick=()=>selectFoodVariant(i);list.appendChild(button)});
+  list.innerHTML="";f.variants.forEach((v,i)=>{const button=document.createElement("button");button.type="button";button.className="variant-choice";button.setAttribute("aria-pressed",String(Number(s.value||0)===i));const name=document.createElement("span");name.className="variant-name";name.textContent=v.name;button.appendChild(name);const diff=variantDifferenceText(f,v);if(diff){const detail=document.createElement("span");detail.className="variant-diff";detail.textContent=diff;button.appendChild(detail)}button.onclick=()=>selectFoodVariant(i);list.appendChild(button)});
 }
 function variantDifferenceText(f,variant){
   const different=RATE_FIELDS.filter(({key})=>new Set(f.variants.map(v=>v[key]==null?"null":String(Math.round(Number(v[key])*1000000)/1000000))).size>1);
