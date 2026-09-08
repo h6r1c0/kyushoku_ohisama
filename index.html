@@ -105,11 +105,31 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .basis-item{min-height:53px}
 .basis-notes{margin:3px 14px 0;padding:0;color:#746d60;font-size:10px}
 @media(max-width:370px){.people-footer{gap:5px}.people-summary{gap:8px}.fruit-adult-control{font-size:10px}.fruit-adult-control .people-summary-icon{display:block;flex-basis:16px;width:16px;height:16px}.inline-option{gap:5px}.variant-choice-list{gap:4px}.variant-choice{padding:5px 4px}.variant-name{font-size:12px}.variant-diff{font-size:9px}.sub{font-size:12px}.basis{margin-left:5px;margin-right:5px}}
+
+/* 今回の調整対象だけを上書き。固定済みのロゴ・クラスアイコン形状は維持する。 */
+.app-header{margin:-10px 0 25px -15px}
+.feature-tab{background:linear-gradient(180deg,#f1b15d 0%,#ffe8c9 58%,var(--feature-surface) 100%)}
+.people-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 204 164'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop stop-color='%23ffad35'/%3E%3Cstop offset='1' stop-color='%23f79425'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop stop-color='%23ffd18a'/%3E%3Cstop offset='1' stop-color='%23f7bc62'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='148' cy='69' r='19' fill='url(%23b)'/%3E%3Cpath d='M118 133v-18c0-18 13-32 30-32s30 14 30 32v18z' fill='url(%23b)'/%3E%3Ccircle cx='82' cy='50' r='28' fill='url(%23a)'/%3E%3Cpath d='M39 133v-17c0-26 18-45 43-45s43 19 43 45v17z' fill='url(%23a)'/%3E%3C/svg%3E")}
+.rice-summary .people-summary-icon{filter:none;mix-blend-mode:normal}
+.inline-option{margin-left:12px;margin-right:4px}
+.variant-choice{align-items:center;line-height:1.2}
+.variant-name,.variant-diff{display:inline-flex;align-items:center;line-height:1.2}
+.result-main{padding-bottom:0}
+.big{grid-template-areas:none;align-items:end;row-gap:0}
+.result-number{grid-area:auto;grid-column:1;grid-row:1/3;align-self:end;line-height:.9}
+.result-unit{grid-area:auto;grid-column:2;grid-row:1;align-self:end;line-height:1}
+.sub{grid-area:auto;grid-column:2;grid-row:2;align-self:end;line-height:1.35}
+.basis{margin-top:0}
+.basis-notes{line-height:1.35}
 </style>
 </head>
 <body>
 <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
   <defs>
+    <filter id="rice-white-visibility" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="1 0 0 0 .1  0 1 0 0 .1  0 0 1 0 .1  -4 -4 -4 0 12"/>
+      <feComponentTransfer><feFuncA type="linear" slope="3.4"/></feComponentTransfer>
+    </filter>
     <symbol id="class-icon-kingyo" viewBox="0 0 291 245">
       <image href="kyushoku_class_icons_FINAL_rice_speck_removed_ONLY.png" x="-104" y="-44" width="1500" height="1000"/>
     </symbol>
@@ -139,7 +159,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
       <circle cx="11" cy="22" r="7" fill="#ef6653" stroke="#ba4038" stroke-width="1.6"/><circle cx="23" cy="21" r="7" fill="#f07558" stroke="#ba4038" stroke-width="1.6"/><circle cx="8.5" cy="19.5" r="1.5" fill="#ffc0a7"/><circle cx="20.5" cy="18.5" r="1.5" fill="#ffc0a7"/>
     </symbol>
     <symbol id="summary-icon-rice" viewBox="0 0 180 249">
-      <image href="kyushoku_class_icons_FINAL_rice_speck_removed_ONLY.png" x="-1162" y="-714" width="1500" height="1000"/>
+      <image href="kyushoku_class_icons_FINAL_rice_speck_removed_ONLY.png" x="-1162" y="-714" width="1500" height="1000" filter="url(#rice-white-visibility)"/>
     </symbol>
   </defs>
 </svg>
@@ -253,6 +273,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
       <label>5歳<input id="d5" type="number" min="0"></label>
       <label>学童<input id="dg" type="number" min="0"></label>
       <label>大人<input id="da" type="number" min="0"></label>
+      <label>果物大人<input id="dFruitAdult" type="number" min="0"></label>
     </div>
     <div class="actions"><button class="btn primary" onclick="saveDefaultCounts()">基本人数を保存</button></div>
 
@@ -268,6 +289,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
         <label>5歳<input id="m5" type="number" min="0" step="1"></label>
         <label>学童<input id="mg" type="number" min="0" step="1"></label>
         <label>大人<input id="ma" type="number" min="0" step="1"></label>
+        <label>果物大人<input id="mFruitAdult" type="number" min="0" step="1"></label>
       </div>
       <div class="actions"><button class="btn primary" onclick="saveMaxCounts()">最大人数を保存</button></div>
     </div>
@@ -357,6 +379,7 @@ const DEFAULT_COUNTS={c0:1,c1:0,c2:5,c3:4,c4:2,c5:5,cg:7,ca:8};
 const PREVIOUS_DEFAULT_COUNTS={c0:1,c1:0,c2:5,c3:4,c4:2,c5:5,cg:0,ca:8};
 const SCHOOL_DEFAULT_MIGRATION_KEY="kyushokuSchoolDefault7Migrated";
 const SCHOOL_ADULT_DEFAULT=2;
+const SCHOOL_ADULT_MAX=3;
 const DEFAULT_MAX_COUNTS={c0:5,c1:3,c2:6,c3:5,c4:3,c5:6,cg:10,ca:13};
 const SELECTED_FOOD_KEY="kyushokuSelectedFoodId";
 const HOKKE_MIGRATION_KEY="kyushokuHokkeAddedV1";
@@ -426,8 +449,10 @@ function load(){
   }
   defaults=savedDefaults||clone(DEFAULT_COUNTS);
   defaults={...DEFAULT_COUNTS,...defaults};
+  defaults.fruitAdult=Math.max(0,Math.floor(Number(defaults.fruitAdult??SCHOOL_ADULT_DEFAULT)));
   maxCounts=stored("kyushokuMaxCounts")||clone(DEFAULT_MAX_COUNTS);
   maxCounts={...DEFAULT_MAX_COUNTS,...maxCounts};
+  maxCounts.fruitAdult=Math.max(defaults.fruitAdult,Math.floor(Number(maxCounts.fruitAdult??SCHOOL_ADULT_MAX)));
   const savedFoodsV6=stored("kyushokuFoodsV6"),savedFoodsV5=stored("kyushokuFoodsV5");
   foods=savedFoodsV6||savedFoodsV5||clone(DEFAULT_FOODS);
   if(!Array.isArray(foods)||!foods.length)foods=clone(DEFAULT_FOODS);
@@ -493,30 +518,32 @@ function renderCurrentCountOptions(){
     select.value=String(preferred);
   });
   const fruitAdult=document.getElementById("fruitAdult"),oldFruitAdult=fruitAdult.value;
-  fruitAdult.innerHTML="";for(let i=0;i<=3;i++){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);fruitAdult.appendChild(option)}
-  fruitAdult.value=oldFruitAdult!==""&&Number(oldFruitAdult)<=3?oldFruitAdult:String(SCHOOL_ADULT_DEFAULT);
+  fruitAdult.innerHTML="";for(let i=0;i<=maxCounts.fruitAdult;i++){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);fruitAdult.appendChild(option)}
+  fruitAdult.value=oldFruitAdult!==""&&Number(oldFruitAdult)<=maxCounts.fruitAdult?oldFruitAdult:String(defaults.fruitAdult);
 }
 
 function fillDefaultsEditor(){
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(k=>document.getElementById("d"+k.slice(1)).value=defaults[k]);
+  document.getElementById("dFruitAdult").value=defaults.fruitAdult;
 }
 function fillMaxEditor(){
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(k=>document.getElementById("m"+k.slice(1)).value=maxCounts[k]);
+  document.getElementById("mFruitAdult").value=maxCounts.fruitAdult;
 }
 function resetCurrentCounts(){
   Object.keys(DEFAULT_COUNTS).forEach(k=>document.getElementById(k).value=defaults[k]??0);
-  adultCountBeforeSchoolMeal=null;document.getElementById("cgEats").checked=false;document.getElementById("fruitAdult").value=String(SCHOOL_ADULT_DEFAULT);document.querySelector(".fruit-adult-control").classList.remove("hidden");trimTemporaryCountOptions("ca");
+  adultCountBeforeSchoolMeal=null;document.getElementById("cgEats").checked=false;document.getElementById("fruitAdult").value=String(defaults.fruitAdult);document.querySelector(".fruit-adult-control").classList.remove("hidden");trimTemporaryCountOptions("ca");
   update();
 }
 function saveDefaultCounts(){
-  const entered={c0:num("d0"),c1:num("d1"),c2:num("d2"),c3:num("d3"),c4:num("d4"),c5:num("d5"),cg:num("dg"),ca:num("da")};
+  const entered={c0:num("d0"),c1:num("d1"),c2:num("d2"),c3:num("d3"),c4:num("d4"),c5:num("d5"),cg:num("dg"),ca:num("da"),fruitAdult:Math.floor(num("dFruitAdult"))};
   const over=Object.keys(entered).filter(k=>entered[k]>maxCounts[k]);
   if(over.length){alert("基本人数が最大人数を超えています。先に最大人数を変更してください。");return}
   defaults=entered;
   saveDefaults();resetCurrentCounts();alert("基本人数を保存しました");
 }
 function saveMaxCounts(){
-  const entered={c0:Math.floor(num("m0")),c1:Math.floor(num("m1")),c2:Math.floor(num("m2")),c3:Math.floor(num("m3")),c4:Math.floor(num("m4")),c5:Math.floor(num("m5")),cg:Math.floor(num("mg")),ca:Math.floor(num("ma"))};
+  const entered={c0:Math.floor(num("m0")),c1:Math.floor(num("m1")),c2:Math.floor(num("m2")),c3:Math.floor(num("m3")),c4:Math.floor(num("m4")),c5:Math.floor(num("m5")),cg:Math.floor(num("mg")),ca:Math.floor(num("ma")),fruitAdult:Math.floor(num("mFruitAdult"))};
   const under=Object.keys(entered).filter(k=>entered[k]<defaults[k]);
   if(under.length){alert("最大人数が基本人数を下回っています。先に基本人数を変更してください。");return}
   maxCounts=entered;saveMaximums();renderCurrentCountOptions();fillMaxEditor();update();alert("最大人数を保存しました");
@@ -650,8 +677,9 @@ function update(){
   document.getElementById("basisRm").textContent=rateText(r.rm);
   document.getElementById("basisRg").textContent=schoolMealCount>0?fmt(gakudoRate)+(f.unit||""):"－";
   document.getElementById("basisRa").textContent=rateText(r.ra);
-  const notes=[];if(f.variants.length){const variant=f.variants[Number(document.getElementById("foodOption").value||0)]||f.variants[0];notes.push(`${f.optionTitle||"オプション"}:${variant.name}`);const difference=variantDifferenceText(f,variant);if(difference)notes.push(difference)}
-  if(f.note)notes.push(f.note);
+  const notes=[],duplicateNote=/^0歳(?:量は)?未確認$|^0歳は食べない$/;
+  if(Number(f.packSize)>1&&f.packLabel&&f.unit&&f.packLabel!==f.unit)notes.push(`1${f.packLabel}を${fmt(f.packSize)}${f.unit}に切る`);
+  if(f.note&&!duplicateNote.test(f.note.trim()))notes.push(f.note);
   document.getElementById("basisNotes").textContent=notes.map(note=>`※${note}`).join("\n");
 }
 
