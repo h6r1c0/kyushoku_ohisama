@@ -306,6 +306,15 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .setting-field-label.fruit-adult-icons .setting-field-icon{flex-basis:17px;width:17px;height:17px}
 .setting-field-label.fruit-adult-icons .setting-field-icon+.setting-field-icon{margin-left:-3px}
 
+/* 分類は保存用selectを残したまま、本体と同じ3つの正式アイコンで選ぶ。 */
+.category-editor-field{display:grid;align-content:start;gap:5px;color:var(--muted);font-size:13px}
+.category-editor-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.category-editor-choice{display:grid;place-items:center;gap:2px;min-width:0;min-height:67px;padding:5px 2px;border:1px solid #ead4b5;border-radius:11px;background:#fff8ea;color:#675849;font:800 11px/1.1 "M PLUS Rounded 1c",sans-serif}
+.category-editor-choice img{display:block;width:35px;height:32px;object-fit:contain}
+.category-editor-choice[data-category="meat"]{background:#fce8e2;color:#a44f2a}.category-editor-choice[data-category="fish"]{background:#dceefa;color:#176ea8}.category-editor-choice[data-category="tofu"]{background:#fff6d8;color:#95551d}
+.category-editor-choice[aria-pressed="true"]{border:2px solid var(--orange);background:#fff;box-shadow:0 1px 5px rgba(174,113,42,.11)}
+.category-visual-native{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;border:0!important;opacity:0!important;pointer-events:none!important;clip:rect(0 0 0 0)!important;overflow:hidden!important}
+
 /* 通常チェックも、おかゆ・食べると同じオレンジへ統一。 */
 input[type="checkbox"]{accent-color:var(--orange)}
 #useOptions{-webkit-appearance:none;appearance:none;position:relative;display:grid;place-items:center;flex:0 0 17px;width:17px!important;height:17px;margin:0!important;padding:0;border:1.5px solid #a59d91;border-radius:3px;background:#fff;box-shadow:none}
@@ -316,7 +325,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
 /* ヘルプは本体カードを複製し、同じ幅・比率・文言で見せる。 */
 .help-live-scene{position:relative;margin-top:7px;padding:58px 0 58px;overflow:visible}
 .help-live-scene.compact-top{padding-top:44px}
-.help-live-clone{position:relative;z-index:1}
+.help-live-frame{position:relative;width:100%;overflow:visible}.help-live-stage{position:absolute;top:0;left:0;width:720px;transform-origin:left top}.help-live-clone{position:relative;z-index:1;width:720px}
 .help-live-clone .card{margin:0;box-shadow:0 2px 7px rgba(90,79,61,.06)}
 .help-live-clone .settings-card{margin:0}
 .help-live-clone .editor-row{display:block!important}
@@ -330,6 +339,13 @@ input[type="checkbox"]{accent-color:var(--orange)}
 .help-live-food-popup .food-choice{font-size:12px}
 .help-legacy-guide{display:none!important}
 @media(max-width:370px){.soft-select-button{min-height:43px;padding-left:8px;font-size:16px}.help-live-scene{padding-top:54px;padding-bottom:54px}.guide-callout.dynamic-callout{max-width:118px;font-size:8.5px}.setting-field-label{font-size:11px}.setting-field-icon{flex-basis:18px;width:18px;height:18px}}
+
+/* しっぽは上辺を描かないSVG輪郭にし、箱との接合線や枝分かれを作らない。 */
+.guide-callout.leader-down::after,.guide-callout.leader-up::after,.guide-callout.leader-left::after{display:none!important}
+.guide-callout.operation.leader-down::before{width:8px;clip-path:none;background:#fff2de center/100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 100' preserveAspectRatio='none'%3E%3Cpath d='M1 0 L4 99 L7 0' fill='%23fff2de' stroke='%23dc9e45' stroke-width='1.25' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")}
+.guide-callout.operation.leader-up::before{width:8px;clip-path:none;background:#fff2de center/100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 100' preserveAspectRatio='none'%3E%3Cpath d='M1 100 L4 1 L7 100' fill='%23fff2de' stroke='%23dc9e45' stroke-width='1.25' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")}
+.guide-callout.info.leader-down::before{width:8px;background:#f0f7ea center/100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 100' preserveAspectRatio='none'%3E%3Cpath d='M1 0 L4 99 L7 0' fill='%23f0f7ea' stroke='%23a9c99a' stroke-width='1.2' stroke-dasharray='4 4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")}
+.guide-callout.info.leader-up::before{width:8px;background:#f0f7ea center/100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 100' preserveAspectRatio='none'%3E%3Cpath d='M1 100 L4 1 L7 100' fill='%23f0f7ea' stroke='%23a9c99a' stroke-width='1.2' stroke-dasharray='4 4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
@@ -514,12 +530,13 @@ input[type="checkbox"]{accent-color:var(--orange)}
     <div class="small">食材追加、1人量、サイズ違いを変更できます。</div>
     <div class="grid3">
       <label>食材名<input id="editName"></label>
-      <label>分類<select id="editCategory">
-        <option value="">選択してください</option>
-        <option value="meat">肉</option>
-        <option value="fish">魚</option>
-        <option value="tofu">豆腐</option>
-      </select></label>
+      <div class="category-editor-field"><span>分類</span><div id="editCategoryChoices" class="category-editor-choices" role="group" aria-label="食材の分類">
+        <button type="button" class="category-editor-choice" data-category="meat" aria-pressed="false"><img src="02_肉アイコン.png" alt=""><span>肉</span></button>
+        <button type="button" class="category-editor-choice" data-category="fish" aria-pressed="false"><img src="05_魚アイコン_左向き_背景透明.png" alt=""><span>魚</span></button>
+        <button type="button" class="category-editor-choice" data-category="tofu" aria-pressed="false"><img src="03_豆腐アイコン.png" alt=""><span>豆腐</span></button>
+      </div><select id="editCategory" class="category-visual-native" aria-label="食材の分類">
+        <option value="">選択してください</option><option value="meat">肉</option><option value="fish">魚</option><option value="tofu">豆腐</option>
+      </select></div>
       <label class="unit-control">表示単位<select id="editUnitChoice"></select><input id="editUnitOther" class="other-value hidden" placeholder="単位を入力"></label>
     </div>
     <div id="baseRateFields" class="grid5 rate-fields" style="margin-top:8px"></div>
@@ -766,8 +783,15 @@ function decorateSettingsIcons(){
     [...label.childNodes].filter(node=>node.nodeType===Node.TEXT_NODE).forEach(node=>node.remove());
     const head=document.createElement("span");head.className="setting-field-label fruit-adult-icons";
     const cherry=document.createElementNS("http://www.w3.org/2000/svg","svg"),use=document.createElementNS("http://www.w3.org/2000/svg","use");cherry.setAttribute("class","setting-field-icon");cherry.setAttribute("viewBox","0 0 32 32");cherry.setAttribute("aria-hidden","true");use.setAttribute("href","#summary-icon-cherry");cherry.appendChild(use);
-    head.append(cherry,createClassIcon(CLASS_ICON_META.adult),document.createTextNode("果物大人"));label.insertBefore(head,input);
+    head.append(cherry,document.createTextNode("大人"));label.insertBefore(head,input);
   });
+}
+
+function syncCategoryEditor(){
+  const value=document.getElementById("editCategory").value;document.querySelectorAll("#editCategoryChoices .category-editor-choice").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.category===value)));
+}
+function setupCategoryEditor(){
+  const select=document.getElementById("editCategory");document.querySelectorAll("#editCategoryChoices .category-editor-choice").forEach(button=>button.addEventListener("click",()=>{select.value=button.dataset.category;select.dispatchEvent(new Event("change",{bubbles:true}));syncCategoryEditor()}));select.addEventListener("change",syncCategoryEditor);syncCategoryEditor();
 }
 
 function selectLabel(select){return select.options[select.selectedIndex]?.textContent||"選択してください"}
@@ -798,7 +822,7 @@ function openSoftSelect(select,button){
   activeSoftSelect={select,button};button.setAttribute("aria-expanded","true");positionSoftSelect(button);
 }
 function enhanceSelect(select){
-  if(select.closest(".soft-select-wrap")||select.matches(".food-native-select,.food-picker-select"))return;
+  if(select.closest(".soft-select-wrap")||select.matches(".food-native-select,.food-picker-select,.category-visual-native"))return;
   const wrap=document.createElement("span"),button=document.createElement("button");wrap.className="soft-select-wrap";button.type="button";button.className="soft-select-button";button.setAttribute("aria-haspopup","listbox");button.setAttribute("aria-expanded","false");
   const explicit=select.getAttribute("aria-label"),label=select.closest("label"),labelText=[...(label?.childNodes||[])].filter(node=>node.nodeType===Node.TEXT_NODE).map(node=>node.textContent.trim()).filter(Boolean).join(" ");button.setAttribute("aria-label",explicit||`${labelText||"項目"}を選ぶ`);
   select.parentNode.insertBefore(wrap,select);wrap.append(button,select);select.classList.add("soft-select-native");select.tabIndex=-1;select.setAttribute("aria-hidden","true");button.addEventListener("click",event=>{event.preventDefault();openSoftSelect(select,button)});select.addEventListener("change",()=>syncSoftSelect(select));
@@ -1157,11 +1181,11 @@ function loadFoodEditor(){
   RATE_FIELDS.forEach(({key})=>setRateControl(key,f[key]));
   document.getElementById("packSize").value=f.packSize??1;document.getElementById("packLabel").value=f.packLabel||"";document.getElementById("editNote").value=f.note||"";
   document.getElementById("useOptions").checked=f.variants.length>0;document.getElementById("optionTitle").value=f.optionTitle||"サイズ";setOptionSettings();
-  for(let i=0;i<3;i++){const v=f.variants[i];document.getElementById(`vName${i}`).value=v?.name||"";RATE_FIELDS.forEach(({key})=>setRateControl(`v${key.slice(1)}_${i}`,v?v[key]:null))}refreshSoftSelects();
+  for(let i=0;i<3;i++){const v=f.variants[i];document.getElementById(`vName${i}`).value=v?.name||"";RATE_FIELDS.forEach(({key})=>setRateControl(`v${key.slice(1)}_${i}`,v?v[key]:null))}syncCategoryEditor();refreshSoftSelects();
 }
 function clearFoodEditor(){
   editingFoodId=null;["editName","editCategory","packSize","packLabel","editNote"].forEach(id=>document.getElementById(id).value="");setUnitControl("");RATE_FIELDS.forEach(({key})=>setRateControl(key,null));
-  document.getElementById("useOptions").checked=false;setOptionSettings();for(let i=0;i<3;i++){document.getElementById(`vName${i}`).value="";RATE_FIELDS.forEach(({key})=>setRateControl(`v${key.slice(1)}_${i}`,null))}refreshSoftSelects();
+  document.getElementById("useOptions").checked=false;setOptionSettings();for(let i=0;i<3;i++){document.getElementById(`vName${i}`).value="";RATE_FIELDS.forEach(({key})=>setRateControl(`v${key.slice(1)}_${i}`,null))}syncCategoryEditor();refreshSoftSelects();
 }
 function saveFood(){
   const name=document.getElementById("editName").value.trim();if(!name){alert("食材名を入力してください");return}
@@ -1194,7 +1218,10 @@ function addGuideCallout(scene,target,text,type="operation",side="top",gap=8){
   const top=side==="bottom"?targetY+gap:targetY-bubbleRect.height-gap;bubble.style.left=`${left}px`;bubble.style.top=`${Math.max(2,top)}px`;bubble.style.setProperty("--tip",`${Math.max(7,Math.min(bubbleRect.width-7,targetX-left))}px`);bubble.style.setProperty("--leader",`${Math.max(8,gap+2)}px`);
 }
 function makeHelpStep(container,number,title,selector){
-  const section=document.createElement("section"),head=document.createElement("div"),scene=document.createElement("div"),clone=cloneForHelp(selector);section.className="guide-step";head.className="guide-step-head";head.innerHTML=`<span class="guide-step-number">${number}</span><span class="guide-step-title">${title}</span>`;scene.className="help-live-scene";scene.appendChild(clone);section.append(head,scene);container.appendChild(section);return{section,scene,clone};
+  const section=document.createElement("section"),head=document.createElement("div"),scene=document.createElement("div"),frame=document.createElement("div"),stage=document.createElement("div"),clone=cloneForHelp(selector);section.className="guide-step";head.className="guide-step-head";head.innerHTML=number?`<span class="guide-step-number">${number}</span><span class="guide-step-title">${title}</span>`:`<span class="guide-step-title">${title}</span>`;scene.className="help-live-scene";frame.className="help-live-frame";stage.className="help-live-stage";stage.appendChild(clone);frame.appendChild(stage);scene.appendChild(frame);section.append(head,scene);container.appendChild(section);return{section,scene,frame,stage,clone};
+}
+function fitHelpClone(step){
+  const width=720,available=Math.max(260,step.scene.clientWidth),scale=Math.min(1,available/width);step.stage.style.transform=`scale(${scale})`;step.frame.style.height=`${Math.ceil(step.stage.scrollHeight*scale)}px`;step.scene.dataset.helpScale=String(scale);return scale;
 }
 function setHelpSelect(root,id,value){
   const select=root.querySelector(`[data-help-id="${id}"]`);if(!select)return;select.value=String(value);const button=select.closest(".soft-select-wrap")?.querySelector(".soft-select-button");if(button)button.textContent=select.options[select.selectedIndex]?.textContent||String(value);
@@ -1205,38 +1232,32 @@ function renderHelpDaily(){
   people.scene.style.paddingBottom="110px";
   clone.querySelector('[data-help-id="porridgeToggleWrap"]')?.classList.remove("hidden");clone.querySelector('[data-help-id="porridgeCountWrap"]')?.classList.remove("hidden");clone.querySelector(".fruit-adult-control")?.classList.remove("hidden");
   const porridge=clone.querySelector('[data-help-id="porridgeEnabled"]'),school=clone.querySelector('[data-help-id="cgEats"]');if(porridge)porridge.checked=true;if(school)school.checked=false;setHelpSelect(clone,"porridgeCount",1);setHelpSelect(clone,"fruitAdult",2);
-  addGuideCallout(people.scene,helpControl(clone,"c0"),"今日の人数を変更","operation","top",10);
-  addGuideCallout(people.scene,clone.querySelector(".people-card .secondary"),"いつもの人数に戻したい時","operation","top",30);
-  addGuideCallout(people.scene,helpControl(clone,"porridgeEnabled"),"おかゆの子がいたらチェック","operation","bottom",12);
-  addGuideCallout(people.scene,helpControl(clone,"porridgeCount"),"人数を選ぶ","operation","bottom",33);
-  addGuideCallout(people.scene,helpControl(clone,"cgEats"),"学童が給食を食べる日","operation","bottom",12);
-  addGuideCallout(people.scene,helpControl(clone,"fruitAdult"),"果物を食べる大人","operation","bottom",34);
-  addGuideCallout(people.scene,clone.querySelector(".people-summary"),"人数に合わせて自動計算","info","bottom",55);
+  requestAnimationFrame(()=>{fitHelpClone(people);addGuideCallout(people.scene,helpControl(clone,"c0"),"今日の人数を変更","operation","top",10);addGuideCallout(people.scene,clone.querySelector(".people-card .secondary"),"いつもの人数に戻したい時","operation","top",30);addGuideCallout(people.scene,helpControl(clone,"porridgeEnabled"),"おかゆの子がいたらチェック","operation","bottom",12);addGuideCallout(people.scene,helpControl(clone,"porridgeCount"),"人数を選ぶ","operation","bottom",33);addGuideCallout(people.scene,helpControl(clone,"cgEats"),"学童が給食を食べる日","operation","bottom",12);addGuideCallout(people.scene,helpControl(clone,"fruitAdult"),"果物を食べる大人","operation","bottom",34);addGuideCallout(people.scene,clone.querySelector(".people-summary"),"人数に合わせて自動計算","info","bottom",55)});
 
   const food=makeHelpStep(container,2,"メイン食材を選ぶ",".food-card"),foodClone=food.clone;
   food.scene.style.paddingBottom="116px";
   const optionWrap=foodClone.querySelector('[data-help-id="foodOptionWrap"]');optionWrap?.classList.remove("hidden");const current=foodClone.querySelector('[data-help-id="currentFoodName"]');if(current)current.textContent="手羽元";
   const choices=foodClone.querySelector('[data-help-id="foodOptionChoices"]');if(choices)choices.innerHTML='<button type="button" class="variant-choice" aria-pressed="true"><span class="variant-name">大きめ</span><span class="variant-diff">大人 2本</span></button><button type="button" class="variant-choice" aria-pressed="false"><span class="variant-name">小さめ</span><span class="variant-diff">大人 3本</span></button>';
   const meat=foodClone.querySelector('.category-chip[data-category="meat"]'),popup=document.createElement("div");popup.className="food-choice-panel help-live-food-popup";popup.innerHTML='<div class="food-choice-hint">肉から選ぶ</div><div class="food-choice-list"><button class="food-choice">鶏もも</button><button class="food-choice" aria-current="true">手羽元</button><button class="food-choice">ささみ</button></div>';foodClone.appendChild(popup);
-  requestAnimationFrame(()=>{const mr=meat.getBoundingClientRect(),cr=foodClone.getBoundingClientRect();popup.style.top=`${mr.bottom-cr.top+6}px`;popup.style.left="8px";addGuideCallout(food.scene,meat,"まずカテゴリをタップ","operation","top",9);addGuideCallout(food.scene,popup.querySelectorAll(".food-choice")[1],"候補から食材をタップ","operation","bottom",8);addGuideCallout(food.scene,current,"選んだ食材を確認","info","bottom",34);addGuideCallout(food.scene,choices?.querySelector(".variant-choice"),"サイズがある時だけ選ぶ","operation","bottom",55)});
+  requestAnimationFrame(()=>{const mr=meat.getBoundingClientRect(),cr=foodClone.getBoundingClientRect();popup.style.top=`${(mr.bottom-cr.top)+10}px`;popup.style.left="8px";fitHelpClone(food);addGuideCallout(food.scene,meat,"まずカテゴリをタップ","operation","top",9);addGuideCallout(food.scene,popup.querySelectorAll(".food-choice")[1],"候補から食材をタップ","operation","bottom",8);addGuideCallout(food.scene,current,"選んだ食材を確認","info","bottom",34);addGuideCallout(food.scene,choices?.querySelector(".variant-choice"),"サイズがある時だけ選ぶ","operation","bottom",55)});
 
   const result=makeHelpStep(container,3,"必要量を見る",".result-card"),resultClone=result.clone;const note=resultClone.querySelector('[data-help-id="basisNotes"]');if(note&&!note.textContent.trim())note.textContent="※1枚を5切れに切る";
   result.scene.style.paddingBottom="90px";
-  requestAnimationFrame(()=>{addGuideCallout(result.scene,resultClone.querySelector(".result-number"),"今日準備する量","info","top",10);const sub=resultClone.querySelector(".sub");if(sub&&!sub.textContent.trim())sub.textContent="余り 0切れ";addGuideCallout(result.scene,sub,"余りがある時に表示","info","top",38);addGuideCallout(result.scene,resultClone.querySelector(".basis"),"年齢別の1人量","info","bottom",10);addGuideCallout(result.scene,note,"必要な補足だけ表示","info","bottom",36)});
+  requestAnimationFrame(()=>{const sub=resultClone.querySelector(".sub");if(sub&&!sub.textContent.trim())sub.textContent="余り 0切れ";fitHelpClone(result);addGuideCallout(result.scene,resultClone.querySelector(".result-number"),"今日準備する量","info","top",10);addGuideCallout(result.scene,sub,"余りがある時に表示","info","top",38);addGuideCallout(result.scene,resultClone.querySelector(".basis"),"年齢別の1人量","info","bottom",10);addGuideCallout(result.scene,note,"必要な補足だけ表示","info","bottom",36)});
 }
 function renderHelpSettings(){
   const container=document.getElementById("helpPeopleLive");container.innerHTML="";const step=makeHelpStep(container,"","基本人数を変更する",".settings-card:nth-of-type(4)"),clone=step.clone;step.scene.style.paddingBottom="140px";clone.querySelector(".editor-row")?.classList.remove("hidden");
-  requestAnimationFrame(()=>{addGuideCallout(step.scene,helpControl(clone,"d0"),"普段の人数を入力","operation","top",8);addGuideCallout(step.scene,helpControl(clone,"dFruitAdult"),"果物大人も設定","operation","bottom",8);addGuideCallout(step.scene,clone.querySelector('[data-help-id="m0"]'),"選べる最大人数","operation","bottom",30);addGuideCallout(step.scene,clone.querySelector(".actions .primary"),"変更を保存","operation","bottom",50)});
+  requestAnimationFrame(()=>{fitHelpClone(step);addGuideCallout(step.scene,helpControl(clone,"d0"),"普段の人数を入力","operation","top",8);addGuideCallout(step.scene,helpControl(clone,"dFruitAdult"),"🍒大人も設定","operation","bottom",8);addGuideCallout(step.scene,clone.querySelector('[data-help-id="m0"]'),"選べる最大人数","operation","bottom",30);addGuideCallout(step.scene,clone.querySelector(".actions .primary"),"変更を保存","operation","bottom",50)});
 }
 function renderHelpFoodEditor(){
   const container=document.getElementById("helpFoodsLive");container.innerHTML="";const step=makeHelpStep(container,"","食材・ルール編集",".settings-card:nth-of-type(5)"),clone=step.clone;step.scene.style.paddingBottom="170px";clone.querySelector(".editor-row")?.classList.remove("hidden");clone.querySelector('[data-help-id="optionSettings"]')?.classList.remove("hidden");
-  const values={editName:"手羽元",optionTitle:"サイズ",vName0:"大きめ",vName1:"小さめ"};Object.entries(values).forEach(([id,value])=>{const element=clone.querySelector(`[data-help-id="${id}"]`);if(element)element.value=value});const check=clone.querySelector('[data-help-id="useOptions"]');if(check)check.checked=true;
-  requestAnimationFrame(()=>{addGuideCallout(step.scene,clone.querySelector('[data-help-id="editName"]'),"食材名を入力","operation","top",8);addGuideCallout(step.scene,helpControl(clone,"editCategory"),"分類と単位を選ぶ","operation","top",36);addGuideCallout(step.scene,helpControl(clone,"r0Choice"),"年齢別の1人量","operation","bottom",8);addGuideCallout(step.scene,check,"サイズ違いを使う時","operation","bottom",34);addGuideCallout(step.scene,clone.querySelector('[data-help-id="optionTitle"]'),"オプション名","operation","bottom",58);addGuideCallout(step.scene,clone.querySelector('[data-help-id="vName0"]'),"選択肢名と量","operation","bottom",82);addGuideCallout(step.scene,clone.querySelector(".actions .primary"),"保存・更新","operation","bottom",106)});
+  const values={editName:"手羽元",optionTitle:"サイズ",vName0:"大きめ",vName1:"小さめ"};Object.entries(values).forEach(([id,value])=>{const element=clone.querySelector(`[data-help-id="${id}"]`);if(element)element.value=value});const check=clone.querySelector('[data-help-id="useOptions"]');if(check)check.checked=true;clone.querySelectorAll(".category-editor-choice").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.category==="meat")));
+  requestAnimationFrame(()=>{fitHelpClone(step);addGuideCallout(step.scene,clone.querySelector('[data-help-id="editName"]'),"食材名を入力","operation","top",8);addGuideCallout(step.scene,clone.querySelector('.category-editor-choice[data-category="meat"]'),"分類をアイコンで選ぶ","operation","top",36);addGuideCallout(step.scene,helpControl(clone,"r0Choice"),"年齢別の1人量","operation","bottom",8);addGuideCallout(step.scene,check,"サイズ違いを使う時","operation","bottom",34);addGuideCallout(step.scene,clone.querySelector('[data-help-id="optionTitle"]'),"オプション名","operation","bottom",58);addGuideCallout(step.scene,clone.querySelector('[data-help-id="vName0"]'),"選択肢ごとの量","operation","bottom",82);addGuideCallout(step.scene,clone.querySelector(".actions .primary"),"保存・更新","operation","bottom",106)});
 }
 function renderHelpGuides(){renderHelpDaily();renderHelpSettings();renderHelpFoodEditor()}
 
 function init(){
-  setupAppChrome();load();renderCurrentCountOptions();restoreDailyState();fillDefaultsEditor();fillMaxEditor();buildEditorControls();buildVariantRows();decorateSettingsIcons();enhanceSelects();renderFoods(dailyState.foodId);restoringDailyState=false;update();
+  setupAppChrome();load();renderCurrentCountOptions();restoreDailyState();fillDefaultsEditor();fillMaxEditor();buildEditorControls();buildVariantRows();setupCategoryEditor();decorateSettingsIcons();enhanceSelects();renderFoods(dailyState.foodId);restoringDailyState=false;update();
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("change",update));
   document.getElementById("cgEats").addEventListener("change",handleSchoolMealChange);document.getElementById("fruitAdult").addEventListener("change",update);
   document.getElementById("porridgeEnabled").addEventListener("change",update);document.getElementById("porridgeCount").addEventListener("change",()=>{porridgeCountMemory=Math.max(1,Math.floor(num("porridgeCount")));update()});
