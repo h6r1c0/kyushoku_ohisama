@@ -138,15 +138,37 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .basis{margin-top:3px}
 .basis-notes{line-height:1.35}
 @media(max-width:370px){.school-meal-toggle{margin-left:7px}.fruit-adult-control{max-width:calc(100% - 5px);margin-left:5px;gap:1px;font-size:8.5px}.fruit-adult-control .people-summary-icon{flex-basis:11px;width:11px;height:11px}.fruit-adult-control select{width:29px}.result-main{padding-left:11px;padding-right:11px}.result-unit{margin-left:4px}.sub{margin-left:7px;font-size:11px}}
+
+/* 正式PNG素材と0歳おかゆ補助UI。既存の確定クラス素材は変更しない。 */
+.feature-tab::after{display:block;left:0;right:0;bottom:-3px;height:4px;background:var(--feature-surface)}
+.people-icon{background-image:url("04_人数アイコン.png")}
+.meal-icon{background-image:url("06_フォークスプーンアイコン.png")}
+.category-chip[data-category="meat"] .category-icon{background-image:url("02_肉アイコン.png")}
+.category-chip[data-category="fish"] .category-icon{background-image:url("05_魚アイコン.png")}
+.category-chip[data-category="tofu"] .category-icon{background-image:url("03_豆腐アイコン.png")}
+.section-icon,.category-icon{image-rendering:auto}
+.zero-cell,.school-cell{display:flex;min-width:0;flex-direction:column;align-items:stretch}
+.zero-cell>label:first-child,.school-count{display:block;min-width:0}
+.zero-cell>label:first-child select,.school-count select{width:100%;margin-top:5px}
+.porridge-toggle,.porridge-count,.school-meal-toggle,.fruit-adult-control{align-self:flex-start;margin-left:5px;white-space:nowrap}
+.porridge-toggle{display:flex;align-items:center;gap:2px;min-height:29px;margin-top:1px;padding:3px 2px;color:var(--muted);font-size:9px;line-height:1}
+.porridge-toggle.hidden{display:none}
+.porridge-toggle input,.school-meal-toggle input{flex:0 0 16px;width:16px;height:16px;margin:0;accent-color:var(--orange)}
+.porridge-icon{display:block;flex:0 0 13px;width:13px;height:13px;object-fit:contain}
+.porridge-count{display:flex;align-items:center;gap:2px;min-height:30px;padding:1px 2px 2px 20px;color:var(--muted);font-size:9px;line-height:1}
+.porridge-count.hidden{display:none}
+.porridge-count select{width:35px;margin:0;padding:3px 1px;font-size:11px}
+.school-meal-toggle{margin-left:5px;padding-right:1px;padding-left:1px}
+.fruit-adult-control{max-width:calc(100% - 5px);margin-left:5px;gap:1px;overflow:visible}
+.fruit-adult-control select{width:38px;padding-right:1px;padding-left:1px}
+.fruit-adult-control .school-helper-label{font-size:9px}
+.rice-summary .people-summary-icon{display:block;object-fit:contain;image-rendering:auto;filter:none;mix-blend-mode:normal}
+@media(max-width:370px){.porridge-toggle,.porridge-count,.school-meal-toggle,.fruit-adult-control{margin-left:3px}.fruit-adult-control{max-width:calc(100% - 3px)}.fruit-adult-control select{width:36px}.porridge-count{padding-left:17px}}
 </style>
 </head>
 <body>
 <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
   <defs>
-    <filter id="rice-white-visibility" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
-      <feColorMatrix type="matrix" values="1.7 0 0 0 -.7  0 1.7 0 0 -.7  0 0 1.7 0 -.7  -4 -4 -4 0 12"/>
-      <feComponentTransfer><feFuncA type="linear" slope="3.4"/></feComponentTransfer>
-    </filter>
     <symbol id="class-icon-kingyo" viewBox="0 0 291 245">
       <image href="kyushoku_class_icons_FINAL_rice_speck_removed_ONLY.png" x="-104" y="-44" width="1500" height="1000"/>
     </symbol>
@@ -175,9 +197,6 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
       <path d="M16 17C15 9 19 5 25 4M16 17C14 10 10 7 6 7M18 8c3-5 8-6 11-4-2 4-6 6-11 4z" fill="none" stroke="#5f963d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 8c3-5 8-6 11-4-2 4-6 6-11 4z" fill="#8fbd63" stroke="#5f963d" stroke-width="1.4"/>
       <circle cx="11" cy="22" r="7" fill="#ef6653" stroke="#ba4038" stroke-width="1.6"/><circle cx="23" cy="21" r="7" fill="#f07558" stroke="#ba4038" stroke-width="1.6"/><circle cx="8.5" cy="19.5" r="1.5" fill="#ffc0a7"/><circle cx="20.5" cy="18.5" r="1.5" fill="#ffc0a7"/>
     </symbol>
-    <symbol id="summary-icon-rice" viewBox="0 0 180 249">
-      <image href="kyushoku_class_icons_FINAL_rice_speck_removed_ONLY.png" x="-1162" y="-714" width="1500" height="1000" filter="url(#rice-white-visibility)"/>
-    </symbol>
   </defs>
 </svg>
 <div class="wrap">
@@ -204,7 +223,11 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
     <button class="btn secondary" onclick="resetCurrentCounts()">基本人数に戻す</button>
   </div>
   <div class="regular-people-grid">
-    <label><span class="class-label"><svg class="class-icon class-kingyo" viewBox="0 0 291 245" aria-hidden="true"><use href="#class-icon-kingyo"/></svg>0歳</span><select id="c0"></select></label>
+    <div class="zero-cell" aria-label="0歳の人数とおかゆ設定">
+      <label><span class="class-label"><svg class="class-icon class-kingyo" viewBox="0 0 291 245" aria-hidden="true"><use href="#class-icon-kingyo"/></svg>0歳</span><select id="c0"></select></label>
+      <label id="porridgeToggleWrap" class="porridge-toggle hidden"><img class="porridge-icon" src="07_おかゆ茶碗アイコン.png" alt=""><input id="porridgeEnabled" type="checkbox"><span>おかゆ</span></label>
+      <label id="porridgeCountWrap" class="porridge-count hidden"><select id="porridgeCount" aria-label="おかゆを食べる0歳児の人数"></select><span>人</span></label>
+    </div>
     <label><span class="class-label"><svg class="class-icon class-medaka" viewBox="0 0 384 208" aria-hidden="true"><use href="#class-icon-medaka"/></svg>1歳</span><select id="c1"></select></label>
     <label><span class="class-label"><svg class="class-icon class-ahiru" viewBox="0 0 263 247" aria-hidden="true"><use href="#class-icon-ahiru"/></svg>2歳</span><select id="c2"></select></label>
     <label><span class="class-label"><svg class="class-icon class-tonbo" viewBox="0 0 339 243" aria-hidden="true"><use href="#class-icon-tonbo"/></svg>3歳</span><select id="c3"></select></label>
@@ -221,7 +244,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
     <div class="people-summary" aria-live="polite">
       <span class="people-summary-item" aria-label="全食数"><span class="people-summary-all">全</span><strong id="allMealCount">0</strong></span>
       <span class="people-summary-item" aria-label="果物を用意する人数"><svg class="people-summary-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#summary-icon-cherry"/></svg><strong id="fruitCount">0</strong></span>
-      <span class="people-summary-item rice-summary" aria-label="炊飯量の目安"><svg class="people-summary-icon" viewBox="0 0 180 249" aria-hidden="true"><use href="#summary-icon-rice"/></svg><strong id="riceAmount">0合</strong></span>
+      <span class="people-summary-item rice-summary" aria-label="炊飯量の目安"><img class="people-summary-icon" src="01_お米アイコン.png" alt=""><strong id="riceAmount">0合</strong></span>
     </div>
   </div>
   <div id="riceNote" class="rice-note hidden">※お母さんが多い場合は＋1合</div>
@@ -435,7 +458,7 @@ const CLASS_ICON_META={
   3:{id:"#class-icon-tonbo",viewBox:"0 0 339 243"},4:{id:"#class-icon-tsubame",viewBox:"0 0 322 246"},5:{id:"#class-icon-kamoshika",viewBox:"0 0 205 248"},
   school:{id:"#class-icon-randoseru",viewBox:"0 0 260 251"},adult:{id:"#class-icon-otona",viewBox:"0 0 184 250"}
 };
-let defaults={},maxCounts={},foods=[],editingFoodId=null,activeFoodCategory="",adultCountBeforeSchoolMeal=null;
+let defaults={},maxCounts={},foods=[],editingFoodId=null,activeFoodCategory="",adultCountBeforeSchoolMeal=null,porridgeCountMemory=1;
 
 function clone(v){return JSON.parse(JSON.stringify(v))}
 function num(id){return Math.max(0,Number(document.getElementById(id).value||0))}
@@ -535,8 +558,21 @@ function renderCurrentCountOptions(){
     select.value=String(preferred);
   });
   const fruitAdult=document.getElementById("fruitAdult"),oldFruitAdult=fruitAdult.value;
-  fruitAdult.innerHTML="";for(let i=0;i<=maxCounts.fruitAdult;i++){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);fruitAdult.appendChild(option)}
+  fruitAdult.innerHTML="";for(let i=0;i<=maxCounts.fruitAdult;i++){const option=document.createElement("option");option.value=String(i);option.textContent=`${i}人`;fruitAdult.appendChild(option)}
   fruitAdult.value=oldFruitAdult!==""&&Number(oldFruitAdult)<=maxCounts.fruitAdult?oldFruitAdult:String(defaults.fruitAdult);
+}
+
+function syncPorridgeControl(c0){
+  const toggleWrap=document.getElementById("porridgeToggleWrap"),countWrap=document.getElementById("porridgeCountWrap"),enabled=document.getElementById("porridgeEnabled"),select=document.getElementById("porridgeCount");
+  const count=Math.max(0,Math.floor(Number(c0)||0));
+  toggleWrap.classList.toggle("hidden",count<1);
+  if(count<1){enabled.checked=false;countWrap.classList.add("hidden");select.innerHTML="";return 0}
+  porridgeCountMemory=Math.min(count,Math.max(1,Math.floor(Number(porridgeCountMemory)||1)));
+  select.innerHTML="";
+  for(let i=1;i<=count;i++){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);select.appendChild(option)}
+  select.value=String(porridgeCountMemory);
+  countWrap.classList.toggle("hidden",!enabled.checked);
+  return enabled.checked?porridgeCountMemory:0;
 }
 
 function fillDefaultsEditor(){
@@ -550,6 +586,7 @@ function fillMaxEditor(){
 function resetCurrentCounts(){
   Object.keys(DEFAULT_COUNTS).forEach(k=>document.getElementById(k).value=defaults[k]??0);
   adultCountBeforeSchoolMeal=null;document.getElementById("cgEats").checked=false;document.getElementById("fruitAdult").value=String(defaults.fruitAdult);document.querySelector(".fruit-adult-control").classList.remove("hidden");trimTemporaryCountOptions("ca");
+  document.getElementById("porridgeEnabled").checked=false;porridgeCountMemory=1;
   update();
 }
 function saveDefaultCounts(){
@@ -670,6 +707,7 @@ function renderGakudoOptions(r,count){
 function update(){
   if(!foods.length)return;
   const c=counts(),f=selectedFood();renderFoodCategory(f);renderFoodOption(f);
+  const porridgeCount=syncPorridgeControl(c.c0);
   const r=activeRates(f),missing=[],schoolMealCount=document.getElementById("cgEats").checked?c.cg:0;
   renderGakudoOptions(r,schoolMealCount);
   const rate=(key,label,count)=>{const v=r[key];if((v===null||v==="")&&count>0){missing.push(label);return 0}return Number(v||0)};
@@ -680,7 +718,7 @@ function update(){
   const pack=Number(f.packSize||1),qty=Math.ceil(units/pack),rem=qty*pack-units;
   const people=c.c0+c.c1+c.c2+c.c3+c.c4+c.c5+schoolMealCount+c.ca;
   const fruitPeople=c.c3+c.c4+c.c5+c.cg+c.ca+(document.getElementById("cgEats").checked?0:c.fruitAdult);
-  const rice=Math.ceil((people/3)*2)/2;
+  const ricePeople=Math.max(0,people-porridgeCount),rice=Math.ceil((ricePeople/3)*2)/2;
   document.getElementById("allMealCount").textContent=people;
   document.getElementById("fruitCount").textContent=fruitPeople;
   document.getElementById("riceAmount").textContent=`${fmt(rice)}合`;
@@ -773,6 +811,7 @@ function init(){
   setupAppChrome();load();renderCurrentCountOptions();fillDefaultsEditor();fillMaxEditor();buildEditorControls();buildVariantRows();renderFoods();
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("change",update));
   document.getElementById("cgEats").addEventListener("change",handleSchoolMealChange);document.getElementById("fruitAdult").addEventListener("change",update);
+  document.getElementById("porridgeEnabled").addEventListener("change",update);document.getElementById("porridgeCount").addEventListener("change",()=>{porridgeCountMemory=Math.max(1,Math.floor(num("porridgeCount")));update()});
   document.getElementById("food").addEventListener("change",()=>{saveSelectedFood();update();if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()});
   document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
 }
