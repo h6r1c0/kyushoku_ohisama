@@ -1157,11 +1157,11 @@ function loadFoodEditor(){
   RATE_FIELDS.forEach(({key})=>setRateControl(key,f[key]));
   document.getElementById("packSize").value=f.packSize??1;document.getElementById("packLabel").value=f.packLabel||"";document.getElementById("editNote").value=f.note||"";
   document.getElementById("useOptions").checked=f.variants.length>0;document.getElementById("optionTitle").value=f.optionTitle||"サイズ";setOptionSettings();
-  for(let i=0;i<3;i++){const v=f.variants[i];document.getElementById(`vName${i}`).value=v?.name||"";RATE_FIELDS.forEach(({key})=>setRateControl(`v${key.slice(1)}_${i}`,v?v[key]:null))}
+  for(let i=0;i<3;i++){const v=f.variants[i];document.getElementById(`vName${i}`).value=v?.name||"";RATE_FIELDS.forEach(({key})=>setRateControl(`v${key.slice(1)}_${i}`,v?v[key]:null))}refreshSoftSelects();
 }
 function clearFoodEditor(){
   editingFoodId=null;["editName","editCategory","packSize","packLabel","editNote"].forEach(id=>document.getElementById(id).value="");setUnitControl("");RATE_FIELDS.forEach(({key})=>setRateControl(key,null));
-  document.getElementById("useOptions").checked=false;setOptionSettings();for(let i=0;i<3;i++){document.getElementById(`vName${i}`).value="";RATE_FIELDS.forEach(({key})=>setRateControl(`v${key.slice(1)}_${i}`,null))}
+  document.getElementById("useOptions").checked=false;setOptionSettings();for(let i=0;i<3;i++){document.getElementById(`vName${i}`).value="";RATE_FIELDS.forEach(({key})=>setRateControl(`v${key.slice(1)}_${i}`,null))}refreshSoftSelects();
 }
 function saveFood(){
   const name=document.getElementById("editName").value.trim();if(!name){alert("食材名を入力してください");return}
