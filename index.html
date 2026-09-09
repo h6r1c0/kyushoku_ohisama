@@ -166,6 +166,17 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .fruit-adult-control .school-helper-label{font-size:9px;font-weight:700}
 .rice-summary .people-summary-icon{display:block;object-fit:contain;image-rendering:auto;filter:none;mix-blend-mode:normal}
 @media(max-width:370px){.porridge-toggle,.school-meal-toggle,.fruit-adult-control{margin-left:3px}.fruit-adult-control{max-width:calc(100% - 3px);gap:1px}.fruit-adult-control select{width:29px}.porridge-toggle{gap:2px;font-size:9.5px}.porridge-icon{flex-basis:16px;width:16px;height:16px}.porridge-count select{width:32px}}
+
+/* 実運用前の最終調整：補助操作の見え方とヘルプ導線だけを整える。 */
+.porridge-toggle input{flex-basis:14px;width:14px;height:14px}
+.global-help{top:4px;right:8px}
+.global-help-button{border:1px solid #e2c58f;background:linear-gradient(145deg,#fffdf8,#fff1dc);color:#946126;font-size:22px;font-weight:800;box-shadow:0 2px 8px rgba(132,92,43,.12)}
+.global-help-button:hover,.global-help-button:focus-visible{border-color:#d9aa64;background:#fff4e3;outline:3px solid rgba(232,163,75,.18)}
+.global-help-button[aria-expanded="true"]{border-color:#d5933d;background:linear-gradient(145deg,#efad58,#e59a3f);color:#fff}
+.global-help-panel{position:fixed;z-index:100;top:max(56px,calc(env(safe-area-inset-top) + 48px));right:max(14px,env(safe-area-inset-right));width:min(430px,calc(100vw - 28px));max-height:calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 68px);max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 68px);padding:0 10px 10px}
+.global-help-header{position:sticky;z-index:2;top:0;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 -10px 8px;padding:10px 10px 8px;border-bottom:1px solid #e5ded1;background:rgba(251,251,248,.97);backdrop-filter:blur(5px)}
+.global-help-title{margin:0 3px}
+.global-help-close{min-width:76px;min-height:38px;padding:7px 11px;border:1px solid #e2c58f;border-radius:12px;background:#fff7e9;color:#81552a;font:700 13px/1 "M PLUS Rounded 1c",sans-serif}
 </style>
 </head>
 <body>
@@ -389,10 +400,10 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 <aside class="global-help">
   <button type="button" class="global-help-button" aria-expanded="false" aria-controls="helpEditor" aria-label="使い方を開く" data-label="使い方" onclick="toggleSection('helpEditor',this)">?</button>
   <div id="helpEditor" class="hidden global-help-panel help-editor">
-    <div class="global-help-title">使い方</div>
+    <div class="global-help-header"><div class="global-help-title">使い方</div><button type="button" class="global-help-close" onclick="toggleSection('helpEditor',document.querySelector('.global-help-button'))">× 閉じる</button></div>
     <div class="help-topic">
       <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpDaily" aria-label="毎日の使い方を開く" data-label="毎日の使い方" onclick="toggleSection('helpDaily',this)"><span>毎日の使い方</span><span class="chevron" aria-hidden="true"></span></button>
-      <div id="helpDaily" class="hidden help-content"><ol><li>今日食べる人数に合わせる</li><li>肉・魚・豆腐・全部から食材を選ぶ</li><li>大きな数字で必要量を確認する</li></ol></div>
+      <div id="helpDaily" class="hidden help-content"><ol><li>今日の人数を合わせます。</li><li>0歳がおかゆなら「おかゆ」にチェックし、人数を選びます。</li><li>学童が給食を食べる日だけ「食べる」にチェックします。食べない日は、果物を食べる付き添いの大人人数を合わせます。</li><li>肉・魚・豆腐・全部から食材を選びます。</li><li>大きな数字で必要量を確認します。下のアイコン欄では、年齢別の1人量を確認できます。</li></ol><p>「全」は給食を食べる人数、さくらんぼは果物の人数、米粒は炊飯量の目安です。</p></div>
     </div>
     <div class="help-topic">
       <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpChoose" aria-label="食材を探す・選ぶを開く" data-label="食材を探す・選ぶ" onclick="toggleSection('helpChoose',this)"><span>食材を探す・選ぶ</span><span class="chevron" aria-hidden="true"></span></button>
@@ -404,11 +415,11 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
     </div>
     <div class="help-topic">
       <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpPeople" aria-label="基本人数を変更するを開く" data-label="基本人数を変更する" onclick="toggleSection('helpPeople',this)"><span>基本人数を変更する</span><span class="chevron" aria-hidden="true"></span></button>
-      <div id="helpPeople" class="hidden help-content"><p>基本人数は、画面を開いたときに入る「いつもの人数」です。</p><ol><li>「基本人数の設定」を開く</li><li>人数を直す</li><li>「基本人数を保存」を押す</li></ol><p>人数の選択肢を増やすときは、同じ場所の「最大人数の設定」を変更します。</p></div>
+      <div id="helpPeople" class="hidden help-content"><p>基本人数は、画面を開いたときに入る「いつもの人数」です。</p><ol><li>「基本人数の設定」を開く</li><li>人数を直す</li><li>「基本人数を保存」を押す</li></ol><p>果物を食べる付き添いの大人人数も、ここで設定できます。人数の選択肢を増やすときは「最大人数の設定」を変更します。</p></div>
     </div>
     <div class="help-topic">
       <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpTrouble" aria-label="こんなときは？を開く" data-label="こんなときは？" onclick="toggleSection('helpTrouble',this)"><span>こんなときは？</span><span class="chevron" aria-hidden="true"></span></button>
-      <div id="helpTrouble" class="hidden help-content"><dl class="help-answers"><div><dt>いつもの人数に戻したい</dt><dd>「基本人数に戻す」を押します。</dd></div><div><dt>食材が見つからない</dt><dd>「全部」を押して探します。</dd></div><div><dt>新しい食材を追加したい</dt><dd>「食材・ルール編集」→「新規入力」を押します。</dd></div><div><dt>1/3や2/3を登録したい</dt><dd>1人量の一覧から分数を選びます。</dd></div><div><dt>いつもの人数そのものを変えたい</dt><dd>「基本人数の設定」で変更して保存します。</dd></div></dl></div>
+      <div id="helpTrouble" class="hidden help-content"><dl class="help-answers"><div><dt>いつもの人数に戻したい</dt><dd>「基本人数に戻す」を押します。</dd></div><div><dt>0歳のおかゆ分を炊飯量から外したい</dt><dd>0歳を1人以上にして「おかゆ」にチェックし、人数を選びます。</dd></div><div><dt>学童が給食を食べる</dt><dd>学童の「食べる」にチェックします。付き添いの大人は通常の大人人数へ自動で加わります。</dd></div><div><dt>学童は給食を食べず、果物だけ用意する</dt><dd>「食べる」は外したまま、さくらんぼ横の大人人数を合わせます。</dd></div><div><dt>食材が見つからない</dt><dd>「全部」を押して探します。</dd></div><div><dt>新しい食材を追加したい</dt><dd>「食材・ルール編集」→「新規入力」を押します。</dd></div><div><dt>1/3や2/3を登録したい</dt><dd>1人量の一覧から分数を選びます。</dd></div><div><dt>いつもの人数そのものを変えたい</dt><dd>「基本人数の設定」で変更して保存します。</dd></div></dl></div>
     </div>
   </div>
 </aside>
