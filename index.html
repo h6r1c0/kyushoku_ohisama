@@ -267,6 +267,9 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .guide-option-title{display:grid;grid-template-columns:58px 1fr;align-items:center;gap:5px}.guide-option-title .guide-input{min-height:20px}
 .guide-option-rows{display:grid;grid-template-columns:1fr 1fr;gap:4px}.guide-option-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:3px;padding:4px;border:1px solid #ead4ad;border-radius:6px;background:#fff}.guide-option-row strong{color:#5d5549;font-size:8px}.guide-option-row span{color:#6f675b;font-size:7px}
 .guide-scene.option-guide{padding-top:50px}
+.guide-scene.porridge-guide,.guide-scene.school-help-guide{padding-bottom:43px}
+.guide-callout.porridge-count-tip{right:auto;bottom:7px;left:49px}
+.guide-callout.school-fruit-tip{right:auto;bottom:7px;left:95px}
 @media(max-width:370px){.guide-option-toggle{font-size:7.5px}}
 </style>
 </head>
@@ -512,14 +515,14 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
                 <span class="guide-person"><span class="guide-person-label"><svg class="guide-class-icon" viewBox="0 0 184 250" aria-hidden="true"><use href="#class-icon-otona"/></svg>大人</span><span class="guide-number">8⌄</span></span>
               </div>
             </div>
-            <div class="guide-scene target-row">
-              <span class="guide-callout operation top-left leader-down" style="--tip:28%;--leader:29px">おかゆの子がいたらチェック</span>
-              <span class="guide-callout operation top-right leader-down" style="--tip:72%;--leader:29px">人数を選ぶ</span>
+            <div class="guide-scene target-row porridge-guide">
+              <span class="guide-callout operation top-left leader-down" style="--tip:8%;--leader:29px">おかゆの子がいたらチェック</span>
+              <span class="guide-callout operation porridge-count-tip leader-up" style="--tip:36%;--leader:24px">人数を選ぶ</span>
               <div class="guide-helper-row"><span class="quick-check"></span><span>おかゆ</span><span class="quick-mini-number">1⌄</span></div>
             </div>
-            <div class="guide-scene target-row">
-              <span class="guide-callout operation top-left leader-down" style="--tip:30%;--leader:47px">学童が給食を食べる日はここ</span>
-              <span class="guide-callout operation top-right leader-down" style="--tip:72%;--leader:66px">果物を食べる大人</span>
+            <div class="guide-scene target-row school-help-guide">
+              <span class="guide-callout operation top-left leader-down" style="--tip:58%;--leader:47px">学童が給食を食べる日はここ</span>
+              <span class="guide-callout operation school-fruit-tip leader-up" style="--tip:45%;--leader:29px">果物を食べる大人</span>
               <div class="guide-school">
                 <span class="guide-school-main"><span class="guide-person-label"><svg class="guide-class-icon" viewBox="0 0 260 251" aria-hidden="true"><use href="#class-icon-randoseru"/></svg>学童</span><span class="guide-number">7⌄</span></span>
                 <span class="guide-school-options"><span class="guide-helper-row"><span class="quick-check"></span>食べる</span><span class="guide-helper-row"><svg class="guide-class-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#summary-icon-cherry"/></svg>大人 <span class="quick-mini-number">2⌄</span></span></span>
