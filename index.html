@@ -1234,17 +1234,15 @@ function helpControl(root,id){
   const control=root.querySelector(`[data-help-id="${id}"]`);return control?.closest(".soft-select-wrap")?.querySelector(".soft-select-button")||control;
 }
 const guideScenes=new Set();
-function guideBubblePath(width,height,targetX,targetY,direction){
-  const radius=8,halfBase=4,base=Math.max(radius+halfBase,Math.min(width-radius-halfBase,targetX));
-  if(direction==="up")return `M ${radius} 0 H ${base-halfBase} L ${targetX} ${targetY} L ${base+halfBase} H ${width-radius} Q ${width} 0 ${width} ${radius} V ${height-radius} Q ${width} ${height} ${width-radius} ${height} H ${radius} Q 0 ${height} 0 ${height-radius} V ${radius} Q 0 0 ${radius} 0 Z`;
-  return `M ${radius} 0 H ${width-radius} Q ${width} 0 ${width} ${radius} V ${height-radius} Q ${width} ${height} ${width-radius} ${height} H ${base+halfBase} L ${targetX} ${targetY} L ${base-halfBase} H ${radius} Q 0 ${height} 0 ${height-radius} V ${radius} Q 0 0 ${radius} 0 Z`;
-}
 function drawGuideBubble(config,sceneRect){
   const {bubble,target,side,type}=config;if(!target?.isConnected)return;
   const bubbleRect=bubble.getBoundingClientRect(),targetRect=target.getBoundingClientRect(),targetX=targetRect.left-sceneRect.left+targetRect.width/2-bubble.offsetLeft,targetY=targetRect.top-sceneRect.top+targetRect.height/2-bubble.offsetTop;
-  let svg=bubble.querySelector(".guide-bubble-shape");if(!svg){svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.classList.add("guide-bubble-shape");const path=document.createElementNS("http://www.w3.org/2000/svg","path");svg.appendChild(path);bubble.prepend(svg)}
-  const width=bubbleRect.width,height=bubbleRect.height,path=svg.querySelector("path");svg.setAttribute("viewBox",`0 0 ${width} ${height}`);path.setAttribute("d",guideBubblePath(width,height,targetX,targetY,side==="bottom"?"up":"down"));path.setAttribute("fill",type==="info"?"#f0f7ea":"#fff2de");path.setAttribute("stroke",type==="info"?"#a9c99a":"#dc9e45");path.setAttribute("stroke-width",type==="info"?"1.2":"1.1");path.setAttribute("stroke-linejoin","round");if(type==="info")path.setAttribute("stroke-dasharray","4 3");else path.removeAttribute("stroke-dasharray");
-}
+  let svg=bubble.querySelector(".guide-bubble-shape");if(!svg){svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.classList.add("guide-bubble-shape");bubble.prepend(svg)}
+  const width=bubbleRect.width,height=bubbleRect.height,background=type==="info"?"#f0f7ea":"#fff2de",border=type==="info"?"#a9c99a":"#dc9e45",startY=side==="bottom"?1:height-1,baseX=Math.max(10,Math.min(width-10,targetX)),connector=`M ${baseX} ${startY} L ${targetX} ${targetY}`;
+  svg.replaceChildren();svg.setAttribute("viewBox",`0 0 ${width} ${height}`);
+  const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");rect.setAttribute("x",".6");rect.setAttribute("y",".6");rect.setAttribute("width",String(width-1.2));rect.setAttribute("height",String(height-1.2));rect.setAttribute("rx","8");rect.setAttribute("fill",background);rect.setAttribute("stroke",border);rect.setAttribute("stroke-width","1.2");if(type==="info")rect.setAttribute("stroke-dasharray","4 3");svg.appendChild(rect);
+  const tail=document.createElementNS("http://www.w3.org/2000/svg","path");tail.setAttribute("d",connector);tail.setAttribute("fill","none");tail.setAttribute("stroke",border);tail.setAttribute("stroke-linecap","round");if(type==="info"){tail.setAttribute("stroke-width","1.2");tail.setAttribute("stroke-dasharray","4 3");svg.appendChild(tail)}else{tail.setAttribute("stroke-width","6");svg.appendChild(tail);const inner=tail.cloneNode();inner.setAttribute("stroke",background);inner.setAttribute("stroke-width","3.8");svg.appendChild(inner)}
+  }
 function layoutGuideGroup(scene,configs,side,sceneRect,frameRect){
   if(!configs.length)return;const columns=1,rows=[];for(let i=0;i<configs.length;i+=columns)rows.push(configs.slice(i,i+columns));
   const heights=rows.map(row=>Math.max(...row.map(item=>item.bubble.offsetHeight))),rowGap=8,total=heights.reduce((sum,value)=>sum+value,0)+rowGap*(rows.length-1);let y=side==="top"?frameRect.top-sceneRect.top-total-8:frameRect.bottom-sceneRect.top+8;
