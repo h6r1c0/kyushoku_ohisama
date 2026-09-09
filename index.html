@@ -1246,12 +1246,12 @@ function drawGuideBubble(config,sceneRect){
   const width=bubbleRect.width,height=bubbleRect.height,path=svg.querySelector("path");svg.setAttribute("viewBox",`0 0 ${width} ${height}`);path.setAttribute("d",guideBubblePath(width,height,targetX,targetY,side==="bottom"?"up":"down"));path.setAttribute("fill",type==="info"?"#f0f7ea":"#fff2de");path.setAttribute("stroke",type==="info"?"#a9c99a":"#dc9e45");path.setAttribute("stroke-width",type==="info"?"1.2":"1.1");path.setAttribute("stroke-linejoin","round");if(type==="info")path.setAttribute("stroke-dasharray","4 3");else path.removeAttribute("stroke-dasharray");
 }
 function layoutGuideGroup(scene,configs,side,sceneRect,frameRect){
-  if(!configs.length)return;const columns=scene.clientWidth<250?1:2,rows=[];for(let i=0;i<configs.length;i+=columns)rows.push(configs.slice(i,i+columns));
+  if(!configs.length)return;const columns=1,rows=[];for(let i=0;i<configs.length;i+=columns)rows.push(configs.slice(i,i+columns));
   const heights=rows.map(row=>Math.max(...row.map(item=>item.bubble.offsetHeight))),rowGap=8,total=heights.reduce((sum,value)=>sum+value,0)+rowGap*(rows.length-1);let y=side==="top"?frameRect.top-sceneRect.top-total-8:frameRect.bottom-sceneRect.top+8;
   rows.forEach((row,rowIndex)=>{row.sort((a,b)=>{const ar=a.target.getBoundingClientRect(),br=b.target.getBoundingClientRect();return ar.left-br.left});row.forEach((item,columnIndex)=>{const width=item.bubble.offsetWidth,targetRect=item.target.getBoundingClientRect(),targetX=targetRect.left-sceneRect.left+targetRect.width/2;let left;if(row.length===1)left=Math.max(4,Math.min(scene.clientWidth-width-4,targetX-width/2));else left=columnIndex===0?4:scene.clientWidth-width-4;item.bubble.style.left=`${left}px`;item.bubble.style.top=`${y}px`;item.bubble.style.visibility="visible"});y+=heights[rowIndex]+rowGap});
 }
 function layoutGuideScene(scene){
-  if(!scene?.isConnected)return;const configs=scene._guideConfigs||[],top=configs.filter(item=>item.side!=="bottom"),bottom=configs.filter(item=>item.side==="bottom"),columns=scene.clientWidth<250?1:2,rowHeight=38;
+  if(!scene?.isConnected)return;const configs=scene._guideConfigs||[],top=configs.filter(item=>item.side!=="bottom"),bottom=configs.filter(item=>item.side==="bottom"),columns=1,rowHeight=38;
   scene.style.paddingTop=`${Math.max(48,Math.ceil(top.length/columns)*rowHeight+12)}px`;scene.style.paddingBottom=`${Math.max(48,Math.ceil(bottom.length/columns)*rowHeight+12)}px`;
   configs.forEach(item=>{item.bubble.style.visibility="hidden";item.bubble.style.left="0";item.bubble.style.top="0"});const sceneRect=scene.getBoundingClientRect(),frameRect=scene.querySelector(".help-live-frame").getBoundingClientRect();layoutGuideGroup(scene,top,"top",sceneRect,frameRect);layoutGuideGroup(scene,bottom,"bottom",sceneRect,frameRect);configs.forEach(item=>drawGuideBubble(item,sceneRect));
 }
@@ -1310,7 +1310,7 @@ function init(){
   document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
   document.querySelectorAll(".category-chip").forEach(button=>button.addEventListener("click",()=>openFoodChoicePanel(button.dataset.category,button)));document.getElementById("allFoodsButton").addEventListener("click",()=>openFoodChoicePanel("",document.getElementById("allFoodsButton")));
   document.addEventListener("pointerdown",event=>{if(activeSoftSelect&&!softSelectPopover?.contains(event.target)&&!activeSoftSelect.button.contains(event.target))closeSoftSelect();if(activeFoodChoicePanel&&!activeFoodChoicePanel.panel.contains(event.target)&&!activeFoodChoicePanel.anchor.contains(event.target))closeFoodChoicePanel()});
-  document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeSoftSelect();closeFoodChoicePanel()}});window.addEventListener("resize",()=>{if(activeSoftSelect)positionSoftSelect(activeSoftSelect.button);closeFoodChoicePanel()});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeSoftSelect();closeFoodChoicePanel()}});window.addEventListener("resize",()=>{if(activeSoftSelect)positionSoftSelect(activeSoftSelect.button);closeFoodChoicePanel();layoutVisibleGuides()});
 }
 init();
 </script>
