@@ -140,7 +140,8 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 @media(max-width:370px){.school-meal-toggle{margin-left:7px}.fruit-adult-control{max-width:calc(100% - 5px);margin-left:5px;gap:1px;font-size:8.5px}.fruit-adult-control .people-summary-icon{flex-basis:11px;width:11px;height:11px}.fruit-adult-control select{width:29px}.result-main{padding-left:11px;padding-right:11px}.result-unit{margin-left:4px}.sub{margin-left:7px;font-size:11px}}
 
 /* 正式PNG素材と0歳おかゆ補助UI。既存の確定クラス素材は変更しない。 */
-.feature-tab::after{display:block;left:0;right:0;bottom:-3px;height:4px;background:var(--feature-surface)}
+.feature-tabs{bottom:100%}
+.feature-tab::after{display:block;left:0;right:0;bottom:-2px;height:3px;background:var(--feature-surface)}
 .people-icon{background-image:url("04_人数アイコン.png")}
 .meal-icon{background-image:url("06_フォークスプーンアイコン.png")}
 .category-chip[data-category="meat"] .category-icon{background-image:url("02_肉アイコン.png")}
@@ -150,20 +151,21 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .zero-cell,.school-cell{display:flex;min-width:0;flex-direction:column;align-items:stretch}
 .zero-cell>label:first-child,.school-count{display:block;min-width:0}
 .zero-cell>label:first-child select,.school-count select{width:100%;margin-top:5px}
+.porridge-row{display:flex;align-items:center;gap:2px;min-width:max-content;margin-top:1px}
 .porridge-toggle,.porridge-count,.school-meal-toggle,.fruit-adult-control{align-self:flex-start;margin-left:5px;white-space:nowrap}
-.porridge-toggle{display:flex;align-items:center;gap:2px;min-height:29px;margin-top:1px;padding:3px 2px;color:var(--muted);font-size:9px;line-height:1}
+.porridge-toggle{display:flex;align-items:center;gap:3px;min-height:29px;padding:3px 1px;color:var(--muted);font-size:10px;font-weight:700;line-height:1}
 .porridge-toggle.hidden{display:none}
-.porridge-toggle input,.school-meal-toggle input{flex:0 0 16px;width:16px;height:16px;margin:0;accent-color:var(--orange)}
-.porridge-icon{display:block;flex:0 0 13px;width:13px;height:13px;object-fit:contain}
-.porridge-count{display:flex;align-items:center;gap:2px;min-height:30px;padding:1px 2px 2px 20px;color:var(--muted);font-size:9px;line-height:1}
+.porridge-toggle input,.school-meal-toggle input{flex:0 0 15px;width:15px;height:15px;margin:0;accent-color:var(--orange)}
+.porridge-icon{display:block;flex:0 0 17px;width:17px;height:17px;object-fit:contain}
+.porridge-count{display:flex;align-items:center;min-height:29px;margin-left:0;padding:2px 0;color:var(--muted);line-height:1}
 .porridge-count.hidden{display:none}
-.porridge-count select{width:35px;margin:0;padding:3px 1px;font-size:11px}
+.porridge-count select{width:34px;margin:0;padding:3px 1px;font-size:11px}
 .school-meal-toggle{margin-left:5px;padding-right:1px;padding-left:1px}
-.fruit-adult-control{max-width:calc(100% - 5px);margin-left:5px;gap:1px;overflow:visible}
-.fruit-adult-control select{width:38px;padding-right:1px;padding-left:1px}
-.fruit-adult-control .school-helper-label{font-size:9px}
+.fruit-adult-control{max-width:calc(100% - 5px);max-height:31px;min-height:31px;margin-left:5px;gap:2px;overflow:visible;font-weight:700}
+.fruit-adult-control select{width:31px;padding-right:1px;padding-left:1px}
+.fruit-adult-control .school-helper-label{font-size:9px;font-weight:700}
 .rice-summary .people-summary-icon{display:block;object-fit:contain;image-rendering:auto;filter:none;mix-blend-mode:normal}
-@media(max-width:370px){.porridge-toggle,.porridge-count,.school-meal-toggle,.fruit-adult-control{margin-left:3px}.fruit-adult-control{max-width:calc(100% - 3px)}.fruit-adult-control select{width:36px}.porridge-count{padding-left:17px}}
+@media(max-width:370px){.porridge-toggle,.school-meal-toggle,.fruit-adult-control{margin-left:3px}.fruit-adult-control{max-width:calc(100% - 3px);gap:1px}.fruit-adult-control select{width:29px}.porridge-toggle{gap:2px;font-size:9.5px}.porridge-icon{flex-basis:16px;width:16px;height:16px}.porridge-count select{width:32px}}
 </style>
 </head>
 <body>
@@ -225,8 +227,10 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
   <div class="regular-people-grid">
     <div class="zero-cell" aria-label="0歳の人数とおかゆ設定">
       <label><span class="class-label"><svg class="class-icon class-kingyo" viewBox="0 0 291 245" aria-hidden="true"><use href="#class-icon-kingyo"/></svg>0歳</span><select id="c0"></select></label>
-      <label id="porridgeToggleWrap" class="porridge-toggle hidden"><img class="porridge-icon" src="07_おかゆ茶碗アイコン.png" alt=""><input id="porridgeEnabled" type="checkbox"><span>おかゆ</span></label>
-      <label id="porridgeCountWrap" class="porridge-count hidden"><select id="porridgeCount" aria-label="おかゆを食べる0歳児の人数"></select><span>人</span></label>
+      <div class="porridge-row">
+        <label id="porridgeToggleWrap" class="porridge-toggle hidden"><img class="porridge-icon" src="07_おかゆ茶碗アイコン.png" alt=""><input id="porridgeEnabled" type="checkbox"><span>おかゆ</span></label>
+        <label id="porridgeCountWrap" class="porridge-count hidden"><select id="porridgeCount" aria-label="おかゆを食べる0歳児の人数"></select></label>
+      </div>
     </div>
     <label><span class="class-label"><svg class="class-icon class-medaka" viewBox="0 0 384 208" aria-hidden="true"><use href="#class-icon-medaka"/></svg>1歳</span><select id="c1"></select></label>
     <label><span class="class-label"><svg class="class-icon class-ahiru" viewBox="0 0 263 247" aria-hidden="true"><use href="#class-icon-ahiru"/></svg>2歳</span><select id="c2"></select></label>
@@ -558,7 +562,7 @@ function renderCurrentCountOptions(){
     select.value=String(preferred);
   });
   const fruitAdult=document.getElementById("fruitAdult"),oldFruitAdult=fruitAdult.value;
-  fruitAdult.innerHTML="";for(let i=0;i<=maxCounts.fruitAdult;i++){const option=document.createElement("option");option.value=String(i);option.textContent=`${i}人`;fruitAdult.appendChild(option)}
+  fruitAdult.innerHTML="";for(let i=0;i<=maxCounts.fruitAdult;i++){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);fruitAdult.appendChild(option)}
   fruitAdult.value=oldFruitAdult!==""&&Number(oldFruitAdult)<=maxCounts.fruitAdult?oldFruitAdult:String(defaults.fruitAdult);
 }
 
