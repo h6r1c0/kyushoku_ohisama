@@ -323,7 +323,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
 #useOptions:checked::after{opacity:1}
 
 /* ヘルプは本体カードを複製し、同じ幅・比率・文言で見せる。 */
-.help-live-scene{position:relative;margin-top:7px;padding:58px 0 58px;overflow:visible}
+.help-live-scene{position:relative;margin-top:7px;padding:34px 0;overflow:visible}
 .help-live-scene.compact-top{padding-top:44px}
 .help-live-frame{position:relative;width:100%;overflow:visible}.help-live-stage{position:absolute;top:0;left:0;width:720px;transform-origin:left top}.help-live-clone{position:relative;z-index:1;width:720px}
 .help-live-clone .card{margin:0;box-shadow:0 2px 7px rgba(90,79,61,.06)}
@@ -348,11 +348,12 @@ input[type="checkbox"]{accent-color:var(--orange)}
 .guide-callout.info.leader-up::before{width:8px;background:#f0f7ea center/100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 100' preserveAspectRatio='none'%3E%3Cpath d='M1 100 L4 1 L7 100' fill='%23f0f7ea' stroke='%23a9c99a' stroke-width='1.2' stroke-dasharray='4 4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")}
 
 /* 動的ガイドは対象DOMから毎回位置を計算し、単一SVG輪郭で本体としっぽを描く。 */
-.guide-callout.dynamic-callout{z-index:8;width:min(126px,calc(50% - 8px));max-width:none;padding:6px 7px;border:0!important;background:transparent!important;box-shadow:none!important;text-align:center}
+.guide-callout.dynamic-callout{z-index:8;width:min(122px,calc(50% - 6px));max-width:none;padding:6px 7px;border:0!important;background:transparent!important;box-shadow:none!important;text-align:center;pointer-events:none}
 .guide-callout.dynamic-callout::before,.guide-callout.dynamic-callout::after{display:none!important}
 .guide-bubble-shape{position:absolute;z-index:0;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}.guide-bubble-text{position:relative;z-index:1}
 .guide-bubble-shape path{vector-effect:non-scaling-stroke}
-@media(max-width:370px){.guide-callout.dynamic-callout{width:min(118px,calc(50% - 6px));font-size:8.5px}}
+@media(max-width:370px){.guide-callout.dynamic-callout{width:min(112px,calc(50% - 5px));font-size:8.5px}}
+@media(min-width:768px){.global-help-panel{width:min(560px,calc(100vw - 40px))}}
 </style>
 </head>
 <body>
@@ -699,7 +700,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
 
 </main>
 </section>
-<div class="version">v0.8</div>
+<div class="version">v1.0</div>
 </div>
 
 <script>
@@ -1234,31 +1235,38 @@ function helpControl(root,id){
   const control=root.querySelector(`[data-help-id="${id}"]`);return control?.closest(".soft-select-wrap")?.querySelector(".soft-select-button")||control;
 }
 const guideScenes=new Set();
+const guideResizeObserver=typeof ResizeObserver==="function"?new ResizeObserver(entries=>entries.forEach(entry=>{const scene=entry.target.closest(".help-live-scene");if(scene)scheduleGuideLayout(scene)})):null;
+function rectOverlap(a,b,padding=0){return Math.max(0,Math.min(a.right,b.right)-Math.max(a.left,b.left)+padding)*Math.max(0,Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)+padding)}
+function roundedBubblePath(width,height,side,base,tip){
+  const r=Math.min(8,width/4,height/4),half=4,x=Math.max(r+half+1,Math.min(width-r-half-1,base)),y=Math.max(r+half+1,Math.min(height-r-half-1,base));
+  if(side==="top")return`M ${r} 0 H ${x-half} L ${tip.x} ${tip.y} L ${x+half} 0 H ${width-r} Q ${width} 0 ${width} ${r} V ${height-r} Q ${width} ${height} ${width-r} ${height} H ${r} Q 0 ${height} 0 ${height-r} V ${r} Q 0 0 ${r} 0 Z`;
+  if(side==="bottom")return`M ${r} 0 H ${width-r} Q ${width} 0 ${width} ${r} V ${height-r} Q ${width} ${height} ${width-r} ${height} H ${x+half} L ${tip.x} ${tip.y} L ${x-half} ${height} H ${r} Q 0 ${height} 0 ${height-r} V ${r} Q 0 0 ${r} 0 Z`;
+  if(side==="left")return`M ${r} 0 H ${width-r} Q ${width} 0 ${width} ${r} V ${y-half} L ${tip.x} ${tip.y} L ${width} ${y+half} V ${height-r} Q ${width} ${height} ${width-r} ${height} H ${r} Q 0 ${height} 0 ${height-r} V ${r} Q 0 0 ${r} 0 Z`;
+  return`M ${r} 0 H ${width-r} Q ${width} 0 ${width} ${r} V ${height-r} Q ${width} ${height} ${width-r} ${height} H ${r} Q 0 ${height} 0 ${height-r} V ${y+half} L ${tip.x} ${tip.y} L 0 ${y-half} V ${r} Q 0 0 ${r} 0 Z`;
+}
 function drawGuideBubble(config,sceneRect){
-  const {bubble,target,side,type}=config;if(!target?.isConnected)return;
-  const bubbleRect=bubble.getBoundingClientRect(),targetRect=target.getBoundingClientRect(),targetX=targetRect.left-sceneRect.left+targetRect.width/2-bubble.offsetLeft,targetY=targetRect.top-sceneRect.top+targetRect.height/2-bubble.offsetTop;
+  const {bubble,target,type,placedSide}=config;if(!target?.isConnected)return;
+  const bubbleRect=bubble.getBoundingClientRect(),targetRect=target.getBoundingClientRect(),width=bubbleRect.width,height=bubbleRect.height,targetX=targetRect.left-sceneRect.left+targetRect.width/2-bubble.offsetLeft,targetY=targetRect.top-sceneRect.top+targetRect.height/2-bubble.offsetTop;
   let svg=bubble.querySelector(".guide-bubble-shape");if(!svg){svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.classList.add("guide-bubble-shape");bubble.prepend(svg)}
-  const width=bubbleRect.width,height=bubbleRect.height,background=type==="info"?"#f0f7ea":"#fff2de",border=type==="info"?"#a9c99a":"#dc9e45",startY=side==="bottom"?1:height-1,baseX=Math.max(10,Math.min(width-10,targetX)),connector=`M ${baseX} ${startY} L ${targetX} ${targetY}`;
-  svg.replaceChildren();svg.setAttribute("viewBox",`0 0 ${width} ${height}`);
-  const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");rect.setAttribute("x",".6");rect.setAttribute("y",".6");rect.setAttribute("width",String(width-1.2));rect.setAttribute("height",String(height-1.2));rect.setAttribute("rx","8");rect.setAttribute("fill",background);rect.setAttribute("stroke",border);rect.setAttribute("stroke-width","1.2");if(type==="info")rect.setAttribute("stroke-dasharray","4 3");svg.appendChild(rect);
-  const tail=document.createElementNS("http://www.w3.org/2000/svg","path");tail.setAttribute("d",connector);tail.setAttribute("fill","none");tail.setAttribute("stroke",border);tail.setAttribute("stroke-linecap","round");if(type==="info"){tail.setAttribute("stroke-width","1.2");tail.setAttribute("stroke-dasharray","4 3");svg.appendChild(tail)}else{tail.setAttribute("stroke-width","6");svg.appendChild(tail);const inner=tail.cloneNode();inner.setAttribute("stroke",background);inner.setAttribute("stroke-width","3.8");svg.appendChild(inner)}
-  }
-function layoutGuideGroup(scene,configs,side,sceneRect,frameRect){
-  if(!configs.length)return;const columns=1,rows=[];for(let i=0;i<configs.length;i+=columns)rows.push(configs.slice(i,i+columns));
-  const heights=rows.map(row=>Math.max(...row.map(item=>item.bubble.offsetHeight))),rowGap=8,total=heights.reduce((sum,value)=>sum+value,0)+rowGap*(rows.length-1);let y=side==="top"?frameRect.top-sceneRect.top-total-8:frameRect.bottom-sceneRect.top+8;
-  rows.forEach((row,rowIndex)=>{row.sort((a,b)=>{const ar=a.target.getBoundingClientRect(),br=b.target.getBoundingClientRect();return ar.left-br.left});row.forEach((item,columnIndex)=>{const width=item.bubble.offsetWidth,targetRect=item.target.getBoundingClientRect(),targetX=targetRect.left-sceneRect.left+targetRect.width/2;let left;if(row.length===1)left=Math.max(4,Math.min(scene.clientWidth-width-4,targetX-width/2));else left=columnIndex===0?4:scene.clientWidth-width-4;item.bubble.style.left=`${left}px`;item.bubble.style.top=`${y}px`;item.bubble.style.visibility="visible"});y+=heights[rowIndex]+rowGap});
+  const background=type==="info"?"#f0f7ea":"#fff2de",border=type==="info"?"#88ad78":"#dc9e45",side=placedSide||"bottom",base=(side==="top"||side==="bottom")?targetX:targetY;
+  svg.replaceChildren();svg.setAttribute("viewBox",`0 0 ${width} ${height}`);const path=document.createElementNS("http://www.w3.org/2000/svg","path");path.setAttribute("d",roundedBubblePath(width,height,side,base,{x:targetX,y:targetY}));path.setAttribute("fill",background);path.setAttribute("stroke",border);path.setAttribute("stroke-width","1.2");path.setAttribute("stroke-linejoin","round");if(type==="info")path.setAttribute("stroke-dasharray","4 3");svg.appendChild(path);
+  const tailStart=side==="top"?{x:Math.max(8,Math.min(width-8,targetX)),y:0}:side==="bottom"?{x:Math.max(8,Math.min(width-8,targetX)),y:height}:side==="left"?{x:width,y:Math.max(8,Math.min(height-8,targetY))}:{x:0,y:Math.max(8,Math.min(height-8,targetY))};bubble.dataset.guideSide=side;bubble.dataset.guideTail=Math.hypot(targetX-tailStart.x,targetY-tailStart.y).toFixed(1);
+}
+function guideCandidates(target,width,height,bounds,preferred){
+  const gap=7,cx=(target.left+target.right)/2,cy=(target.top+target.bottom)/2,sides=preferred==="bottom"?["top","bottom","left","right"]:["bottom","top","right","left"],out=[],tangent=[0,-.3,.3,-.62,.62];
+  sides.forEach((side,sideRank)=>tangent.forEach((shift,shiftRank)=>{let left,top;if(side==="bottom"){left=cx-width/2+shift*width;top=target.top-gap-height}else if(side==="top"){left=cx-width/2+shift*width;top=target.bottom+gap}else if(side==="left"){left=target.right+gap;top=cy-height/2+shift*height}else{left=target.left-gap-width;top=cy-height/2+shift*height}left=Math.max(bounds.left,Math.min(bounds.right-width,left));top=Math.max(bounds.top,Math.min(bounds.bottom-height,top));out.push({left,top,right:left+width,bottom:top+height,side,rank:sideRank*22+shiftRank*4})}));return out;
 }
 function layoutGuideScene(scene){
-  if(!scene?.isConnected)return;const configs=scene._guideConfigs||[],top=configs.filter(item=>item.side!=="bottom"),bottom=configs.filter(item=>item.side==="bottom"),columns=1,rowHeight=38;
-  scene.style.paddingTop=`${Math.max(48,Math.ceil(top.length/columns)*rowHeight+12)}px`;scene.style.paddingBottom=`${Math.max(48,Math.ceil(bottom.length/columns)*rowHeight+12)}px`;
-  configs.forEach(item=>{item.bubble.style.visibility="hidden";item.bubble.style.left="0";item.bubble.style.top="0"});const sceneRect=scene.getBoundingClientRect(),frameRect=scene.querySelector(".help-live-frame").getBoundingClientRect();layoutGuideGroup(scene,top,"top",sceneRect,frameRect);layoutGuideGroup(scene,bottom,"bottom",sceneRect,frameRect);configs.forEach(item=>drawGuideBubble(item,sceneRect));
+  if(!scene?.isConnected)return;const configs=scene._guideConfigs||[];scene.style.paddingTop="34px";scene.style.paddingBottom="34px";configs.forEach(item=>{item.bubble.style.visibility="hidden";item.bubble.style.left="0";item.bubble.style.top="0"});
+  const sceneRect=scene.getBoundingClientRect(),bounds={left:3,top:3,right:scene.clientWidth-3,bottom:scene.clientHeight-3},targets=configs.map(item=>{const r=item.target.getBoundingClientRect();return{left:r.left-sceneRect.left,top:r.top-sceneRect.top,right:r.right-sceneRect.left,bottom:r.bottom-sceneRect.top}}),placed=[];
+  configs.forEach((item,index)=>{const width=item.bubble.offsetWidth,height=item.bubble.offsetHeight,target=targets[index],candidates=guideCandidates(target,width,height,bounds,item.side);let best;candidates.forEach(candidate=>{let score=candidate.rank;placed.forEach(rect=>score+=rectOverlap(candidate,rect,3)*40);targets.forEach((rect,targetIndex)=>{if(targetIndex!==index)score+=rectOverlap(candidate,rect,1)*9});score+=rectOverlap(candidate,target,1)*100;if(!best||score<best.score)best={...candidate,score}});item.bubble.style.left=`${best.left}px`;item.bubble.style.top=`${best.top}px`;item.bubble.style.visibility="visible";item.placedSide=best.side;placed.push(best)});configs.forEach(item=>drawGuideBubble(item,sceneRect));
 }
 function scheduleGuideLayout(scene){
   guideScenes.add(scene);if(scene._guideLayoutPending)return;scene._guideLayoutPending=true;requestAnimationFrame(()=>{scene._guideLayoutPending=false;layoutGuideScene(scene)});
 }
 function layoutVisibleGuides(){guideScenes.forEach(scene=>{if(scene.isConnected&&!scene.closest(".hidden"))scheduleGuideLayout(scene);else if(!scene.isConnected)guideScenes.delete(scene)})}
 function addGuideCallout(scene,target,text,type="operation",side="top"){
-  if(!target)return;const bubble=document.createElement("span");bubble.className=`guide-callout dynamic-callout ${type}`;const label=document.createElement("span");label.className="guide-bubble-text";label.textContent=text;bubble.appendChild(label);scene.appendChild(bubble);(scene._guideConfigs||(scene._guideConfigs=[])).push({bubble,target,type,side});scheduleGuideLayout(scene);
+  if(!target)return;const guideId=`guide-${Math.random().toString(36).slice(2)}`;target.dataset.guideTargetId=guideId;const bubble=document.createElement("span");bubble.className=`guide-callout dynamic-callout ${type}`;bubble.dataset.guideTargetId=guideId;const label=document.createElement("span");label.className="guide-bubble-text";label.textContent=text;bubble.appendChild(label);scene.appendChild(bubble);(scene._guideConfigs||(scene._guideConfigs=[])).push({bubble,target,type,side});guideResizeObserver?.observe(scene.querySelector(".help-live-frame"));scheduleGuideLayout(scene);
 }
 function makeHelpStep(container,number,title,selector){
   const section=document.createElement("section"),head=document.createElement("div"),scene=document.createElement("div"),frame=document.createElement("div"),stage=document.createElement("div"),clone=cloneForHelp(selector);section.className="guide-step";head.className="guide-step-head";head.innerHTML=number?`<span class="guide-step-number">${number}</span><span class="guide-step-title">${title}</span>`:`<span class="guide-step-title">${title}</span>`;scene.className="help-live-scene";frame.className="help-live-frame";stage.className="help-live-stage";stage.appendChild(clone);frame.appendChild(stage);scene.appendChild(frame);section.append(head,scene);container.appendChild(section);return{section,scene,frame,stage,clone};
@@ -1308,7 +1316,7 @@ function init(){
   document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
   document.querySelectorAll(".category-chip").forEach(button=>button.addEventListener("click",()=>openFoodChoicePanel(button.dataset.category,button)));document.getElementById("allFoodsButton").addEventListener("click",()=>openFoodChoicePanel("",document.getElementById("allFoodsButton")));
   document.addEventListener("pointerdown",event=>{if(activeSoftSelect&&!softSelectPopover?.contains(event.target)&&!activeSoftSelect.button.contains(event.target))closeSoftSelect();if(activeFoodChoicePanel&&!activeFoodChoicePanel.panel.contains(event.target)&&!activeFoodChoicePanel.anchor.contains(event.target))closeFoodChoicePanel()});
-  document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeSoftSelect();closeFoodChoicePanel()}});window.addEventListener("resize",()=>{if(activeSoftSelect)positionSoftSelect(activeSoftSelect.button);closeFoodChoicePanel();layoutVisibleGuides()});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeSoftSelect();closeFoodChoicePanel()}});window.addEventListener("resize",()=>{if(activeSoftSelect)positionSoftSelect(activeSoftSelect.button);closeFoodChoicePanel();layoutVisibleGuides()});window.addEventListener("orientationchange",layoutVisibleGuides);
 }
 init();
 </script>
