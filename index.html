@@ -145,7 +145,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .people-icon{background-image:url("04_人数アイコン.png")}
 .meal-icon{background-image:url("06_フォークスプーンアイコン.png")}
 .category-chip[data-category="meat"] .category-icon{background-image:url("02_肉アイコン.png")}
-.category-chip[data-category="fish"] .category-icon{background-image:url("05_魚アイコン_左向き.png")}
+.category-chip[data-category="fish"] .category-icon{background-image:url("05_魚アイコン_左向き_背景透明.png")}
 .category-chip[data-category="tofu"] .category-icon{background-image:url("03_豆腐アイコン.png")}
 .section-icon,.category-icon{image-rendering:auto}
 .zero-cell,.school-cell{display:flex;min-width:0;flex-direction:column;align-items:stretch}
@@ -156,7 +156,6 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .porridge-toggle{display:flex;align-items:center;gap:3px;min-height:29px;padding:3px 1px;color:var(--muted);font-size:10px;font-weight:700;line-height:1}
 .porridge-toggle.hidden{display:none}
 .porridge-toggle input,.school-meal-toggle input{flex:0 0 15px;width:15px;height:15px;margin:0;accent-color:var(--orange)}
-.porridge-icon{display:block;flex:0 0 17px;width:17px;height:17px;object-fit:contain}
 .porridge-count{display:flex;align-items:center;min-height:29px;margin-left:0;padding:2px 0;color:var(--muted);line-height:1}
 .porridge-count.hidden{display:none}
 .porridge-count select{width:34px;margin:0;padding:3px 1px;font-size:11px}
@@ -165,7 +164,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .fruit-adult-control select{width:31px;padding-right:1px;padding-left:1px}
 .fruit-adult-control .school-helper-label{font-size:9px;font-weight:700}
 .rice-summary .people-summary-icon{display:block;object-fit:contain;image-rendering:auto;filter:none;mix-blend-mode:normal}
-@media(max-width:370px){.porridge-toggle,.school-meal-toggle,.fruit-adult-control{margin-left:3px}.fruit-adult-control{max-width:calc(100% - 3px);gap:1px}.fruit-adult-control select{width:29px}.porridge-toggle{gap:2px;font-size:9.5px}.porridge-icon{flex-basis:16px;width:16px;height:16px}.porridge-count select{width:32px}}
+@media(max-width:370px){.porridge-toggle,.school-meal-toggle,.fruit-adult-control{margin-left:3px}.fruit-adult-control{max-width:calc(100% - 3px);gap:1px}.fruit-adult-control select{width:29px}.porridge-toggle{gap:2px;font-size:9.5px}.porridge-count select{width:32px}}
 
 /* 実運用前の最終調整：補助操作の見え方とヘルプ導線だけを整える。 */
 .porridge-toggle input{flex-basis:15px;width:15px;height:15px}
@@ -247,26 +246,28 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 .variant-choice[aria-pressed="true"]{border-width:2px;background:#fff}
 .variant-choice[aria-pressed="true"] .variant-name{font-weight:900}
 
-/* 線と矢印ではなく、説明枠から対象へ伸びる一続きの吹き出しのしっぽ。 */
+/* 説明枠としっぽを一体化し、根元に内側の線を残さない。 */
 .guide-callout.operation{--bubble-bg:#fff2de;--bubble-border:#dc9e45;background:var(--bubble-bg);border-color:var(--bubble-border)}
 .guide-callout.info{--bubble-bg:#f0f7ea;--bubble-border:#a9c99a;background:var(--bubble-bg);border-color:var(--bubble-border);border-style:dashed}
-.guide-callout.leader-down::before,.guide-callout.leader-up::before,.guide-callout.leader-left::before{content:"";position:absolute;z-index:-1;display:block;opacity:1;background:var(--bubble-border)}
-.guide-callout.leader-down::after,.guide-callout.leader-up::after,.guide-callout.leader-left::after{content:"";position:absolute;z-index:-1;display:block;border:0;background:var(--bubble-bg)}
-.guide-callout.leader-down::before{top:calc(100% - 1px);left:var(--tip,50%);width:16px;height:var(--leader,28px);clip-path:polygon(0 0,100% 0,50% 100%);transform:translateX(-50%)}
-.guide-callout.leader-down::after{top:100%;left:var(--tip,50%);width:12px;height:calc(var(--leader,28px) - 2px);clip-path:polygon(0 0,100% 0,50% 100%);transform:translateX(-50%)}
-.guide-callout.leader-up::before{bottom:calc(100% - 1px);left:var(--tip,50%);width:16px;height:var(--leader,28px);clip-path:polygon(50% 0,100% 100%,0 100%);transform:translateX(-50%)}
-.guide-callout.leader-up::after{bottom:100%;left:var(--tip,50%);width:12px;height:calc(var(--leader,28px) - 2px);clip-path:polygon(50% 0,100% 100%,0 100%);transform:translateX(-50%)}
-.guide-callout.leader-left::before{top:var(--tip,50%);right:calc(100% - 1px);width:var(--leader,28px);height:16px;clip-path:polygon(0 50%,100% 0,100% 100%);transform:translateY(-50%)}
-.guide-callout.leader-left::after{top:var(--tip,50%);right:100%;width:calc(var(--leader,28px) - 2px);height:12px;clip-path:polygon(0 50%,100% 0,100% 100%);transform:translateY(-50%)}
-.guide-callout.info.leader-down::after{top:100%;bottom:auto;left:var(--tip,50%);width:12px;height:calc(var(--leader,28px) - 2px);border:0;border-radius:0;background:var(--bubble-bg);clip-path:polygon(0 0,100% 0,50% 100%);transform:translateX(-50%)}
-.guide-callout.info.leader-up::after{top:auto;bottom:100%;left:var(--tip,50%);width:12px;height:calc(var(--leader,28px) - 2px);border:0;border-radius:0;background:var(--bubble-bg);clip-path:polygon(50% 0,100% 100%,0 100%);transform:translateX(-50%)}
-.guide-callout.info.leader-left::after{top:var(--tip,50%);right:100%;left:auto;width:calc(var(--leader,28px) - 2px);height:12px;border:0;border-radius:0;background:var(--bubble-bg);clip-path:polygon(0 50%,100% 0,100% 100%);transform:translateY(-50%)}
+.guide-callout.leader-down::before,.guide-callout.leader-up::before,.guide-callout.leader-left::before{content:"";position:absolute;z-index:4;display:block;opacity:1;background:var(--bubble-border)}
+.guide-callout.leader-down::after,.guide-callout.leader-up::after,.guide-callout.leader-left::after{content:"";position:absolute;z-index:5;display:block;border:0;background:var(--bubble-bg)}
+.guide-callout.leader-down::before{top:calc(100% - 2px);left:var(--tip,50%);width:10px;height:var(--leader,28px);clip-path:polygon(0 0,100% 0,50% 100%);transform:translateX(-50%)}
+.guide-callout.leader-down::after{top:calc(100% - 2px);left:var(--tip,50%);width:7px;height:calc(var(--leader,28px) - 3px);clip-path:polygon(0 0,100% 0,50% 100%);transform:translateX(-50%)}
+.guide-callout.leader-up::before{bottom:calc(100% - 2px);left:var(--tip,50%);width:10px;height:var(--leader,28px);clip-path:polygon(50% 0,100% 100%,0 100%);transform:translateX(-50%)}
+.guide-callout.leader-up::after{bottom:calc(100% - 2px);left:var(--tip,50%);width:7px;height:calc(var(--leader,28px) - 3px);clip-path:polygon(50% 0,100% 100%,0 100%);transform:translateX(-50%)}
+.guide-callout.leader-left::before{top:var(--tip,50%);right:calc(100% - 2px);width:var(--leader,28px);height:10px;clip-path:polygon(0 50%,100% 0,100% 100%);transform:translateY(-50%)}
+.guide-callout.leader-left::after{top:var(--tip,50%);right:calc(100% - 2px);width:calc(var(--leader,28px) - 3px);height:7px;clip-path:polygon(0 50%,100% 0,100% 100%);transform:translateY(-50%)}
+/* 点線の補足は、しっぽの両辺も同じ点線にする。上辺は描かず本体とつなぐ。 */
+.guide-callout.info.leader-down::before{background:var(--bubble-bg) center/100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 100' preserveAspectRatio='none'%3E%3Cpath d='M1 0 L6 99 L11 0' fill='%23f0f7ea' stroke='%23a9c99a' stroke-width='1.3' stroke-dasharray='4 4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");clip-path:none}
+.guide-callout.info.leader-up::before{background:var(--bubble-bg) center/100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 100' preserveAspectRatio='none'%3E%3Cpath d='M1 100 L6 1 L11 100' fill='%23f0f7ea' stroke='%23a9c99a' stroke-width='1.3' stroke-dasharray='4 4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");clip-path:none}
+.guide-callout.info.leader-left::before{background:var(--bubble-bg) center/100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M99 1 L1 6 L99 11' fill='%23f0f7ea' stroke='%23a9c99a' stroke-width='1.3' stroke-dasharray='4 4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");clip-path:none}
+.guide-callout.info.leader-down::after,.guide-callout.info.leader-up::after,.guide-callout.info.leader-left::after{display:none}
 .guide-editor-options{display:grid;gap:4px;margin-top:6px;padding:6px;border-radius:8px;background:#fff8eb;color:#665d50;font-size:8px;font-weight:700}
 .guide-option-toggle{display:flex;align-items:center;gap:4px;white-space:nowrap}.guide-option-toggle .quick-check{border-color:#d9892b;background:var(--orange);box-shadow:inset 0 0 0 3px var(--orange)}
 .guide-option-title{display:grid;grid-template-columns:58px 1fr;align-items:center;gap:5px}.guide-option-title .guide-input{min-height:20px}
 .guide-option-rows{display:grid;grid-template-columns:1fr 1fr;gap:4px}.guide-option-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:3px;padding:4px;border:1px solid #ead4ad;border-radius:6px;background:#fff}.guide-option-row strong{color:#5d5549;font-size:8px}.guide-option-row span{color:#6f675b;font-size:7px}
 .guide-scene.option-guide{padding-top:50px}
-@media(max-width:370px){.guide-callout.leader-down::before,.guide-callout.leader-up::before{width:14px}.guide-callout.leader-down::after,.guide-callout.leader-up::after{width:10px}.guide-option-toggle{font-size:7.5px}}
+@media(max-width:370px){.guide-option-toggle{font-size:7.5px}}
 </style>
 </head>
 <body>
@@ -329,7 +330,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
     <div class="zero-cell" aria-label="0歳の人数とおかゆ設定">
       <label><span class="class-label"><svg class="class-icon class-kingyo" viewBox="0 0 291 245" aria-hidden="true"><use href="#class-icon-kingyo"/></svg>0歳</span><select id="c0"></select></label>
       <div class="porridge-row">
-        <label id="porridgeToggleWrap" class="porridge-toggle hidden"><img class="porridge-icon" src="07_おかゆ茶碗アイコン.png" alt=""><input id="porridgeEnabled" type="checkbox"><span>おかゆ</span></label>
+        <label id="porridgeToggleWrap" class="porridge-toggle hidden"><input id="porridgeEnabled" type="checkbox"><span>おかゆ</span></label>
         <label id="porridgeCountWrap" class="porridge-count hidden"><select id="porridgeCount" aria-label="おかゆを食べる0歳児の人数"></select></label>
       </div>
     </div>
@@ -499,7 +500,6 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
             <div class="guide-step-head"><span class="guide-step-number">1</span><span class="guide-step-title">今日の人数を決める</span></div>
             <div class="guide-scene people-overview">
               <span class="guide-callout operation top-left leader-down" style="--tip:26%;--leader:66px">今日の人数を変更</span>
-              <span class="guide-callout operation top-right leader-down" style="--tip:72%;--leader:27px">基本人数に戻す</span>
               <div class="guide-card-head"><img src="04_人数アイコン.png" alt=""><span>今日の人数</span><span class="guide-reset">基本人数に戻す</span></div>
               <div class="guide-people-grid">
                 <span class="guide-person"><span class="guide-person-label"><svg class="guide-class-icon" viewBox="0 0 291 245" aria-hidden="true"><use href="#class-icon-kingyo"/></svg>0歳</span><span class="guide-number">1⌄</span></span>
@@ -515,7 +515,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
             <div class="guide-scene target-row">
               <span class="guide-callout operation top-left leader-down" style="--tip:28%;--leader:29px">おかゆの子がいたらチェック</span>
               <span class="guide-callout operation top-right leader-down" style="--tip:72%;--leader:29px">人数を選ぶ</span>
-              <div class="guide-helper-row"><img src="07_おかゆ茶碗アイコン.png" alt=""><span class="quick-check"></span><span>おかゆ</span><span class="quick-mini-number">1⌄</span></div>
+              <div class="guide-helper-row"><span class="quick-check"></span><span>おかゆ</span><span class="quick-mini-number">1⌄</span></div>
             </div>
             <div class="guide-scene target-row">
               <span class="guide-callout operation top-left leader-down" style="--tip:30%;--leader:47px">学童が給食を食べる日はここ</span>
@@ -536,7 +536,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
             <div class="guide-scene">
               <span class="guide-callout operation top-left leader-down" style="--tip:42%;--leader:57px">まずカテゴリをタップ</span>
               <div class="guide-card-head"><img src="06_フォークスプーンアイコン.png" alt=""><span>メイン食材を選ぶ</span><span class="guide-reset">全部</span></div>
-              <div class="guide-categories"><span class="guide-category meat"><img src="02_肉アイコン.png" alt="">肉</span><span class="guide-category fish"><img src="05_魚アイコン_左向き.png" alt="">魚</span><span class="guide-category tofu"><img src="03_豆腐アイコン.png" alt="">豆腐</span></div>
+              <div class="guide-categories"><span class="guide-category meat"><img src="02_肉アイコン.png" alt="">肉</span><span class="guide-category fish"><img src="05_魚アイコン_左向き_背景透明.png" alt="">魚</span><span class="guide-category tofu"><img src="03_豆腐アイコン.png" alt="">豆腐</span></div>
               <div class="guide-food-popup"><span>鶏もも　✓</span><span>手羽元</span><span>ささみ</span></div>
               <span class="guide-callout operation center-right leader-left" style="--leader:48px">候補から食材をタップ</span>
             </div>
