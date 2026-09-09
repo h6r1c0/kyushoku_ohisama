@@ -840,7 +840,7 @@ function renderFoodOption(f){
   if(!f.variants.length){w.classList.add("hidden");s.innerHTML="";list.innerHTML="";return}
   w.classList.remove("hidden");document.getElementById("foodOptionLabel").textContent=f.optionTitle||"オプション";
   const old=s.dataset.foodId===f.id?s.value:"",saved=dailyState.variantByFood?.[f.id];s.innerHTML="";f.variants.forEach((v,i)=>{const o=document.createElement("option");o.value=i;o.textContent=v.name;s.appendChild(o)});
-  const preferred=saved!==undefined?Number(saved):Number(old||0);s.value=String(preferred>=0&&preferred<f.variants.length?preferred:0);s.dataset.foodId=f.id;
+  const preferred=old!==""?Number(old):(saved!==undefined?Number(saved):0);s.value=String(preferred>=0&&preferred<f.variants.length?preferred:0);s.dataset.foodId=f.id;
   list.innerHTML="";f.variants.forEach((v,i)=>{const button=document.createElement("button");button.type="button";button.className="variant-choice";button.setAttribute("aria-pressed",String(Number(s.value||0)===i));const name=document.createElement("span");name.className="variant-name";name.textContent=v.name;button.appendChild(name);const diff=variantDifferenceText(f,v);if(diff){const detail=document.createElement("span");detail.className="variant-diff";detail.textContent=diff;button.appendChild(detail)}button.onclick=()=>selectFoodVariant(i);list.appendChild(button)});
 }
 function variantDifferenceText(f,variant){
@@ -861,7 +861,7 @@ function renderGakudoOptions(r,count){
   const unique=[...new Set(rates)];
   select.innerHTML="";
   unique.forEach(v=>{const o=document.createElement("option");o.value=String(v);o.textContent=String(Math.round(v*100)/100);select.appendChild(o)});
-  const preferred=[saved===undefined?"":String(saved),old,r.rg==null?"":String(Number(r.rg)),unique.length?String(unique[0]):""].find(v=>v!==""&&unique.some(n=>String(n)===v));
+  const preferred=[old,saved===undefined?"":String(saved),r.rg==null?"":String(Number(r.rg)),unique.length?String(unique[0]):""].find(v=>v!==""&&unique.some(n=>String(n)===v));
   if(preferred!==undefined)select.value=preferred;select.dataset.foodId=foodId;
 }
 function update(){
