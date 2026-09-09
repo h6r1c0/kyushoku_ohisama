@@ -335,7 +335,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
 .help-live-clone .food-picker-select{display:none!important}
 .help-live-clone .toggle-btn[aria-expanded="true"] .chevron{transform:rotate(225deg) translate(-2px,-2px)}
 .guide-callout.dynamic-callout{z-index:8;max-width:132px;font-size:9px}
-.help-live-food-popup{position:absolute!important;z-index:5!important;display:block!important}
+.help-live-clone .help-live-food-popup{position:absolute!important;z-index:5!important;display:block!important}
 .help-live-food-popup .food-choice{font-size:12px}
 .help-legacy-guide{display:none!important}
 @media(max-width:370px){.soft-select-button{min-height:43px;padding-left:8px;font-size:16px}.help-live-scene{padding-top:54px;padding-bottom:54px}.guide-callout.dynamic-callout{max-width:118px;font-size:8.5px}.setting-field-label{font-size:11px}.setting-field-icon{flex-basis:18px;width:18px;height:18px}}
@@ -1211,10 +1211,10 @@ function cloneForHelp(selector){
 function helpControl(root,id){
   const control=root.querySelector(`[data-help-id="${id}"]`);return control?.closest(".soft-select-wrap")?.querySelector(".soft-select-button")||control;
 }
-function addGuideCallout(scene,target,text,type="operation",side="top",gap=8){
+function addGuideCallout(scene,target,text,type="operation",side="top",gap=8,offsetX=0){
   if(!target)return;const bubble=document.createElement("span");bubble.className=`guide-callout dynamic-callout ${type} leader-${side==="bottom"?"up":"down"}`;bubble.textContent=text;scene.appendChild(bubble);
   const sceneRect=scene.getBoundingClientRect(),targetRect=target.getBoundingClientRect(),bubbleRect=bubble.getBoundingClientRect(),targetX=targetRect.left-sceneRect.left+targetRect.width/2;
-  const left=Math.max(4,Math.min(sceneRect.width-bubbleRect.width-4,targetX-bubbleRect.width/2)),targetY=side==="bottom"?targetRect.bottom-sceneRect.top:targetRect.top-sceneRect.top;
+  const left=Math.max(4,Math.min(sceneRect.width-bubbleRect.width-4,targetX-bubbleRect.width/2+offsetX)),targetY=side==="bottom"?targetRect.bottom-sceneRect.top:targetRect.top-sceneRect.top;
   const top=side==="bottom"?targetY+gap:targetY-bubbleRect.height-gap;bubble.style.left=`${left}px`;bubble.style.top=`${Math.max(2,top)}px`;bubble.style.setProperty("--tip",`${Math.max(7,Math.min(bubbleRect.width-7,targetX-left))}px`);bubble.style.setProperty("--leader",`${Math.max(8,gap+2)}px`);
 }
 function makeHelpStep(container,number,title,selector){
@@ -1232,7 +1232,7 @@ function renderHelpDaily(){
   people.scene.style.paddingBottom="110px";
   clone.querySelector('[data-help-id="porridgeToggleWrap"]')?.classList.remove("hidden");clone.querySelector('[data-help-id="porridgeCountWrap"]')?.classList.remove("hidden");clone.querySelector(".fruit-adult-control")?.classList.remove("hidden");
   const porridge=clone.querySelector('[data-help-id="porridgeEnabled"]'),school=clone.querySelector('[data-help-id="cgEats"]');if(porridge)porridge.checked=true;if(school)school.checked=false;setHelpSelect(clone,"porridgeCount",1);setHelpSelect(clone,"fruitAdult",2);
-  requestAnimationFrame(()=>{fitHelpClone(people);addGuideCallout(people.scene,helpControl(clone,"c0"),"今日の人数を変更","operation","top",10);addGuideCallout(people.scene,clone.querySelector(".people-card .secondary"),"いつもの人数に戻したい時","operation","top",30);addGuideCallout(people.scene,helpControl(clone,"porridgeEnabled"),"おかゆの子がいたらチェック","operation","bottom",12);addGuideCallout(people.scene,helpControl(clone,"porridgeCount"),"人数を選ぶ","operation","bottom",33);addGuideCallout(people.scene,helpControl(clone,"cgEats"),"学童が給食を食べる日","operation","bottom",12);addGuideCallout(people.scene,helpControl(clone,"fruitAdult"),"果物を食べる大人","operation","bottom",34);addGuideCallout(people.scene,clone.querySelector(".people-summary"),"人数に合わせて自動計算","info","bottom",55)});
+  requestAnimationFrame(()=>{fitHelpClone(people);addGuideCallout(people.scene,helpControl(clone,"c0"),"今日の人数を変更","operation","top",10,-18);addGuideCallout(people.scene,clone.querySelector(".people-card .secondary"),"いつもの人数に戻したい時","operation","top",30,10);addGuideCallout(people.scene,helpControl(clone,"porridgeEnabled"),"おかゆの子がいたらチェック","operation","bottom",13,-55);addGuideCallout(people.scene,helpControl(clone,"porridgeCount"),"人数を選ぶ","operation","bottom",34,54);addGuideCallout(people.scene,helpControl(clone,"cgEats"),"学童が給食を食べる日","operation","bottom",13,-63);addGuideCallout(people.scene,helpControl(clone,"fruitAdult"),"果物を食べる大人","operation","bottom",38,38)});
 
   const food=makeHelpStep(container,2,"メイン食材を選ぶ",".food-card"),foodClone=food.clone;
   food.scene.style.paddingBottom="116px";
