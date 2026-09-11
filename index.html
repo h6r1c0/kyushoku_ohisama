@@ -144,7 +144,7 @@ strong{color:var(--green-dark)}label{font-size:13px;color:var(--muted)}input,sel
 /* 正式PNG素材と0歳おかゆ補助UI。既存の確定クラス素材は変更しない。 */
 .feature-tabs{bottom:100%}
 .feature-tab::after{display:block;left:0;right:0;bottom:-2px;height:3px;background:var(--feature-surface)}
-.people-icon{background-image:url("04_人数アイコン.png")}
+.people-icon{background:none}
 .meal-icon{background-image:url("06_フォークスプーンアイコン.png")}
 .category-chip[data-category="meat"] .category-icon{background-image:url("02_肉アイコン.png")}
 .category-chip[data-category="fish"] .category-icon{background-image:url("05_魚アイコン_左向き_背景透明.png")}
@@ -356,15 +356,10 @@ input[type="checkbox"]{accent-color:var(--orange)}
 @media(max-width:370px){.guide-callout.dynamic-callout{width:min(112px,calc(50% - 5px));font-size:8.5px}}
 .global-help-panel{width:min(430px,calc(100vw - 28px))}
 @media(min-width:768px){.global-help-panel{width:min(560px,calc(100vw - 40px))}}
-/* 乾物計算：既存の量計算とは独立したタブ。 */
+/* 乾物計算は量計算内のアコーディオンとして表示する。 */
 .feature-tab{appearance:none;font-family:inherit;cursor:pointer;gap:6px}
 .feature-tab[aria-selected="false"]{border-color:#e8c994;background:linear-gradient(180deg,#fff8ed,#f8ead4);color:#80694e;font-weight:700}
 .feature-tab[aria-selected="false"]::after{display:none}
-.calculator-icon{position:relative;display:inline-block;flex:0 0 19px;width:19px;height:21px;border:2px solid currentColor;border-radius:4px}
-.calculator-icon::before{content:"";position:absolute;left:3px;right:3px;top:3px;height:4px;border:1px solid currentColor;border-radius:1px}
-.calculator-icon::after{content:"";position:absolute;left:4px;top:11px;width:3px;height:3px;border-radius:1px;background:currentColor;box-shadow:5px 0 currentColor,0 5px currentColor,5px 5px currentColor}
-.calculator-icon.large{flex-basis:26px;width:26px;height:29px;color:var(--orange)}
-.calculator-icon.large::before{left:4px;right:4px;height:5px}.calculator-icon.large::after{left:5px;top:14px;width:4px;height:4px;box-shadow:7px 0 currentColor,0 7px currentColor,7px 7px currentColor}
 .dry-panel.hidden{display:none}.dry-card{background:#fffdf9}.dry-flow{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(82px,.8fr) auto;align-items:end;gap:9px}
 .dry-flow label{min-width:0;color:var(--muted);font-size:12px;font-weight:700}.dry-flow input[type="number"]{width:100%;min-height:42px;margin-top:5px}
 .dry-snack-toggle{display:flex;align-items:center;gap:6px;min-height:42px;padding:0 5px;white-space:nowrap}.dry-snack-toggle input{width:17px;height:17px;margin:0;accent-color:var(--orange)}
@@ -373,7 +368,30 @@ input[type="checkbox"]{accent-color:var(--orange)}
 .global-help-title{display:flex;align-items:center;gap:6px}.help-title-question{display:grid;place-items:center;width:22px;height:22px;border:1px solid #e2c58f;border-radius:50%;background:#fff1dc;color:#946126;font-size:14px;font-weight:900}.help-heading-label{display:flex;align-items:center;gap:7px;min-width:0}.help-heading-label>img{width:29px;height:25px;object-fit:contain}.help-heading-label>.settings-icon{flex-basis:27px;width:27px;height:27px}
 .help-remainder-example{display:flex;align-items:baseline;gap:5px;margin:9px 7px 0;padding:9px 11px;border:1px dashed #d5b77a;border-radius:10px;background:#fffaf1;color:#51483d}.help-remainder-example small{margin-right:auto;color:#826c4d;font-size:9px}.help-remainder-example strong{font-size:22px}.help-remainder-example span{color:#4b8a31;font-size:11px;font-weight:800}
 @media(max-width:430px){.feature-tabs{gap:3px}.feature-tab{padding-right:12px;padding-left:12px}.dry-flow{grid-template-columns:minmax(0,1.45fr) 76px auto;gap:6px}.dry-snack-toggle{gap:3px;padding:0;font-size:11px}}
-@media(max-width:350px){.feature-tab{padding-right:9px;padding-left:9px;font-size:14px}.feature-tab .calculator-icon{display:none}.dry-flow{grid-template-columns:minmax(0,1fr) 72px}.dry-snack-toggle{grid-column:1/-1;min-height:30px}}
+@media(max-width:350px){.feature-tab{padding-right:9px;padding-left:9px;font-size:14px}.dry-flow{grid-template-columns:minmax(0,1fr) 72px}.dry-snack-toggle{grid-column:1/-1;min-height:30px}}
+
+/* 今回追加された正式PNGを、そのまま見出し素材として使う。 */
+.people-icon{background:none!important;object-fit:contain}
+.dry-settings-icon{background-image:url("09_乾物計算アイコン.png");filter:none!important}
+.heading-image-icon{display:block;flex:0 0 29px;width:29px;height:29px;object-fit:contain}
+.help-heading-label.no-icon{padding-left:1px}
+.help-heading-label .help-daily-icon,.help-heading-label .help-dry-icon{width:27px;height:27px;object-fit:contain;filter:sepia(1) saturate(.78) hue-rotate(350deg) brightness(.82)}
+
+/* 食材・ルール編集は、入口で対象を選んでから既存フォームを表示する。 */
+.editor-kind-prompt{margin:0 0 9px;color:#685d4d;font-size:14px;font-weight:800;text-align:center}
+.editor-kind-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.editor-kind-choice{display:flex;align-items:center;justify-content:center;gap:8px;min-height:64px;padding:9px;border:1px solid #e5c995;border-radius:13px;background:#fffaf0;color:#76502d;font:800 15px/1.3 "M PLUS Rounded 1c",sans-serif}
+.editor-kind-choice img{display:block;width:31px;height:31px;object-fit:contain}
+.editor-kind-choice[aria-pressed="true"]{border:2px solid var(--orange);background:#fff;box-shadow:0 2px 7px rgba(151,98,38,.1)}
+.editor-mode-panel{margin-top:12px;padding-top:12px;border-top:1px solid #edddc1}
+.editor-mode-panel.hidden{display:none}
+.editor-mode-back{margin-bottom:9px;padding:7px 10px;font-size:12px}
+.dry-calculator-card>.editor-row{padding-top:2px}
+.dry-calculator-card .dry-card{margin:0;padding:2px 0 5px;border:0;background:transparent;box-shadow:none}
+.help-live-clone .editor-mode-panel.hidden{display:none!important}
+.help-live-clone .editor-kind-chooser.hidden{display:none!important}
+.help-live-clone .dry-calculator-card>.editor-row{display:block!important}
+@media(max-width:370px){.editor-kind-choice{min-height:58px;padding:7px;font-size:14px}.editor-kind-choice img{width:28px;height:28px}}
 </style>
 </head>
 <body>
@@ -425,14 +443,13 @@ input[type="checkbox"]{accent-color:var(--orange)}
 </header>
 <section class="feature-shell">
 <div class="feature-tabs" role="tablist" aria-label="機能">
-  <button id="quantityTab" class="feature-tab" type="button" role="tab" aria-selected="true" aria-controls="quantityPanel" onclick="showFeature('quantity')">量計算</button>
-  <button id="dryTab" class="feature-tab" type="button" role="tab" aria-selected="false" aria-controls="dryPanel" onclick="showFeature('dry')"><span class="calculator-icon" aria-hidden="true"></span>乾物計算</button>
+  <button id="quantityTab" class="feature-tab" type="button" role="tab" aria-selected="true" aria-controls="quantityPanel">量計算</button>
 </div>
 <main id="quantityPanel" class="feature-panel" role="tabpanel" aria-labelledby="quantityTab">
 
 <div class="card daily-card people-card">
   <div class="section-head daily-section-head">
-    <div class="daily-title"><span class="section-icon people-icon" aria-hidden="true"></span><strong>今日の人数</strong></div>
+    <div class="daily-title"><img class="section-icon people-icon" src="10_kyo_no_ninzu_icon.png" alt=""><strong>今日の人数</strong></div>
     <button class="btn secondary" onclick="resetCurrentCounts()">基本人数に戻す</button>
   </div>
   <div class="regular-people-grid">
@@ -512,7 +529,28 @@ input[type="checkbox"]{accent-color:var(--orange)}
   </div>
 </div>
 
-<div class="card settings-card">
+<div class="card settings-card dry-calculator-card">
+  <div class="section-head settings-accordion-head" onclick="handleSettingsHeaderClick(event)">
+    <div class="settings-title"><span class="settings-icon dry-settings-icon" aria-hidden="true"></span><strong>乾物計算</strong></div>
+    <button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="dryCalculator" aria-label="乾物計算を開く" data-label="乾物計算" onclick="toggleDryCalculator(this)"><span class="chevron" aria-hidden="true"></span></button>
+  </div>
+  <div id="dryCalculator" class="hidden editor-row">
+    <div class="card dry-card">
+      <div class="dry-flow">
+        <label>食材<select id="dryFood" aria-label="乾物の食材を選ぶ"></select></label>
+        <label>人数<input id="dryPeople" type="number" min="0" step="1" inputmode="numeric" aria-label="乾物計算の人数"></label>
+        <label class="dry-snack-toggle"><input id="drySnack" type="checkbox">おやつ</label>
+      </div>
+      <div class="dry-result" aria-live="polite">
+        <div class="dry-result-label">必要量</div>
+        <div id="dryResultValue" class="dry-result-value">—</div>
+        <div id="dryResultNote" class="dry-result-note">1人量が未設定です</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card settings-card defaults-settings-card">
   <div class="section-head settings-accordion-head" onclick="handleSettingsHeaderClick(event)">
     <div class="settings-title"><span class="settings-icon people-settings-icon" aria-hidden="true"></span><strong>基本人数の設定</strong></div>
     <button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="defaultsEditor" aria-label="基本人数の設定を開く" data-label="基本人数の設定" onclick="toggleSection('defaultsEditor',this)"><span class="chevron" aria-hidden="true"></span></button>
@@ -551,13 +589,22 @@ input[type="checkbox"]{accent-color:var(--orange)}
   </div>
 </div>
 
-<div class="card settings-card">
+<div class="card settings-card food-editor-card">
   <div class="section-head settings-accordion-head" onclick="handleSettingsHeaderClick(event)">
     <div class="settings-title"><span class="settings-icon food-settings-icon" aria-hidden="true"></span><strong>食材・ルール編集</strong></div>
     <button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="foodEditor" aria-label="食材・ルール編集を開く" data-label="食材・ルール編集" onclick="toggleFoodEditor(this)"><span class="chevron" aria-hidden="true"></span></button>
   </div>
 
   <div id="foodEditor" class="hidden editor-row">
+    <div id="foodEditorChooser" class="editor-kind-chooser">
+      <div class="editor-kind-prompt">どちらを編集しますか？</div>
+      <div class="editor-kind-choices" role="group" aria-label="編集する食材の種類">
+        <button type="button" class="editor-kind-choice" data-editor-kind="main" aria-pressed="false" onclick="showFoodEditorMode('main')"><img src="06_フォークスプーンアイコン.png" alt=""><span>メイン食材</span></button>
+        <button type="button" class="editor-kind-choice" data-editor-kind="dry" aria-pressed="false" onclick="showFoodEditorMode('dry')"><img src="09_乾物計算アイコン.png" alt=""><span>乾物</span></button>
+      </div>
+    </div>
+    <div id="mainFoodEditor" class="editor-mode-panel hidden">
+    <button type="button" class="btn secondary editor-mode-back" onclick="showFoodEditorMode(null)">← 選び直す</button>
     <div class="small">食材追加、1人量、サイズ違いを変更できます。</div>
     <div class="grid3">
       <div class="category-editor-field"><span>分類</span><div id="editCategoryChoices" class="category-editor-choices" role="group" aria-label="食材の分類">
@@ -603,6 +650,18 @@ input[type="checkbox"]{accent-color:var(--orange)}
       <button class="btn secondary" onclick="clearFoodEditor()">新規入力</button>
       <button class="btn secondary" onclick="deleteFood()">選択中を削除</button>
     </div>
+    </div>
+    <div id="dryEditor" class="editor-mode-panel hidden">
+      <button type="button" class="btn secondary editor-mode-back" onclick="showFoodEditorMode(null)">← 選び直す</button>
+      <div class="small">食事用・おやつ用の1人量を個別に設定できます。未設定の欄は空欄のまま保存できます。</div>
+      <div class="grid2 dry-editor-grid">
+        <label>食材名<input id="dryEditName"></label>
+        <label class="unit-control">表示単位<select id="dryEditUnitChoice"></select><input id="dryEditUnitOther" class="other-value hidden" placeholder="単位を入力"></label>
+        <label>食事用1人量<input id="dryMealRate" type="number" min="0" step="any" inputmode="decimal" placeholder="未設定"></label>
+        <label>おやつ用1人量<input id="drySnackRate" type="number" min="0" step="any" inputmode="decimal" placeholder="未設定"></label>
+      </div>
+      <div class="actions"><button class="btn primary" onclick="saveDryFood()">保存 / 更新</button><button class="btn secondary" onclick="clearDryEditor()">新規入力</button><button class="btn secondary" onclick="deleteDryFood()">選択中を削除</button></div>
+    </div>
   </div>
 </div>
 
@@ -611,10 +670,10 @@ input[type="checkbox"]{accent-color:var(--orange)}
   <div id="helpEditor" class="hidden global-help-panel help-editor">
     <div class="global-help-header"><div class="global-help-title"><span class="help-title-question" aria-hidden="true">?</span>使い方</div><button type="button" class="global-help-close" onclick="toggleSection('helpEditor',document.querySelector('.global-help-button'))">× 閉じる</button></div>
     <div class="help-feature">
-      <button type="button" class="help-feature-button" aria-expanded="true" aria-controls="helpQuantity" aria-label="量計算の使い方を閉じる" data-label="量計算の使い方" onclick="toggleSection('helpQuantity',this)"><span class="help-heading-label"><img src="02_肉アイコン.png" alt="">量計算</span><span class="chevron" aria-hidden="true"></span></button>
+      <button type="button" class="help-feature-button" aria-expanded="true" aria-controls="helpQuantity" aria-label="量計算の使い方を閉じる" data-label="量計算の使い方" onclick="toggleSection('helpQuantity',this)"><span class="help-heading-label no-icon">量計算</span><span class="chevron" aria-hidden="true"></span></button>
       <div id="helpQuantity" class="help-feature-content">
     <div class="help-topic">
-      <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpDaily" aria-label="毎日の使い方を開く" data-label="毎日の使い方" onclick="toggleSection('helpDaily',this)"><span class="help-heading-label"><img src="04_人数アイコン.png" alt="">毎日の使い方</span><span class="chevron" aria-hidden="true"></span></button>
+      <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpDaily" aria-label="毎日の使い方を開く" data-label="毎日の使い方" onclick="toggleSection('helpDaily',this)"><span class="help-heading-label"><img class="help-daily-icon" src="08_毎日の使い方アイコン.png" alt="">毎日の使い方</span><span class="chevron" aria-hidden="true"></span></button>
       <div id="helpDaily" class="hidden help-content help-content-visual">
         <div id="helpDailyLive" class="visual-guide"></div>
         <div class="visual-guide help-legacy-guide" aria-hidden="true">
@@ -622,7 +681,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
             <div class="guide-step-head"><span class="guide-step-number">1</span><span class="guide-step-title">今日の人数を決める</span></div>
             <div class="guide-scene people-overview">
               <span class="guide-callout operation top-left leader-down" style="--tip:26%;--leader:66px">今日の人数を変更</span>
-              <div class="guide-card-head"><img src="04_人数アイコン.png" alt=""><span>今日の人数</span><span class="guide-reset">基本人数に戻す</span></div>
+              <div class="guide-card-head"><img src="10_kyo_no_ninzu_icon.png" alt=""><span>今日の人数</span><span class="guide-reset">基本人数に戻す</span></div>
               <div class="guide-people-grid">
                 <span class="guide-person"><span class="guide-person-label"><svg class="guide-class-icon" viewBox="0 0 291 245" aria-hidden="true"><use href="#class-icon-kingyo"/></svg>0歳</span><span class="guide-number">1⌄</span></span>
                 <span class="guide-person"><span class="guide-person-label"><svg class="guide-class-icon" viewBox="0 0 384 208" aria-hidden="true"><use href="#class-icon-medaka"/></svg>1歳</span><span class="guide-number">0⌄</span></span>
@@ -692,6 +751,10 @@ input[type="checkbox"]{accent-color:var(--orange)}
       </div>
     </div>
     <div class="help-topic">
+      <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpDry" aria-label="乾物計算を開く" data-label="乾物計算" onclick="toggleSection('helpDry',this)"><span class="help-heading-label"><img class="help-dry-icon" src="09_乾物計算アイコン.png" alt="">乾物計算</span><span class="chevron" aria-hidden="true"></span></button>
+      <div id="helpDry" class="hidden help-content help-content-visual"><div id="helpDryLive" class="visual-guide"></div></div>
+    </div>
+    <div class="help-topic">
       <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpPeople" aria-label="基本人数を変更するを開く" data-label="基本人数を変更する" onclick="toggleSection('helpPeople',this)"><span class="help-heading-label"><span class="settings-icon people-settings-icon" aria-hidden="true"></span>基本人数を変更する</span><span class="chevron" aria-hidden="true"></span></button>
       <div id="helpPeople" class="hidden help-content help-content-visual">
         <div id="helpPeopleLive" class="visual-guide"></div>
@@ -735,37 +798,6 @@ input[type="checkbox"]{accent-color:var(--orange)}
 </aside>
 
 </main>
-<section id="dryPanel" class="feature-panel dry-panel hidden" role="tabpanel" aria-labelledby="dryTab">
-  <div class="card dry-card">
-    <div class="section-head daily-section-head"><div class="daily-title"><span class="calculator-icon large" aria-hidden="true"></span><strong>乾物計算</strong></div></div>
-    <div class="dry-flow">
-      <label>食材<select id="dryFood" aria-label="乾物の食材を選ぶ"></select></label>
-      <label>人数<input id="dryPeople" type="number" min="0" step="1" inputmode="numeric" aria-label="乾物計算の人数"></label>
-      <label class="dry-snack-toggle"><input id="drySnack" type="checkbox">おやつ</label>
-    </div>
-    <div class="dry-result" aria-live="polite">
-      <div class="dry-result-label">必要量</div>
-      <div id="dryResultValue" class="dry-result-value">—</div>
-      <div id="dryResultNote" class="dry-result-note">1人量が未設定です</div>
-    </div>
-  </div>
-  <div class="card settings-card">
-    <div class="section-head settings-accordion-head" onclick="handleSettingsHeaderClick(event)">
-      <div class="settings-title"><span class="settings-icon food-settings-icon" aria-hidden="true"></span><strong>乾物の設定</strong></div>
-      <button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="dryEditor" aria-label="乾物の設定を開く" data-label="乾物の設定" onclick="toggleSection('dryEditor',this)"><span class="chevron" aria-hidden="true"></span></button>
-    </div>
-    <div id="dryEditor" class="hidden editor-row">
-      <div class="small">食事用・おやつ用の1人量を個別に設定できます。未設定の欄は空欄のまま保存できます。</div>
-      <div class="grid2 dry-editor-grid">
-        <label>食材名<input id="dryEditName"></label>
-        <label class="unit-control">表示単位<select id="dryEditUnitChoice"></select><input id="dryEditUnitOther" class="other-value hidden" placeholder="単位を入力"></label>
-        <label>食事用1人量<input id="dryMealRate" type="number" min="0" step="any" inputmode="decimal" placeholder="未設定"></label>
-        <label>おやつ用1人量<input id="drySnackRate" type="number" min="0" step="any" inputmode="decimal" placeholder="未設定"></label>
-      </div>
-      <div class="actions"><button class="btn primary" onclick="saveDryFood()">保存 / 更新</button><button class="btn secondary" onclick="clearDryEditor()">新規入力</button><button class="btn secondary" onclick="deleteDryFood()">選択中を削除</button></div>
-    </div>
-  </div>
-</section>
 </section>
 <div class="version">v1.0</div>
 </div>
@@ -843,8 +875,8 @@ function setSectionState(id,button,open){
 }
 function closeAccordionPeers(id){
   const groups=[
-    ["defaultsEditor","foodEditor","dryEditor"],
-    ["helpDaily","helpPeople","helpFoods"]
+    ["dryCalculator","defaultsEditor","foodEditor"],
+    ["helpDaily","helpDry","helpPeople","helpFoods"]
   ],group=groups.find(items=>items.includes(id));
   if(!group)return;
   group.filter(peerId=>peerId!==id).forEach(peerId=>{
@@ -856,9 +888,9 @@ function toggleSection(id,button){
   const panel=document.getElementById(id),opening=panel.classList.contains("hidden");
   if(opening)closeAccordionPeers(id);setSectionState(id,button,opening);
   if(opening&&id==="helpDaily")requestAnimationFrame(renderHelpDaily);
+  if(opening&&id==="helpDry")requestAnimationFrame(renderHelpDry);
   if(opening&&id==="helpPeople")requestAnimationFrame(renderHelpSettings);
   if(opening&&id==="helpFoods")requestAnimationFrame(renderHelpFoodEditor);
-  if(opening&&id==="dryEditor")loadDryEditor();
   return opening;
 }
 function handleSettingsHeaderClick(event){
@@ -1329,7 +1361,13 @@ function buildVariantRows(){
 }
 function setOptionSettings(){document.getElementById("optionSettings").classList.toggle("hidden",!document.getElementById("useOptions").checked)}
 function setCuttingSettings(){document.getElementById("cuttingSettings").classList.toggle("hidden",!document.getElementById("useCutting").checked)}
-function toggleFoodEditor(button){if(toggleSection("foodEditor",button))loadFoodEditor()}
+function toggleFoodEditor(button){if(toggleSection("foodEditor",button))showFoodEditorMode(null)}
+function showFoodEditorMode(mode){
+  const chooser=document.getElementById("foodEditorChooser"),main=document.getElementById("mainFoodEditor"),dry=document.getElementById("dryEditor");
+  chooser.classList.toggle("hidden",Boolean(mode));main.classList.toggle("hidden",mode!=="main");dry.classList.toggle("hidden",mode!=="dry");
+  document.querySelectorAll("#foodEditorChooser .editor-kind-choice").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.editorKind===mode)));
+  if(mode==="main")loadFoodEditor();if(mode==="dry")loadDryEditor();closeSoftSelect();
+}
 function loadFoodEditor(){
   const f=selectedFood();if(!f)return;editingFoodId=f.id;
   document.getElementById("editName").value=f.name||"";document.getElementById("editCategory").value=f.category||"";setUnitControl(f.unit||"");
@@ -1359,11 +1397,8 @@ function saveFood(){
 function deleteFood(){if(!editingFoodId)return;if(!confirm("この食材を削除しますか？"))return;foods=foods.filter(f=>f.id!==editingFoodId);saveFoods();editingFoodId=null;renderFoods();clearFoodEditor()}
 
 function dryInitialPeople(){const c=counts();return c.c1+c.c2+c.c3+c.c4+c.c5+c.ca+(document.getElementById("cgEats").checked?c.cg:0)}
-function showFeature(name){
-  closeSoftSelect();closeFoodChoicePanel();const dry=name==="dry";
-  document.getElementById("quantityPanel").classList.toggle("hidden",dry);document.getElementById("dryPanel").classList.toggle("hidden",!dry);
-  document.getElementById("quantityTab").setAttribute("aria-selected",String(!dry));document.getElementById("dryTab").setAttribute("aria-selected",String(dry));
-  if(dry){document.getElementById("dryPeople").value=String(dryInitialPeople());renderDryFoods(dryState.selectedFoodId);updateDryResult()}
+function toggleDryCalculator(button){
+  if(toggleSection("dryCalculator",button)){document.getElementById("dryPeople").value=String(dryInitialPeople());renderDryFoods(dryState.selectedFoodId);updateDryResult()}
 }
 function selectedDryFood(){return dryFoods.find(food=>food.id===document.getElementById("dryFood").value)||dryFoods[0]}
 function renderDryFoods(preferredId){
@@ -1465,46 +1500,72 @@ function fillHelpVariantChoices(root,food){
   root.innerHTML="";food.variants.forEach((variant,index)=>{const button=document.createElement("button"),name=document.createElement("span"),detail=document.createElement("span");button.type="button";button.className="variant-choice";button.setAttribute("aria-pressed",String(index===0));name.className="variant-name";name.textContent=variant.name;button.appendChild(name);const difference=variantDifferenceText(food,variant);if(difference){detail.className="variant-diff";detail.textContent=difference;button.appendChild(detail)}root.appendChild(button)})
 }
 function fillHelpResult(root,food){
-  const c=counts(),rates=food.variants[0]||food,missing=c.c0>0?["0歳"]:[],rate=(key,label,count)=>{const value=rates[key];if((value===null||value==="")&&count>0){missing.push(label);return 0}return Number(value||0)},r12=rate("r12","1〜2歳",c.c1+c.c2),rm=rate("rm","3〜5歳",c.c3+c.c4+c.c5),ra=rate("ra","大人",c.ca),units=r12*(c.c1+c.c2)+rm*(c.c3+c.c4+c.c5)+ra*c.ca,pack=food.usesCutting?Math.max(.01,Number(food.yieldPerSource||1)):1,quantity=Math.ceil(units/pack-1e-9),remainder=Math.max(0,quantity*pack-units),fractional=["r12","rm","rg","ra"].some(key=>rates[key]!=null&&Number.isFinite(Number(rates[key]))&&!Number.isInteger(Number(rates[key]))),parts=[];
+  const c=DEFAULT_COUNTS,rates=food.variants[0]||food,missing=c.c0>0?["0歳"]:[],rate=(key,label,count)=>{const value=rates[key];if((value===null||value==="")&&count>0){missing.push(label);return 0}return Number(value||0)},r12=rate("r12","1〜2歳",c.c1+c.c2),rm=rate("rm","3〜5歳",c.c3+c.c4+c.c5),ra=rate("ra","大人",c.ca),units=r12*(c.c1+c.c2)+rm*(c.c3+c.c4+c.c5)+ra*c.ca,pack=food.usesCutting?Math.max(.01,Number(food.yieldPerSource||1)):1,quantity=Math.ceil(units/pack-1e-9),remainder=Math.max(0,quantity*pack-units),fractional=["r12","rm","rg","ra"].some(key=>rates[key]!=null&&Number.isFinite(Number(rates[key]))&&!Number.isInteger(Number(rates[key]))),parts=[];
   root.querySelector('[data-help-id="resultNumber"]').textContent=quantity;root.querySelector('[data-help-id="resultUnit"]').textContent=food.usesCutting?(food.sourceUnit||food.unit):food.unit;if(remainder>.00001||food.usesCutting||fractional)parts.push(`余り ${fmt(remainder)}${food.unit}`);if(missing.length)parts.push(`＋${missing.join("・")}分`);root.querySelector('[data-help-id="subResult"]').textContent=parts.join(" ");const rateText=value=>value==null?"未確認":`${fmt(value)}${food.unit}`;root.querySelector('[data-help-id="basisR0"]').textContent=rateText(rates.r0);root.querySelector('[data-help-id="basisR12"]').textContent=rateText(rates.r12);root.querySelector('[data-help-id="basisRm"]').textContent=rateText(rates.rm);root.querySelector('[data-help-id="basisRg"]').textContent="－";root.querySelector('[data-help-id="basisRa"]').textContent=rateText(rates.ra);const notes=[];if(food.usesCutting&&food.sourceUnit&&food.unit)notes.push(`1${food.sourceUnit}を${fmt(pack)}${food.unit}に切る`);if(food.note)notes.push(food.note);root.querySelector('[data-help-id="basisNotes"]').textContent=notes.map(note=>`※${note}`).join("\n");
 }
 function fillHelpFoodEditor(root,food){
   const setValue=(id,value)=>{const element=root.querySelector(`[data-help-id="${id}"]`);if(element)element.value=value??""};setValue("editName",food.name);setValue("editCategory",food.category);setHelpSelect(root,"editUnitChoice",food.unit);RATE_FIELDS.forEach(({key})=>setHelpRate(root,key,food[key]));const cutting=root.querySelector('[data-help-id="useCutting"]'),cuttingSettings=root.querySelector('[data-help-id="cuttingSettings"]');if(cutting)cutting.checked=Boolean(food.usesCutting);cuttingSettings?.classList.toggle("hidden",!food.usesCutting);setHelpSelect(root,"sourceUnitChoice",food.sourceUnit||"");setValue("yieldPerSource",food.yieldPerSource||"");setValue("editNote",food.note||"");const options=root.querySelector('[data-help-id="useOptions"]'),optionSettings=root.querySelector('[data-help-id="optionSettings"]');if(options)options.checked=food.variants.length>0;optionSettings?.classList.toggle("hidden",!food.variants.length);setValue("optionTitle",food.optionTitle||"サイズ");for(let i=0;i<3;i++){const variant=food.variants[i];setValue(`vName${i}`,variant?.name||"");RATE_FIELDS.forEach(({key})=>setHelpRate(root,`v${key.slice(1)}_${i}`,variant?variant[key]:null))}root.querySelectorAll(".category-editor-choice").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.category===food.category)));
 }
-function renderHelpDaily(){
-  const container=document.getElementById("helpDailyLive");container.innerHTML="";
-  const people=makeHelpStep(container,1,"今日の人数を決める",".people-card"),clone=people.clone;
-  people.scene.style.paddingBottom="110px";
+function prepareHelpPeople(clone){
   clone.querySelector('[data-help-id="porridgeToggleWrap"]')?.classList.remove("hidden");clone.querySelector('[data-help-id="porridgeCountWrap"]')?.classList.remove("hidden");clone.querySelector(".fruit-adult-control")?.classList.remove("hidden");
   const porridge=clone.querySelector('[data-help-id="porridgeEnabled"]'),school=clone.querySelector('[data-help-id="cgEats"]');if(porridge)porridge.checked=true;if(school)school.checked=false;setHelpSelect(clone,"porridgeCount",1);setHelpSelect(clone,"fruitAdult",2);
-  requestAnimationFrame(()=>{fitHelpClone(people);addGuideCallout(people.scene,helpControl(clone,"c0"),"今日の人数をここで変更","operation","top");addGuideCallout(people.scene,clone.querySelector(".people-card .secondary"),"いつもの人数に戻したい時はここをタップ","operation","top");addGuideCallout(people.scene,helpControl(clone,"porridgeEnabled"),"おかゆを食べる子がいる場合はチェック","operation","bottom");addGuideCallout(people.scene,helpControl(clone,"porridgeCount"),"おかゆを食べる人数を選択","operation","top");addGuideCallout(people.scene,helpControl(clone,"cgEats"),"学童が給食を食べる日はチェック","operation","bottom");addGuideCallout(people.scene,helpControl(clone,"fruitAdult"),"果物を食べる大人の人数を選択","operation","top")});
+}
+function prepareHelpFood(clone,food,showPopup=false){
+  const optionWrap=clone.querySelector('[data-help-id="foodOptionWrap"]'),current=clone.querySelector('[data-help-id="currentFoodName"]'),choices=clone.querySelector('[data-help-id="foodOptionChoices"]');optionWrap?.classList.toggle("hidden",!food.variants.length);if(current)current.textContent=food.name;if(choices)fillHelpVariantChoices(choices,food);clone.querySelectorAll(".category-chip").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.category===food.category)));
+  if(!showPopup)return null;const category=clone.querySelector(`.category-chip[data-category="${food.category}"]`),popup=document.createElement("div"),hint=document.createElement("div"),list=document.createElement("div"),categoryFoods=foods.filter(item=>item.category===food.category),sampleIndex=Math.max(0,categoryFoods.findIndex(item=>item.id===food.id)),start=Math.max(0,Math.min(sampleIndex-1,categoryFoods.length-3)),listed=categoryFoods.slice(start,start+3);if(!listed.some(item=>item.id===food.id))listed.push(food);popup.className="food-choice-panel help-live-food-popup";hint.className="food-choice-hint";hint.textContent="魚から選ぶ";list.className="food-choice-list";listed.forEach(item=>{const button=document.createElement("button");button.type="button";button.className="food-choice";button.setAttribute("aria-current",String(item.id===food.id));button.textContent=item.name;list.appendChild(button)});popup.append(hint,list);clone.appendChild(popup);return{category,popup};
+}
+function prepareHelpEditorClone(clone,mode){
+  const outer=clone.querySelector('[data-help-id="foodEditor"]'),chooser=clone.querySelector('[data-help-id="foodEditorChooser"]'),main=clone.querySelector('[data-help-id="mainFoodEditor"]'),dry=clone.querySelector('[data-help-id="dryEditor"]');outer?.classList.remove("hidden");chooser?.classList.toggle("hidden",mode!==null);main?.classList.toggle("hidden",mode!=="main");dry?.classList.toggle("hidden",mode!=="dry");return{outer,chooser,main,dry};
+}
+function renderHelpDaily(){
+  const container=document.getElementById("helpDailyLive");container.innerHTML="";
+  const peopleMain=makeHelpStep(container,1,"今日の人数を決める（人数）",".people-card");prepareHelpPeople(peopleMain.clone);peopleMain.scene.style.paddingBottom="64px";
+  requestAnimationFrame(()=>{fitHelpClone(peopleMain);addGuideCallout(peopleMain.scene,helpControl(peopleMain.clone,"c0"),"今日の人数をここで変更","operation","top");addGuideCallout(peopleMain.scene,peopleMain.clone.querySelector(".daily-section-head .secondary"),"いつもの人数に戻したい時はここをタップ","operation","top")});
+  const peoplePorridge=makeHelpStep(container,"","0歳のおかゆ",".people-card");prepareHelpPeople(peoplePorridge.clone);peoplePorridge.scene.style.paddingBottom="64px";
+  requestAnimationFrame(()=>{fitHelpClone(peoplePorridge);addGuideCallout(peoplePorridge.scene,helpControl(peoplePorridge.clone,"porridgeEnabled"),"おかゆを食べる子がいる場合はチェック","operation","bottom");addGuideCallout(peoplePorridge.scene,helpControl(peoplePorridge.clone,"porridgeCount"),"おかゆを食べる人数を選択","operation","top")});
+  const peopleSchool=makeHelpStep(container,"","学童と果物大人",".people-card");prepareHelpPeople(peopleSchool.clone);peopleSchool.scene.style.paddingBottom="64px";
+  requestAnimationFrame(()=>{fitHelpClone(peopleSchool);addGuideCallout(peopleSchool.scene,helpControl(peopleSchool.clone,"cgEats"),"学童が給食を食べる日はチェック","operation","bottom");addGuideCallout(peopleSchool.scene,helpControl(peopleSchool.clone,"fruitAdult"),"果物を食べる大人の人数を選択","operation","top")});
 
-  const sampleFood=helpSampleFood(),food=makeHelpStep(container,2,"メイン食材を選ぶ",".food-card"),foodClone=food.clone;
-  food.scene.style.paddingBottom="116px";
-  const optionWrap=foodClone.querySelector('[data-help-id="foodOptionWrap"]'),current=foodClone.querySelector('[data-help-id="currentFoodName"]'),choices=foodClone.querySelector('[data-help-id="foodOptionChoices"]');optionWrap?.classList.toggle("hidden",!sampleFood.variants.length);if(current)current.textContent=sampleFood.name;if(choices)fillHelpVariantChoices(choices,sampleFood);foodClone.querySelectorAll(".category-chip").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.category===sampleFood.category)));
-  const category=foodClone.querySelector(`.category-chip[data-category="${sampleFood.category}"]`),popup=document.createElement("div"),hint=document.createElement("div"),list=document.createElement("div"),fishFoods=foods.filter(item=>item.category==="fish"),sampleIndex=Math.max(0,fishFoods.findIndex(item=>item.id===sampleFood.id)),listed=fishFoods.slice(Math.max(0,Math.min(sampleIndex-1,fishFoods.length-3)),Math.max(0,Math.min(sampleIndex-1,fishFoods.length-3))+3);if(!listed.some(item=>item.id===sampleFood.id))listed.push(sampleFood);popup.className="food-choice-panel help-live-food-popup";hint.className="food-choice-hint";hint.textContent="魚から選ぶ";list.className="food-choice-list";listed.forEach(item=>{const button=document.createElement("button");button.type="button";button.className="food-choice";button.setAttribute("aria-current",String(item.id===sampleFood.id));button.textContent=item.name;list.appendChild(button)});popup.append(hint,list);foodClone.appendChild(popup);
-  requestAnimationFrame(()=>{const mr=category.getBoundingClientRect(),cr=foodClone.getBoundingClientRect();popup.style.top=`${(mr.bottom-cr.top)+10}px`;popup.style.left="8px";fitHelpClone(food);addGuideCallout(food.scene,category,"最初に食材の分類を選択","operation","top",9);addGuideCallout(food.scene,popup.querySelector('[aria-current="true"]'),"候補から食材を選択","operation","bottom",8);addGuideCallout(food.scene,current,"選んだ食材をここで確認","info","bottom",34);addGuideCallout(food.scene,choices?.querySelector(".variant-choice"),"サイズがある場合だけ選択","operation","bottom",55)});
+  const sampleFood=helpSampleFood(),foodPick=makeHelpStep(container,2,"メイン食材を選ぶ（分類・候補）",".food-card"),picker=prepareHelpFood(foodPick.clone,sampleFood,true);foodPick.scene.style.paddingBottom="70px";
+  requestAnimationFrame(()=>{const mr=picker.category.getBoundingClientRect(),cr=foodPick.clone.getBoundingClientRect();picker.popup.style.top=`${mr.bottom-cr.top+10}px`;picker.popup.style.left="8px";fitHelpClone(foodPick);addGuideCallout(foodPick.scene,picker.category,"最初に魚の分類を選択","operation","top");addGuideCallout(foodPick.scene,picker.popup.querySelector('[aria-current="true"]'),"候補からししゃもを選択","operation","bottom")});
+  const foodCurrent=makeHelpStep(container,"","選んだ食材を確認",".food-card");prepareHelpFood(foodCurrent.clone,sampleFood,false);foodCurrent.scene.style.paddingBottom="62px";
+  requestAnimationFrame(()=>{fitHelpClone(foodCurrent);addGuideCallout(foodCurrent.scene,foodCurrent.clone.querySelector('[data-help-id="currentFoodName"]'),"選んだ食材をここで確認","info","bottom")});
+  const sizeSample=sampleFood.variants.length?sampleFood:DEFAULT_FOODS.find(food=>food.id==="shishamo"),foodSize=makeHelpStep(container,"","サイズがある場合",".food-card");prepareHelpFood(foodSize.clone,sizeSample,false);foodSize.scene.style.paddingBottom="62px";
+  requestAnimationFrame(()=>{fitHelpClone(foodSize);addGuideCallout(foodSize.scene,foodSize.clone.querySelector('[data-help-id="foodOptionChoices"] .variant-choice'),"サイズがある場合だけ選択","operation","bottom")});
 
-  const result=makeHelpStep(container,3,"必要量を見る",".result-card"),resultClone=result.clone;fillHelpResult(resultClone,sampleFood);const note=resultClone.querySelector('[data-help-id="basisNotes"]'),remainderExample=document.createElement("div");remainderExample.className="help-remainder-example";remainderExample.innerHTML='<small>切り分ける食材の例</small><strong>10枚</strong><span>余り3切れ</span>';result.scene.appendChild(remainderExample);
-  result.scene.style.paddingBottom="90px";
-  requestAnimationFrame(()=>{const sub=resultClone.querySelector(".sub");fitHelpClone(result);addGuideCallout(result.scene,resultClone.querySelector(".result-number"),"本日の使用量が表示されます","info","top");if(sub.textContent.includes("＋0歳分"))addGuideCallout(result.scene,sub,"0歳分は現場で別途判断します","info","top");addGuideCallout(result.scene,resultClone.querySelector(".basis"),"年齢別の1人量を表示","info","bottom");addGuideCallout(result.scene,remainderExample.querySelector("span"),"切り分ける食材では余りも表示します","info","bottom");if(note.textContent.trim())addGuideCallout(result.scene,note,"必要な補足だけ表示","info","bottom")});
+  const result=makeHelpStep(container,3,"必要量を見る（ししゃも）",".result-card"),resultClone=result.clone;fillHelpResult(resultClone,sampleFood);result.scene.style.paddingBottom="72px";
+  requestAnimationFrame(()=>{const sub=resultClone.querySelector(".sub");fitHelpClone(result);addGuideCallout(result.scene,resultClone.querySelector(".result-number"),"本日の使用量が表示されます","info","top");addGuideCallout(result.scene,sub,"0歳分は現場で別途判断します","info","top");addGuideCallout(result.scene,resultClone.querySelector(".basis"),"年齢別の1人量を表示","info","bottom")});
+  const cuttingFood=DEFAULT_FOODS.find(food=>food.id==="chicken"),cuttingResult=makeHelpStep(container,"","切り分ける食材の結果",".result-card"),cuttingClone=cuttingResult.clone;fillHelpResult(cuttingClone,cuttingFood);cuttingResult.scene.style.paddingBottom="72px";
+  requestAnimationFrame(()=>{fitHelpClone(cuttingResult);addGuideCallout(cuttingResult.scene,cuttingClone.querySelector(".sub"),"切り分ける食材では余りも表示します","info","top");addGuideCallout(cuttingResult.scene,cuttingClone.querySelector('[data-help-id="basisNotes"]'),"必要な切り分け方を表示","info","bottom")});
+}
+function renderHelpDry(){
+  const container=document.getElementById("helpDryLive");container.innerHTML="";
+  const inputs=makeHelpStep(container,"","食材と人数を選ぶ",".dry-calculator-card"),clone=inputs.clone;clone.querySelector('[data-help-id="dryCalculator"]')?.classList.remove("hidden");setHelpSelect(clone,"dryFood",dryState.selectedFoodId||dryFoods[0]?.id);const people=clone.querySelector('[data-help-id="dryPeople"]');if(people)people.value=String(dryInitialPeople());inputs.scene.style.paddingBottom="68px";
+  requestAnimationFrame(()=>{fitHelpClone(inputs);addGuideCallout(inputs.scene,helpControl(clone,"dryFood"),"乾物の食材を選択","operation","top");addGuideCallout(inputs.scene,people,"計算する人数を入力","operation","bottom")});
+  const mode=makeHelpStep(container,"","食事・おやつの必要量を見る",".dry-calculator-card"),modeClone=mode.clone;modeClone.querySelector('[data-help-id="dryCalculator"]')?.classList.remove("hidden");mode.scene.style.paddingBottom="68px";
+  requestAnimationFrame(()=>{fitHelpClone(mode);addGuideCallout(mode.scene,modeClone.querySelector('[data-help-id="drySnack"]'),"おやつ用の量に切り替える時はチェック","operation","top");addGuideCallout(mode.scene,modeClone.querySelector('[data-help-id="dryResultValue"]'),"登録した1人量から必要量を表示","info","bottom")});
 }
 function renderHelpSettings(){
-  const container=document.getElementById("helpPeopleLive");container.innerHTML="";const step=makeHelpStep(container,"","基本人数を変更する",".settings-card:nth-of-type(4)"),clone=step.clone;step.scene.style.paddingBottom="140px";clone.querySelector(".editor-row")?.classList.remove("hidden");
+  const container=document.getElementById("helpPeopleLive");container.innerHTML="";const step=makeHelpStep(container,"","基本人数を変更する",".defaults-settings-card"),clone=step.clone;step.scene.style.paddingBottom="140px";clone.querySelector(".editor-row")?.classList.remove("hidden");
   requestAnimationFrame(()=>{fitHelpClone(step);addGuideCallout(step.scene,helpControl(clone,"d0"),"普段の人数を入力","operation","top");addGuideCallout(step.scene,helpControl(clone,"dFruitAdult"),"学童に入る職員数を入力","operation","bottom");addGuideCallout(step.scene,clone.querySelector('[data-help-id="m0"]'),"選択できる最大人数を設定","operation","bottom");addGuideCallout(step.scene,clone.querySelector(".actions .primary"),"変更内容を保存","operation","bottom")});
 }
 function renderHelpFoodEditor(){
-  const container=document.getElementById("helpFoodsLive");container.innerHTML="";const step=makeHelpStep(container,"","食材・ルール編集",".settings-card:nth-of-type(5)"),clone=step.clone,sampleFood=helpSampleFood();step.scene.style.paddingBottom="190px";clone.querySelector(".editor-row")?.classList.remove("hidden");fillHelpFoodEditor(clone,sampleFood);const optionCheck=clone.querySelector('[data-help-id="useOptions"]'),cuttingCheck=clone.querySelector('[data-help-id="useCutting"]');
-  requestAnimationFrame(()=>{fitHelpClone(step);addGuideCallout(step.scene,clone.querySelector('[data-help-id="editName"]'),"食材名を入力","operation","top");addGuideCallout(step.scene,clone.querySelector(`.category-editor-choice[data-category="${sampleFood.category}"]`),"食材の分類をアイコンで選択","operation","top");addGuideCallout(step.scene,helpControl(clone,"r0Choice"),"年齢別の1人量を設定","operation","bottom");if(sampleFood.usesCutting){addGuideCallout(step.scene,cuttingCheck,"切り分けて使う場合はチェック","operation","bottom");addGuideCallout(step.scene,helpControl(clone,"sourceUnitChoice"),"切り分け前の単位を選択","operation","bottom");addGuideCallout(step.scene,clone.querySelector('[data-help-id="yieldPerSource"]'),"1つから取れる数を入力","operation","bottom")}if(sampleFood.variants.length){addGuideCallout(step.scene,optionCheck,"サイズ違いを使う場合はチェック","operation","bottom");addGuideCallout(step.scene,clone.querySelector('[data-help-id="optionTitle"]'),"オプション名を入力","operation","bottom");addGuideCallout(step.scene,clone.querySelector('[data-help-id="vName0"]'),"選択肢ごとの量を設定","operation","bottom")}addGuideCallout(step.scene,clone.querySelector(".actions .primary"),"入力内容を保存・更新","operation","bottom")});
+  const container=document.getElementById("helpFoodsLive");container.innerHTML="",sampleFood=helpSampleFood();
+  const chooser=makeHelpStep(container,"","編集する種類を選ぶ",".food-editor-card"),chooserParts=prepareHelpEditorClone(chooser.clone,null);chooser.scene.style.paddingBottom="64px";
+  requestAnimationFrame(()=>{fitHelpClone(chooser);addGuideCallout(chooser.scene,chooserParts.chooser.querySelector('[data-editor-kind="main"]'),"メイン食材を編集する時はこちら","operation","top");addGuideCallout(chooser.scene,chooserParts.chooser.querySelector('[data-editor-kind="dry"]'),"乾物を編集する時はこちら","operation","bottom")});
+  const main=makeHelpStep(container,"","メイン食材の設定",".food-editor-card"),mainParts=prepareHelpEditorClone(main.clone,"main");fillHelpFoodEditor(main.clone,sampleFood);main.scene.style.paddingBottom="115px";
+  requestAnimationFrame(()=>{fitHelpClone(main);addGuideCallout(main.scene,main.clone.querySelector(`.category-editor-choice[data-category="${sampleFood.category}"]`),"食材の分類をアイコンで選択","operation","top");addGuideCallout(main.scene,main.clone.querySelector('[data-help-id="editName"]'),"食材名を入力","operation","top");addGuideCallout(main.scene,helpControl(main.clone,"r0Choice"),"年齢別の1人量を設定","operation","bottom");addGuideCallout(main.scene,main.clone.querySelector('[data-help-id="mainFoodEditor"] .actions .primary'),"入力内容を保存・更新","operation","bottom")});
+  const dry=makeHelpStep(container,"","乾物の設定",".food-editor-card"),dryParts=prepareHelpEditorClone(dry.clone,"dry"),dryFood=dryFoods[0];if(dryFood){const set=(id,value)=>{const el=dry.clone.querySelector(`[data-help-id="${id}"]`);if(el)el.value=value??""};set("dryEditName",dryFood.name);setHelpSelect(dry.clone,"dryEditUnitChoice",dryFood.unit);set("dryMealRate",dryFood.mealRate);set("drySnackRate",dryFood.snackRate)}dry.scene.style.paddingBottom="90px";
+  requestAnimationFrame(()=>{fitHelpClone(dry);addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="dryEditName"]'),"乾物の食材名を入力","operation","top");addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="dryMealRate"]'),"食事用の1人量を入力","operation","bottom");addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="drySnackRate"]'),"おやつ用の1人量を入力","operation","bottom");addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="dryEditor"] .actions .primary'),"入力内容を保存・更新","operation","bottom")});
 }
-function renderHelpGuides(){renderHelpDaily();renderHelpSettings();renderHelpFoodEditor()}
+function renderHelpGuides(){renderHelpDaily();renderHelpDry();renderHelpSettings();renderHelpFoodEditor()}
 
 function init(){
   setupAppChrome();load();renderCurrentCountOptions();restoreDailyState();fillDefaultsEditor();fillMaxEditor();buildEditorControls();buildVariantRows();setupCategoryEditor();decorateSettingsIcons();enhanceSelects();renderFoods(dailyState.foodId);renderDryFoods(dryState.selectedFoodId);document.getElementById("dryPeople").value=String(dryInitialPeople());restoringDailyState=false;update();updateDryResult();
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("change",update));
   document.getElementById("cgEats").addEventListener("change",handleSchoolMealChange);document.getElementById("fruitAdult").addEventListener("change",update);
   document.getElementById("porridgeEnabled").addEventListener("change",update);document.getElementById("porridgeCount").addEventListener("change",()=>{porridgeCountMemory=Math.max(1,Math.floor(num("porridgeCount")));update()});
-  document.getElementById("food").addEventListener("change",()=>{saveSelectedFood();update();if(!document.getElementById("foodEditor").classList.contains("hidden"))loadFoodEditor()});
+  document.getElementById("food").addEventListener("change",()=>{saveSelectedFood();update();if(!document.getElementById("mainFoodEditor").classList.contains("hidden"))loadFoodEditor()});
   document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
   document.getElementById("useCutting").addEventListener("change",setCuttingSettings);
   document.getElementById("dryFood").addEventListener("change",()=>{dryState.selectedFoodId=document.getElementById("dryFood").value;saveDryState();updateDryResult();if(!document.getElementById("dryEditor").classList.contains("hidden"))loadDryEditor()});document.getElementById("dryPeople").addEventListener("input",updateDryResult);document.getElementById("drySnack").addEventListener("change",updateDryResult);
