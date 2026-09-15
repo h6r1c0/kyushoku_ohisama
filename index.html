@@ -1044,7 +1044,8 @@ function load(){
   foods=foods.map(normalizeFood);
   const migratedFoods=migrateFoodCuttingData();
   const addedFoods=Array.isArray(savedFoodsV6)?false:addNewDefaultFoods();
-  foods=mergeCatalogDefaults(foods,DEFAULT_FOODS,"kyushokuKnownFoodDefaults",["saba","chicken","pork","teba","sasami","buri","shishamo","tofu",...FOOD_ADDITIONS.map(item=>item.id)]).map(normalizeFood);
+  // Fixed legacy baseline: do not extend this list when adding future DEFAULT_FOODS.
+  foods=mergeCatalogDefaults(foods,DEFAULT_FOODS,"kyushokuKnownFoodDefaults",["saba","chicken","pork","teba","sasami","buri","shishamo","tofu","hokke","aji_hiraki","minced_meat"]).map(normalizeFood);
   const migratedAji=migrateAjiSizeOption();
   saveFoods();
   loadDryData();
