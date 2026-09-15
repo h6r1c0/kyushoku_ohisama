@@ -76,9 +76,12 @@ async function noOverflow(page,label){
           await page.locator(`[aria-controls="${topic}"]`).click();
           await page.locator(`#${topic} .help-live-clone`).first().waitFor();await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
           await noOverflow(page,topic+' '+width);
+          // Expand only the scroll viewport for a complete artifact; geometry checks above use the real panel.
+          const captureStyle=await page.addStyleTag({content:'#helpEditor{max-height:none!important;overflow:visible!important}.global-help-header{position:static!important}'});
           const cards=page.locator(`#${topic} .guide-step`).filter({visible:true});
           const count=await cards.count();
           for(let i=0;i<count;i++)await cards.nth(i).screenshot({path:path.join(out,`${width}-${topic}-${i}.png`)});
+          await captureStyle.evaluate(element=>element.remove());
         }
         assert.deepEqual(errors,[]);report.push({width,status:'passed'});
       }catch(error){report.push({width,status:'failed',error:error.stack,errors});await page.screenshot({path:path.join(out,`${width}-failure.png`),fullPage:true});throw error;}
