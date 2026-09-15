@@ -31,7 +31,7 @@ async function noOverflow(page,label){
   const report=[];
   try{
     for(const width of [320,375,768]){
-      const context=await browser.newContext({viewport:{width,height:900},deviceScaleFactor:1,hasTouch:true});
+      const context=await browser.newContext({viewport:{width,height:width===320?568:900},deviceScaleFactor:1,hasTouch:true});
       const page=await context.newPage();const errors=[];
       page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
       try{
