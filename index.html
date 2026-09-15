@@ -392,6 +392,18 @@ input[type="checkbox"]{accent-color:var(--orange)}
 .help-live-clone .editor-kind-chooser.hidden{display:none!important}
 .help-live-clone .dry-calculator-card>.editor-row{display:block!important}
 @media(max-width:370px){.editor-kind-choice{min-height:58px;padding:7px;font-size:14px}.editor-kind-choice img{width:28px;height:28px}}
+
+.brand-logo-frame{width:min(210px,calc(100% - 52px));height:auto}.header-logo-image{display:block;width:100%;height:auto}
+.help-heading-label img{filter:none!important}.help-heading-label .settings-icon{filter:sepia(1) saturate(3.1) hue-rotate(342deg) brightness(.95)!important}
+.count-exception{width:100%;margin-top:6px;min-height:44px;padding:6px}.cut-icon{background-image:url("11_切り分け計算アイコン.png");filter:none!important}
+.cut-slots,.cut-rates{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0}
+.cut-slots button,.cut-rates button,.cut-ages button{min-height:48px;border:1px solid #dcc8a9;border-radius:10px;background:#fffaf1;color:#654a2c;font:inherit;font-weight:700;overflow-wrap:anywhere;padding:7px 3px}
+.cut-slots button[aria-pressed="true"],.cut-rates button[aria-pressed="true"]{background:#f6d7a3;border:2px solid #a66321}
+.cut-slots small{display:block;font-size:12px}.cut-ages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.cut-ages button span{display:block;font-size:20px;color:#95591d}.cut-ages button small{display:block;font-weight:400;font-size:12px}.cut-ages button[aria-disabled="true"]{opacity:.5}
+.cut-total{text-align:center;margin:14px 0;font-size:19px;font-weight:800}.cut-total strong{font-size:42px}.cut-options{margin:12px 0}.cut-options summary{min-height:44px;padding:10px 0;cursor:pointer}.cut-options label{display:block;margin:8px 0}.cut-options input{width:100%;min-height:44px}.cut-status,.dry-mode-note{font-size:12px;color:#766955;margin:8px 0}.cut-pack{text-align:center;font-size:23px;font-weight:800}
+.dry-choice-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.dry-choice-row button{min-height:44px}.dry-choice-row button[aria-pressed="true"]{background:#f6d7a3}.dry-flow{grid-template-columns:minmax(0,1fr) 82px}.dry-snack-toggle{grid-column:1/-1}.dry-flow input[readonly]{background:#f3f1eb}
+.help-live-stage{position:relative;width:100%!important;transform:none!important}.help-live-clone{width:100%!important}.help-live-frame{height:auto!important}.help-live-scene{padding:4px 0!important}.help-live-clone .food-choice-panel{position:relative!important;top:auto!important;left:auto!important;width:100%;margin-top:10px}.help-live-clone .food-choice-panel:before,.help-live-clone .food-choice-panel:after{display:none}
+.help-caption{display:flex;align-items:flex-start;gap:8px;padding:9px;margin:8px 0;background:#fff4dd;border-radius:8px;font-size:13px;line-height:1.65}.help-marker{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:50%;background:#a66321;color:white;font-size:12px;vertical-align:middle}.help-target-marker{outline:2px solid #c59b60;outline-offset:2px}.help-example-note{font-size:13px;line-height:1.7;margin:8px 0}
 </style>
 </head>
 <body>
@@ -429,17 +441,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
 </svg>
 <div class="wrap">
 <header class="app-header">
-  <!-- 完成済みロゴ部品：内部デザインは固定し、配置と全体サイズは brand-logo-frame で調整する -->
-  <div class="brand-logo-frame">
-    <div class="brand-logo" aria-label="さくらさくらんぼ保育 NPO法人 おひさま保育園">
-      <div class="brand-topline"><span class="brand-sprout" aria-hidden="true"></span><span class="brand-kicker">さくらさくらんぼ保育</span></div>
-      <div class="brand-main">
-        <span class="brand-npo">NPO法人</span>
-        <span class="brand-name">おひさま</span>
-        <span class="brand-circles" aria-label="保育園"><span>保</span><span>育</span><span>園</span></span>
-      </div>
-    </div>
-  </div>
+  <div class="brand-logo-frame"><img class="header-logo-image" src="ohisama_header_logo.png" alt="さくらさくらんぼ保育 NPO法人 おひさま保育園"></div>
 </header>
 <section class="feature-shell">
 <div class="feature-tabs" role="tablist" aria-label="機能">
@@ -529,6 +531,23 @@ input[type="checkbox"]{accent-color:var(--orange)}
   </div>
 </div>
 
+<div class="card settings-card cut-calculator-card">
+ <div class="section-head" onclick="handleSettingsHeaderClick(event)"><div class="settings-title"><span class="settings-icon cut-icon" aria-hidden="true"></span><strong>切り分け計算</strong></div><button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="cutCalculator" aria-label="切り分け計算を開く" data-label="切り分け計算" onclick="toggleSection('cutCalculator',this)"><span class="chevron" aria-hidden="true"></span></button></div>
+ <div id="cutCalculator" class="hidden editor-row">
+ <div id="cutSlots" class="cut-slots" aria-label="一時保存する計算枠"></div>
+ <p class="cut-status">今日の人数を自動使用（0歳を除く）</p>
+ <div id="cutTotal" class="cut-total" aria-live="polite"></div>
+ <div id="cutPack" class="cut-pack"></div>
+ <p class="small">① 切数を選ぶ → ② その切数に変わる年齢をタップ</p>
+ <div id="cutRates" class="cut-rates" aria-label="1人あたりの切数"></div>
+ <div id="cutAges" class="cut-ages" aria-label="この年齢以降の切数を変更"></div>
+ <details class="cut-options"><summary>名前・1個からの切数（任意）</summary>
+ <label>食材名／メモ<input id="cutMemo" maxlength="24" placeholder="例：なす"></label>
+ <label>1個（1本・1丁など）から何切れ？<input id="cutYield" type="number" min="1" step="1" inputmode="numeric" placeholder="入力しなくても使えます"></label>
+ </details>
+ <div class="actions"><button class="btn secondary" onclick="resetCutSlot()">この枠をクリア</button></div>
+ <p class="cut-status">①〜④で計算を保持。人数を変えると全枠を再計算します。同じタブを閉じるまでの一時保存です。</p>
+ </div></div>
 <div class="card settings-card dry-calculator-card">
   <div class="section-head settings-accordion-head" onclick="handleSettingsHeaderClick(event)">
     <div class="settings-title"><span class="settings-icon dry-settings-icon" aria-hidden="true"></span><strong>乾物計算</strong></div>
@@ -538,9 +557,11 @@ input[type="checkbox"]{accent-color:var(--orange)}
     <div class="card dry-card">
       <div class="dry-flow">
         <label>食材<select id="dryFood" aria-label="乾物の食材を選ぶ"></select></label>
-        <label>人数<input id="dryPeople" type="number" min="0" step="1" inputmode="numeric" aria-label="乾物計算の人数"></label>
+        <label><span id="dryPeopleLabel">食事人数</span><input id="dryPeople" type="number" min="0" step="1" inputmode="numeric" aria-label="乾物計算の人数"></label>
         <label class="dry-snack-toggle"><input id="drySnack" type="checkbox">おやつ</label>
       </div>
+      <p id="dryModeNote" class="dry-mode-note">食事：今日の人数から自動（0歳を除く）</p>
+      <div id="dryMealChoices" class="dry-choice-row"></div>
       <div class="dry-result" aria-live="polite">
         <div class="dry-result-label">必要量</div>
         <div id="dryResultValue" class="dry-result-value">—</div>
@@ -654,10 +675,12 @@ input[type="checkbox"]{accent-color:var(--orange)}
     <div id="dryEditor" class="editor-mode-panel hidden">
       <button type="button" class="btn secondary editor-mode-back" onclick="showFoodEditorMode(null)">← 選び直す</button>
       <div class="small">食事用・おやつ用の1人量を個別に設定できます。未設定の欄は空欄のまま保存できます。</div>
+      <label>編集する乾物<select id="dryEditFood" aria-label="編集する乾物"></select></label>
       <div class="grid2 dry-editor-grid">
         <label>食材名<input id="dryEditName"></label>
         <label class="unit-control">表示単位<select id="dryEditUnitChoice"></select><input id="dryEditUnitOther" class="other-value hidden" placeholder="単位を入力"></label>
         <label>食事用1人量<input id="dryMealRate" type="number" min="0" step="any" inputmode="decimal" placeholder="未設定"></label>
+        <label>少なめの1人量（任意）<input id="dryLessRate" type="number" min="0" step="any" inputmode="decimal" placeholder="未設定"></label>
         <label>おやつ用1人量<input id="drySnackRate" type="number" min="0" step="any" inputmode="decimal" placeholder="未設定"></label>
       </div>
       <div class="actions"><button class="btn primary" onclick="saveDryFood()">保存 / 更新</button><button class="btn secondary" onclick="clearDryEditor()">新規入力</button><button class="btn secondary" onclick="deleteDryFood()">選択中を削除</button></div>
@@ -750,6 +773,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
         </div>
       </div>
     </div>
+    <div class="help-topic"><button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpCut" aria-label="切り分け計算を開く" data-label="切り分け計算" onclick="toggleSection('helpCut',this)"><span class="help-heading-label"><img class="help-dry-icon" src="11_切り分け計算アイコン.png" alt="">切り分け計算</span><span class="chevron" aria-hidden="true"></span></button><div id="helpCut" class="hidden help-content"><div id="helpCutLive"></div></div></div>
     <div class="help-topic">
       <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpDry" aria-label="乾物計算を開く" data-label="乾物計算" onclick="toggleSection('helpDry',this)"><span class="help-heading-label"><img class="help-dry-icon" src="09_乾物計算アイコン.png" alt="">乾物計算</span><span class="chevron" aria-hidden="true"></span></button>
       <div id="helpDry" class="hidden help-content help-content-visual"><div id="helpDryLive" class="visual-guide"></div></div>
@@ -840,8 +864,8 @@ const FOOD_ADDITIONS=[
  {id:"minced_meat",migrationKey:MINCED_MEAT_MIGRATION_KEY,afterId:"pork"}
 ];
 const DEFAULT_DRY_FOODS=[
- {id:"kiriboshi_daikon",name:"切り干し大根",unit:"g",mealRate:null,snackRate:null},
- {id:"hijiki",name:"ひじき",unit:"g",mealRate:null,snackRate:null},
+ {id:"kiriboshi_daikon",name:"切り干し大根",unit:"g",mealRate:10,snackRate:null,lessRate:8},
+ {id:"hijiki",name:"ひじき",unit:"g",mealRate:5,snackRate:null},
  {id:"somen",name:"そうめん",unit:"g",mealRate:null,snackRate:null},
  {id:"udon",name:"うどん",unit:"g",mealRate:null,snackRate:null}
 ];
@@ -865,7 +889,7 @@ let defaults={},maxCounts={},foods=[],dryFoods=[],dryState={},editingFoodId=null
 let activeSoftSelect=null,softSelectPopover=null,activeFoodChoicePanel=null;
 
 function clone(v){return JSON.parse(JSON.stringify(v))}
-function num(id){return Math.max(0,Number(document.getElementById(id).value||0))}
+function num(id){const el=document.getElementById(id);return Math.max(0,Number(el.value==="other"?document.getElementById(id+"Other")?.value||0:el.value||0))}
 function fmt(n){const x=Number(n);if(Math.abs(x-1/3)<0.01)return"1/3";if(Math.abs(x-2/3)<0.01)return"2/3";if(Math.abs(x-.5)<.001)return"1/2";return String(Math.round(x*100)/100)}
 function toggle(id){document.getElementById(id).classList.toggle("hidden")}
 function setSectionState(id,button,open){
@@ -875,8 +899,8 @@ function setSectionState(id,button,open){
 }
 function closeAccordionPeers(id){
   const groups=[
-    ["dryCalculator","defaultsEditor","foodEditor"],
-    ["helpDaily","helpDry","helpPeople","helpFoods"]
+    ["cutCalculator","dryCalculator","defaultsEditor","foodEditor"],
+    ["helpDaily","helpCut","helpDry","helpPeople","helpFoods"]
   ],group=groups.find(items=>items.includes(id));
   if(!group)return;
   group.filter(peerId=>peerId!==id).forEach(peerId=>{
@@ -888,6 +912,7 @@ function toggleSection(id,button){
   const panel=document.getElementById(id),opening=panel.classList.contains("hidden");
   if(opening)closeAccordionPeers(id);setSectionState(id,button,opening);
   if(opening&&id==="helpDaily")requestAnimationFrame(renderHelpDaily);
+  if(opening&&id==="helpCut")requestAnimationFrame(renderHelpCut);
   if(opening&&id==="helpDry")requestAnimationFrame(renderHelpDry);
   if(opening&&id==="helpPeople")requestAnimationFrame(renderHelpSettings);
   if(opening&&id==="helpFoods")requestAnimationFrame(renderHelpFoodEditor);
@@ -986,11 +1011,6 @@ function openFoodChoicePanel(category,anchor){
 
 function load(){
   const savedDefaults=stored("kyushokuDefaultCounts");
-  if(savedDefaults&&localStorage.getItem(SCHOOL_DEFAULT_MIGRATION_KEY)!=="1"){
-    const unchanged=Object.keys(PREVIOUS_DEFAULT_COUNTS).every(key=>Number(savedDefaults[key])===PREVIOUS_DEFAULT_COUNTS[key]);
-    if(unchanged){savedDefaults.cg=7;localStorage.setItem("kyushokuDefaultCounts",JSON.stringify(savedDefaults))}
-    localStorage.setItem(SCHOOL_DEFAULT_MIGRATION_KEY,"1");
-  }
   defaults=savedDefaults||clone(DEFAULT_COUNTS);
   defaults={...DEFAULT_COUNTS,...defaults};
   defaults.fruitAdult=Math.max(0,Math.floor(Number(defaults.fruitAdult??SCHOOL_ADULT_DEFAULT)));
@@ -998,13 +1018,13 @@ function load(){
   maxCounts={...DEFAULT_MAX_COUNTS,...maxCounts};
   maxCounts.fruitAdult=Math.max(defaults.fruitAdult,Math.floor(Number(maxCounts.fruitAdult??SCHOOL_ADULT_MAX)));
   const savedFoodsV6=stored("kyushokuFoodsV6"),savedFoodsV5=stored("kyushokuFoodsV5");
-  foods=savedFoodsV6||savedFoodsV5||clone(DEFAULT_FOODS);
-  if(!Array.isArray(foods)||!foods.length)foods=clone(DEFAULT_FOODS);
+  foods=Array.isArray(savedFoodsV6)?savedFoodsV6:Array.isArray(savedFoodsV5)?savedFoodsV5:clone(DEFAULT_FOODS);
   foods=foods.map(normalizeFood);
   const migratedFoods=migrateFoodCuttingData();
-  const addedFoods=addNewDefaultFoods();
+  const addedFoods=Array.isArray(savedFoodsV6)?false:addNewDefaultFoods();
+  foods=mergeCatalogDefaults(foods,DEFAULT_FOODS,"kyushokuKnownFoodDefaults",["saba","chicken","pork","teba","sasami","buri","shishamo","tofu",...FOOD_ADDITIONS.map(item=>item.id)]).map(normalizeFood);
   const migratedAji=migrateAjiSizeOption();
-  if(migratedFoods||addedFoods||migratedAji||!Array.isArray(savedFoodsV6)||!savedFoodsV6.length)saveFoods();
+  saveFoods();
   loadDryData();
 }
 function cleanRedundantZeroNote(note){
@@ -1017,8 +1037,10 @@ function migrateFoodCuttingData(){
   if(localStorage.getItem(FOOD_CUTTING_MIGRATION_KEY)==="1")return false;
   let changed=false;
   foods.forEach(food=>{
-    if(food.id==="chicken"&&food.name==="鶏もも"){food.name="鶏もも肉";changed=true}
-    const cleanedNote=cleanRedundantZeroNote(food.note);if(cleanedNote!==String(food.note||"")){food.note=cleanedNote;changed=true}
+
+
+    const original=(stored("kyushokuFoodsV6")||stored("kyushokuFoodsV5")||[]).find(row=>row.id===food.id);
+    if(original&&Object.hasOwn(original,"usesCutting"))return;
     const legacyYield=Number(food.packSize||1),legacySource=String(food.packLabel||"").trim();
     if(!food.usesCutting&&legacyYield>1&&legacySource&&legacySource!==food.unit){
       food.usesCutting=true;food.sourceUnit=legacySource;food.yieldPerSource=legacyYield;changed=true;
@@ -1049,19 +1071,32 @@ function addNewDefaultFoods(){
 function migrateAjiSizeOption(){
   if(localStorage.getItem(AJI_SIZE_MIGRATION_KEY)==="1")return false;
   const food=foods.find(item=>item.id==="aji_hiraki");let changed=false;
-  if(food&&!food.variants.length){
+  const original=(stored("kyushokuFoodsV6")||stored("kyushokuFoodsV5")||[]).find(row=>row.id==="aji_hiraki");
+  if(food&&original&&!Object.hasOwn(original,"variants")&&!food.variants.length){
     const standard={name:"標準",r0:food.r0,r12:food.r12,rm:food.rm,rg:food.rg,ra:food.ra};
     food.optionTitle="サイズ";food.variants=[standard,{...standard,name:"小さめ",r12:1}];changed=true;
   }
   localStorage.setItem(AJI_SIZE_MIGRATION_KEY,"1");return changed;
 }
+// Only absent properties receive new defaults; null, zero, empty strings and arrays are saved choices.
+function fillMissingDefaults(saved,initial){
+ const result=clone(saved);for(const [key,value] of Object.entries(initial)){
+ if(!Object.hasOwn(result,key))result[key]=clone(value);
+ else if(value&&typeof value==="object"&&!Array.isArray(value)&&result[key]&&typeof result[key]==="object"&&!Array.isArray(result[key]))result[key]=fillMissingDefaults(result[key],value);
+ }return result;
+}
+function mergeCatalogDefaults(saved,initial,key,legacyIds){
+ const known=stored(key)||legacyIds,result=saved.map(item=>{const base=initial.find(row=>row.id===item.id);return base?fillMissingDefaults(item,base):item});
+ initial.forEach(item=>{if(!known.includes(item.id)&&!result.some(row=>row.id===item.id))result.push(clone(item))});
+ localStorage.setItem(key,JSON.stringify([...new Set([...known,...initial.map(item=>item.id)])]));return result;
+}
 function nullableNumber(value){return value===null||value===undefined||value===""?null:(Number.isFinite(Number(value))?Number(value):null)}
 function normalizeDryFood(food){return{...food,id:String(food.id||`dry_${Date.now()}`),name:String(food.name||"").trim(),unit:String(food.unit||"g").trim()||"g",mealRate:nullableNumber(food.mealRate),snackRate:nullableNumber(food.snackRate)}}
 function loadDryData(){
-  const saved=stored(DRY_FOODS_KEY);dryFoods=Array.isArray(saved)&&saved.length?saved.map(normalizeDryFood):clone(DEFAULT_DRY_FOODS);
-  DEFAULT_DRY_FOODS.forEach(item=>{if(!dryFoods.some(food=>food.id===item.id))dryFoods.push(clone(item))});
-  const savedState=stored(DRY_STATE_KEY)||{};dryState={selectedFoodId:String(savedState.selectedFoodId||dryFoods[0]?.id||""),snack:Boolean(savedState.snack)};saveDryFoods();saveDryState();
+ const saved=stored(DRY_FOODS_KEY);if(Array.isArray(saved))saved.forEach(food=>{if(food.id==="kiriboshi_daikon"&&food.unit!=="g"&&!Object.hasOwn(food,"lessRate"))food.lessRate=null});dryFoods=mergeCatalogDefaults(Array.isArray(saved)?saved:clone(DEFAULT_DRY_FOODS),DEFAULT_DRY_FOODS,"kyushokuKnownDryDefaults",["kiriboshi_daikon","hijiki","somen","udon"]).map(normalizeDryFood);
+ const state=stored(DRY_STATE_KEY)||{};dryState={...state,selectedFoodId:String(state.selectedFoodId||dryFoods[0]?.id||""),snack:Boolean(state.snack)};saveDryFoods();saveDryState();
 }
+
 function saveDryFoods(){localStorage.setItem(DRY_FOODS_KEY,JSON.stringify(dryFoods))}
 function saveDryState(){localStorage.setItem(DRY_STATE_KEY,JSON.stringify(dryState))}
 function normalizeFood(f){
@@ -1100,7 +1135,7 @@ function saveDailyState(){
   if(f?.variants?.length)variantByFood[f.id]=Math.max(0,Number(document.getElementById("foodOption").value||0));
   if(f&&document.getElementById("gakudoRate").value!=="")gakudoRateByFood[f.id]=document.getElementById("gakudoRate").value;
   dailyState={
-    counts:counts(),schoolEats:document.getElementById("cgEats").checked,
+    countOther:{c5:document.getElementById("c5").value==="other",ca:document.getElementById("ca").value==="other"},counts:counts(),schoolEats:document.getElementById("cgEats").checked,
     adultBeforeSchoolMeal:adultCountBeforeSchoolMeal,
     porridgeEnabled:document.getElementById("porridgeEnabled").checked,
     porridgeCount:porridgeCountMemory,
@@ -1116,6 +1151,7 @@ function restoreDailyState(){
     const fruitAdult=document.getElementById("fruitAdult"),value=Math.min(maxCounts.fruitAdult,Math.max(0,Math.floor(Number(savedCounts.fruitAdult)||0)));
     fruitAdult.value=String(value);
   }
+  ["c5","ca"].forEach(id=>{if(dailyState.countOther?.[id]){document.getElementById(id).value="other";document.getElementById(id+"Other").classList.remove("hidden")}});
   const schoolEats=Boolean(dailyState.schoolEats);document.getElementById("cgEats").checked=schoolEats;
   adultCountBeforeSchoolMeal=schoolEats?Math.max(0,Math.floor(Number(dailyState.adultBeforeSchoolMeal??(num("ca")-num("fruitAdult")))||0)):null;
   document.querySelector(".fruit-adult-control").classList.toggle("hidden",schoolEats);
@@ -1125,12 +1161,16 @@ function restoreDailyState(){
 
 function renderCurrentCountOptions(){
   Object.keys(DEFAULT_COUNTS).forEach(k=>{
-    const select=document.getElementById(k),old=select.value;
+    const select=document.getElementById(k),old=select.value==="other"?String(num(k)):select.value;
     const max=Math.max(0,Math.floor(Number(maxCounts[k])||0));
     select.innerHTML="";
     for(let i=0;i<=max;i++){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);select.appendChild(option)}
-    const preferred=old!==""?Math.min(Number(old),max):Math.min(Number(defaults[k]||0),max);
-    select.value=String(preferred);
+    const preferred=old!==""?Number(old):Number(defaults[k]||0);
+    if(["c5","ca"].includes(k)){
+      const option=new Option("その他","other");select.appendChild(option);
+      let input=document.getElementById(k+"Other");if(!input){input=document.createElement("input");input.id=k+"Other";input.type="number";input.min="0";input.step="1";input.inputMode="numeric";input.className="count-exception hidden";input.setAttribute("aria-label",k==="c5"?"5歳児の人数を入力":"大人の人数を入力");select.after(input);input.addEventListener("input",()=>{if(input.value!=="")input.value=String(Math.max(0,Math.floor(Number(input.value)||0)));update()});}
+      setCountSelectValue(k,preferred);
+    }else select.value=String(Math.min(preferred,max));
   });
   const fruitAdult=document.getElementById("fruitAdult"),oldFruitAdult=fruitAdult.value;
   fruitAdult.innerHTML="";for(let i=0;i<=maxCounts.fruitAdult;i++){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);fruitAdult.appendChild(option)}
@@ -1159,7 +1199,7 @@ function fillMaxEditor(){
   document.getElementById("mFruitAdult").value=maxCounts.fruitAdult;
 }
 function resetCurrentCounts(){
-  Object.keys(DEFAULT_COUNTS).forEach(k=>document.getElementById(k).value=defaults[k]??0);
+  Object.keys(DEFAULT_COUNTS).forEach(k=>setCountSelectValue(k,defaults[k]??0));
   adultCountBeforeSchoolMeal=null;document.getElementById("cgEats").checked=false;document.getElementById("fruitAdult").value=String(defaults.fruitAdult);document.querySelector(".fruit-adult-control").classList.remove("hidden");trimTemporaryCountOptions("ca");
   document.getElementById("porridgeEnabled").checked=false;porridgeCountMemory=1;
   update();
@@ -1180,6 +1220,10 @@ function saveMaxCounts(){
 function counts(){return{c0:num("c0"),c1:num("c1"),c2:num("c2"),c3:num("c3"),c4:num("c4"),c5:num("c5"),cg:num("cg"),ca:num("ca"),fruitAdult:num("fruitAdult")}}
 function setCountSelectValue(id,value){
   const select=document.getElementById(id),target=Math.max(0,Math.floor(Number(value)||0));
+  if(["c5","ca"].includes(id)){
+    const other=target>maxCounts[id];select.value=other?"other":String(target);
+    const input=document.getElementById(id+"Other");if(input){input.value=String(target);input.classList.toggle("hidden",!other)}return;
+  }
   for(let i=0;i<=target;i++)if(![...select.options].some(option=>Number(option.value)===i)){const option=document.createElement("option");option.value=String(i);option.textContent=String(i);select.appendChild(option)}
   select.value=String(target);
 }
@@ -1280,7 +1324,13 @@ function renderGakudoOptions(r,count){
   if(preferred!==undefined)select.value=preferred;select.dataset.foodId=foodId;
 }
 function update(){
-  if(!foods.length)return;
+  ["c5","ca"].forEach(id=>document.getElementById(id+"Other")?.classList.toggle("hidden",document.getElementById(id).value!=="other"));
+  if(!restoringDailyState){renderCutResults();updateDryResult();}
+  if(!foods.length){
+    const c=counts(),school=document.getElementById("cgEats").checked,people=c.c0+c.c1+c.c2+c.c3+c.c4+c.c5+c.ca+(school?c.cg:0),porridge=syncPorridgeControl(c.c0);
+    document.getElementById("allMealCount").textContent=people;document.getElementById("fruitCount").textContent=c.c3+c.c4+c.c5+c.cg+c.ca+(school?0:c.fruitAdult);document.getElementById("riceAmount").textContent=fmt(Math.ceil(Math.max(0,people-porridge)/3*2)/2)+"合";document.getElementById("riceNote").classList.toggle("hidden",c.c0<3);
+    document.getElementById("resultNumber").textContent="—";document.getElementById("resultUnit").textContent="";document.getElementById("subResult").textContent="食材を追加してください";["basisR0","basisR12","basisRm","basisRg","basisRa","basisNotes"].forEach(id=>document.getElementById(id).textContent="");refreshSoftSelects();saveDailyState();return;
+  }
   const c=counts(),f=selectedFood();renderFoodCategory(f);renderFoodOption(f);
   const porridgeCount=syncPorridgeControl(c.c0);
   const r=activeRates(f),missing=[],schoolMealCount=document.getElementById("cgEats").checked?c.cg:0;
@@ -1386,7 +1436,7 @@ function saveFood(){
   const category=document.getElementById("editCategory").value;if(!CATEGORY_META[category]){alert("分類を選択してください");return}
   const unit=readUnitControl(),usesCutting=document.getElementById("useCutting").checked,sourceUnit=usesCutting?readUnitControl("sourceUnitChoice","sourceUnitOther"):"",yieldPerSource=usesCutting?Number(document.getElementById("yieldPerSource").value||0):0;
   if(!unit){alert("表示単位を選択してください");return}if(usesCutting&&!sourceUnit){alert("切り分け前の単位を選択してください");return}if(usesCutting&&yieldPerSource<=0){alert("1つから取れる数を入力してください");return}
-  const item={id:editingFoodId||"food_"+Date.now(),name,category,unit,r0:readRateControl("r0"),r12:readRateControl("r12"),rm:readRateControl("rm"),rg:readRateControl("rg"),ra:readRateControl("ra"),usesCutting,sourceUnit,yieldPerSource,
+  const item={...foods.find(food=>food.id===editingFoodId),id:editingFoodId||"food_"+Date.now(),name,category,unit,r0:readRateControl("r0"),r12:readRateControl("r12"),rm:readRateControl("rm"),rg:readRateControl("rg"),ra:readRateControl("ra"),usesCutting,sourceUnit,yieldPerSource,
     packSize:usesCutting?yieldPerSource:1,packLabel:usesCutting?sourceUnit:unit,note:document.getElementById("editNote").value.trim(),optionTitle:"",variants:[]};
   if(document.getElementById("useOptions").checked){
     item.optionTitle=document.getElementById("optionTitle").value.trim()||"サイズ";
@@ -1396,34 +1446,64 @@ function saveFood(){
 }
 function deleteFood(){if(!editingFoodId)return;if(!confirm("この食材を削除しますか？"))return;foods=foods.filter(f=>f.id!==editingFoodId);saveFoods();editingFoodId=null;renderFoods();clearFoodEditor()}
 
+const CUT_IDS=["c1","c2","c3","c4","c5","cg","ca"],CUT_LABELS=["1歳","2歳","3歳","4歳","5歳","学童","大人"];
+const emptyCut=()=>({rates:[1,1,2,2,2,2,3],memo:"",yield:""});
+let cutSlots=Array.from({length:4},emptyCut),cutSlot=0,cutBrush=2;
+try{const saved=JSON.parse(sessionStorage.getItem("kyushokuCutSession"));if(Array.isArray(saved)&&saved.length===4)cutSlots=saved.map(row=>({rates:CUT_IDS.map((_,i)=>Math.min(4,Math.max(1,Math.floor(Number(row.rates?.[i])||1)))),memo:String(row.memo||"").slice(0,24),yield:String(row.yield||"")}))}catch(e){}
+function cutPeople(){const c=counts();return CUT_IDS.map(id=>id==="cg"&&!document.getElementById("cgEats").checked?0:c[id])}
+function cutTotalFor(slot){return cutPeople().reduce((total,count,i)=>total+count*slot.rates[i],0)}
+function saveCutSlots(){sessionStorage.setItem("kyushokuCutSession",JSON.stringify(cutSlots))}
+function renderCutResults(){
+ const current=cutSlots[cutSlot],people=cutPeople(),slots=document.getElementById("cutSlots");if(!slots)return;
+ slots.replaceChildren();cutSlots.forEach((row,i)=>{const button=document.createElement("button");button.textContent=["①","②","③","④"][i]+(row.memo?" "+row.memo:"");button.setAttribute("aria-pressed",String(i===cutSlot));const result=document.createElement("small");result.textContent=`${cutTotalFor(row)}切れ`;button.append(result);button.onclick=()=>{cutSlot=i;renderCutResults();document.getElementById("cutMemo").value=cutSlots[i].memo;document.getElementById("cutYield").value=cutSlots[i].yield};slots.append(button)});
+ const total=cutTotalFor(current);document.getElementById("cutTotal").innerHTML=`必要 <strong>${total}</strong>切れ`;
+ const per=Number(current.yield);document.getElementById("cutPack").textContent=Number.isInteger(per)&&per>0?`必要 ${Math.ceil(total/per)}個分`:"";
+ const rates=document.getElementById("cutRates");rates.replaceChildren();for(let rate=1;rate<=4;rate++){const b=document.createElement("button");b.textContent=rate+"切れ";b.setAttribute("aria-pressed",String(cutBrush===rate));b.onclick=()=>{cutBrush=rate;renderCutResults()};rates.append(b)}
+ const ages=document.getElementById("cutAges");ages.replaceChildren();CUT_IDS.forEach((id,i)=>{const b=document.createElement("button");b.innerHTML=`${CUT_LABELS[i]}<span>${current.rates[i]}切れ</span><small>${people[i]}人</small>`;b.setAttribute("aria-label",`${CUT_LABELS[i]}以降を${cutBrush}切れにする。現在${current.rates[i]}切れ、${people[i]}人`);b.onclick=()=>{for(let j=i;j<CUT_IDS.length;j++)current.rates[j]=cutBrush;saveCutSlots();renderCutResults()};ages.append(b)});
+}
+function resetCutSlot(){cutSlots[cutSlot]=emptyCut();document.getElementById("cutMemo").value="";document.getElementById("cutYield").value="";saveCutSlots();renderCutResults()}
+function initCut(){document.getElementById("cutMemo").value=cutSlots[cutSlot].memo;document.getElementById("cutYield").value=cutSlots[cutSlot].yield;["cutMemo","cutYield"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{const el=document.getElementById(id);if(id==="cutYield"&&el.value!=="")el.value=String(Math.max(1,Math.floor(Number(el.value)||1)));cutSlots[cutSlot][id==="cutMemo"?"memo":"yield"]=el.value;saveCutSlots();renderCutResults()}));renderCutResults()}
 function dryInitialPeople(){const c=counts();return c.c1+c.c2+c.c3+c.c4+c.c5+c.ca+(document.getElementById("cgEats").checked?c.cg:0)}
 function toggleDryCalculator(button){
-  if(toggleSection("dryCalculator",button)){document.getElementById("dryPeople").value=String(dryInitialPeople());renderDryFoods(dryState.selectedFoodId);updateDryResult()}
+  if(toggleSection("dryCalculator",button)){document.getElementById("dryPeople").value=dryState.snack?(dryState.snackPeople??""):String(dryInitialPeople());renderDryFoods(dryState.selectedFoodId);updateDryResult()}
 }
 function selectedDryFood(){return dryFoods.find(food=>food.id===document.getElementById("dryFood").value)||dryFoods[0]}
 function renderDryFoods(preferredId){
   const select=document.getElementById("dryFood"),wanted=preferredId||dryState.selectedFoodId||select.value;select.innerHTML="";
   dryFoods.forEach(food=>{const option=document.createElement("option");option.value=food.id;option.textContent=food.name;select.appendChild(option)});
   if(dryFoods.some(food=>food.id===wanted))select.value=wanted;else if(dryFoods[0])select.value=dryFoods[0].id;
+  const editSelect=document.getElementById("dryEditFood");editSelect.innerHTML=select.innerHTML;editSelect.value=select.value;
   dryState.selectedFoodId=select.value;document.getElementById("drySnack").checked=Boolean(dryState.snack);refreshSoftSelects();saveDryState();
 }
 function updateDryResult(){
-  const food=selectedDryFood(),raw=document.getElementById("dryPeople").value,people=raw===""?null:Math.max(0,Number(raw)),snack=document.getElementById("drySnack").checked,rate=food?(snack?food.snackRate:food.mealRate):null,value=document.getElementById("dryResultValue"),note=document.getElementById("dryResultNote");
-  dryState.selectedFoodId=food?.id||"";dryState.snack=snack;saveDryState();
-  if(people===null||!Number.isFinite(people)){value.textContent="—";note.textContent="人数を入力してください";note.classList.remove("ready");return}
-  if(rate===null||rate===undefined){value.textContent="—";note.textContent="1人量が未設定です";note.classList.remove("ready");return}
-  value.textContent=`${fmt(Number(rate)*people)}${food.unit}`;note.textContent=`${snack?"おやつ":"食事"}用：1人 ${fmt(rate)}${food.unit} × ${fmt(people)}人`;note.classList.add("ready");
+ const food=selectedDryFood(),input=document.getElementById("dryPeople"),snack=document.getElementById("drySnack").checked;
+ if(!snack)input.value=String(dryInitialPeople());input.readOnly=!snack;
+ document.getElementById("dryPeopleLabel").textContent=snack?"おやつ人数":"食事人数";
+ document.getElementById("dryModeNote").textContent=snack?"おやつ：食べる合計人数を入力":"食事：今日の人数から自動（0歳を除く・学童は「食べる」と連動）";
+ const people=input.value===""?null:Math.max(0,Math.floor(Number(input.value))),rate=food?(snack?food.snackRate:(dryState.less&&food.lessRate!=null?food.lessRate:food.mealRate)):null,value=document.getElementById("dryResultValue"),note=document.getElementById("dryResultNote");
+ dryState.selectedFoodId=food?.id||"";dryState.snack=snack;if(snack)dryState.snackPeople=input.value;saveDryState();
+ const choices=document.getElementById("dryMealChoices");choices.replaceChildren();
+ if(!snack&&food?.lessRate!=null){[[false,`通常 ${food.mealRate==null?"未設定":fmt(food.mealRate)+food.unit}`],[true,`少なめ ${fmt(food.lessRate)}${food.unit}`]].forEach(([less,label])=>{const b=document.createElement("button");b.className="btn secondary";b.textContent=label;b.setAttribute("aria-pressed",String(Boolean(dryState.less)===less));b.onclick=()=>{dryState.less=less;updateDryResult()};choices.append(b)})}
+ // Legacy null may be an intentional user choice. Offer confirmed data without overwriting it.
+ if(!snack&&food&&food.mealRate==null&&["hijiki","kiriboshi_daikon"].includes(food.id)&&food.unit==="g"){
+ const b=document.createElement("button");b.className="btn secondary";const confirmed=food.id==="hijiki"?5:10;b.textContent=`確認済みの${confirmed}g／人を設定`;b.onclick=()=>{food.mealRate=confirmed;dryState.less=false;saveDryFoods();updateDryResult()};choices.append(b);
+ }
+ note.classList.remove("ready");
+ if(rate==null){value.textContent="—";note.textContent="1人量が未設定です";return}
+ if(people===null||!Number.isFinite(people)){value.textContent="—";note.textContent="人数を入力してください";return}
+ value.textContent=`${fmt(Number(rate)*people)}${food.unit}`;note.textContent=`${snack?"おやつ":"食事"}用：1人 ${fmt(rate)}${food.unit} × ${people}人`;note.classList.add("ready");
 }
-function loadDryEditor(){const food=selectedDryFood();if(!food)return;editingDryFoodId=food.id;document.getElementById("dryEditName").value=food.name;setUnitControl(food.unit,"dryEditUnitChoice","dryEditUnitOther");document.getElementById("dryMealRate").value=food.mealRate??"";document.getElementById("drySnackRate").value=food.snackRate??"";refreshSoftSelects()}
-function clearDryEditor(){editingDryFoodId=null;document.getElementById("dryEditName").value="";setUnitControl("g","dryEditUnitChoice","dryEditUnitOther");document.getElementById("dryMealRate").value="";document.getElementById("drySnackRate").value="";refreshSoftSelects()}
+
+function loadDryEditor(){const food=selectedDryFood();if(!food)return;editingDryFoodId=food.id;document.getElementById("dryEditName").value=food.name;setUnitControl(food.unit,"dryEditUnitChoice","dryEditUnitOther");document.getElementById("dryMealRate").value=food.mealRate??"";document.getElementById("dryLessRate").value=food.lessRate??"";document.getElementById("drySnackRate").value=food.snackRate??"";refreshSoftSelects()}
+function clearDryEditor(){editingDryFoodId=null;document.getElementById("dryEditName").value="";setUnitControl("g","dryEditUnitChoice","dryEditUnitOther");document.getElementById("dryMealRate").value="";document.getElementById("dryLessRate").value="";document.getElementById("drySnackRate").value="";refreshSoftSelects()}
 function saveDryFood(){
   const name=document.getElementById("dryEditName").value.trim(),unit=readUnitControl("dryEditUnitChoice","dryEditUnitOther");if(!name){alert("食材名を入力してください");return}if(!unit){alert("表示単位を選択してください");return}
-  const item=normalizeDryFood({id:editingDryFoodId||`dry_${Date.now()}`,name,unit,mealRate:document.getElementById("dryMealRate").value,snackRate:document.getElementById("drySnackRate").value}),index=dryFoods.findIndex(food=>food.id===item.id);if(index>=0)dryFoods[index]=item;else dryFoods.push(item);editingDryFoodId=item.id;saveDryFoods();renderDryFoods(item.id);updateDryResult();alert("乾物の設定を保存しました");
+  const item=normalizeDryFood({...dryFoods.find(food=>food.id===editingDryFoodId),id:editingDryFoodId||`dry_${Date.now()}`,name,unit,mealRate:document.getElementById("dryMealRate").value,lessRate:nullableNumber(document.getElementById("dryLessRate").value),snackRate:document.getElementById("drySnackRate").value}),index=dryFoods.findIndex(food=>food.id===item.id);if(index>=0)dryFoods[index]=item;else dryFoods.push(item);editingDryFoodId=item.id;saveDryFoods();renderDryFoods(item.id);updateDryResult();alert("乾物の設定を保存しました");
 }
-function deleteDryFood(){if(!editingDryFoodId)return;if(!confirm("この乾物を削除しますか？"))return;dryFoods=dryFoods.filter(food=>food.id!==editingDryFoodId);if(!dryFoods.length)dryFoods=clone(DEFAULT_DRY_FOODS);saveDryFoods();editingDryFoodId=null;renderDryFoods();clearDryEditor();updateDryResult()}
+function deleteDryFood(){if(!editingDryFoodId)return;if(!confirm("この乾物を削除しますか？"))return;dryFoods=dryFoods.filter(food=>food.id!==editingDryFoodId);saveDryFoods();editingDryFoodId=null;renderDryFoods();clearDryEditor();updateDryResult()}
 
 function cloneForHelp(selector){
-  const source=document.querySelector(selector),clone=source.cloneNode(true),sourceControls=source.querySelectorAll("input,select,textarea"),cloneControls=clone.querySelectorAll("input,select,textarea");
+  const source=[...document.querySelectorAll(selector)].find(element=>!element.closest(".help-live-clone")),clone=source.cloneNode(true),sourceControls=source.querySelectorAll("input,select,textarea"),cloneControls=clone.querySelectorAll("input,select,textarea");
   sourceControls.forEach((control,index)=>{const copy=cloneControls[index];if(!copy)return;if(control.type==="checkbox"||control.type==="radio")copy.checked=control.checked;else copy.value=control.value});
   clone.querySelectorAll("[id]").forEach(element=>{element.dataset.helpId=element.id;element.removeAttribute("id")});
   clone.querySelectorAll("[onclick],[onchange]").forEach(element=>{element.removeAttribute("onclick");element.removeAttribute("onchange")});
@@ -1481,14 +1561,16 @@ function scheduleGuideLayout(scene){
 }
 function layoutVisibleGuides(){guideScenes.forEach(scene=>{if(scene.isConnected&&!scene.closest(".hidden"))scheduleGuideLayout(scene);else if(!scene.isConnected)guideScenes.delete(scene)})}
 function addGuideCallout(scene,target,text,type="operation",side="top"){
-  if(!target)return;const guideId=`guide-${Math.random().toString(36).slice(2)}`;target.dataset.guideTargetId=guideId;const bubble=document.createElement("span");bubble.className=`guide-callout dynamic-callout ${type}`;bubble.dataset.guideTargetId=guideId;const label=document.createElement("span");label.className="guide-bubble-text";label.textContent=text;bubble.appendChild(label);scene.appendChild(bubble);(scene._guideConfigs||(scene._guideConfigs=[])).push({bubble,target,type,side});guideResizeObserver?.observe(scene.querySelector(".help-live-frame"));scheduleGuideLayout(scene);
+ if(!target)return;const number=scene.querySelectorAll(".help-caption").length+1;
+ const note=document.createElement("div");note.className="help-caption";const marker=document.createElement("span");marker.className="help-marker";marker.textContent=String(number);note.append(marker,document.createTextNode(text));scene.append(note);
+ const targetMarker=marker.cloneNode(true);targetMarker.setAttribute("aria-hidden","true");target.before(targetMarker);target.classList.add("help-target-marker");
 }
+
 function makeHelpStep(container,number,title,selector){
   const section=document.createElement("section"),head=document.createElement("div"),scene=document.createElement("div"),frame=document.createElement("div"),stage=document.createElement("div"),clone=cloneForHelp(selector);section.className="guide-step";head.className="guide-step-head";head.innerHTML=number?`<span class="guide-step-number">${number}</span><span class="guide-step-title">${title}</span>`:`<span class="guide-step-title">${title}</span>`;scene.className="help-live-scene";frame.className="help-live-frame";stage.className="help-live-stage";stage.appendChild(clone);frame.appendChild(stage);scene.appendChild(frame);section.append(head,scene);container.appendChild(section);return{section,scene,frame,stage,clone};
 }
-function fitHelpClone(step){
-  const width=720,available=Math.max(260,step.scene.clientWidth),scale=Math.min(1,available/width);step.stage.style.transform=`scale(${scale})`;step.frame.style.height=`${Math.ceil(step.stage.scrollHeight*scale)}px`;step.scene.dataset.helpScale=String(scale);return scale;
-}
+function fitHelpClone(step){step.stage.style.transform="none";step.frame.style.height="auto";step.scene.dataset.helpScale="1";return 1;}
+
 function setHelpSelect(root,id,value){
   const select=root.querySelector(`[data-help-id="${id}"]`);if(!select)return;select.value=String(value);const button=select.closest(".soft-select-wrap")?.querySelector(".soft-select-button");if(button)button.textContent=select.options[select.selectedIndex]?.textContent||String(value);
 }
@@ -1521,10 +1603,11 @@ function renderHelpDaily(){
   const container=document.getElementById("helpDailyLive");container.innerHTML="";
   const peopleMain=makeHelpStep(container,1,"今日の人数を決める（人数）",".people-card");prepareHelpPeople(peopleMain.clone);peopleMain.scene.style.paddingBottom="64px";
   requestAnimationFrame(()=>{fitHelpClone(peopleMain);addGuideCallout(peopleMain.scene,helpControl(peopleMain.clone,"c0"),"今日の人数をここで変更","operation","top");addGuideCallout(peopleMain.scene,peopleMain.clone.querySelector(".daily-section-head .secondary"),"いつもの人数に戻したい時はここをタップ","operation","top")});
+  peopleMain.section.appendChild(helpText("5歳児・大人は、候補を超える人数を「その他」から入力できます。"));
   const peoplePorridge=makeHelpStep(container,"","0歳のおかゆ",".people-card");prepareHelpPeople(peoplePorridge.clone);peoplePorridge.scene.style.paddingBottom="64px";
   requestAnimationFrame(()=>{fitHelpClone(peoplePorridge);addGuideCallout(peoplePorridge.scene,helpControl(peoplePorridge.clone,"porridgeEnabled"),"おかゆを食べる子がいる場合はチェック","operation","bottom");addGuideCallout(peoplePorridge.scene,helpControl(peoplePorridge.clone,"porridgeCount"),"おかゆを食べる人数を選択","operation","top")});
-  const peopleSchool=makeHelpStep(container,"","学童と果物大人",".people-card");prepareHelpPeople(peopleSchool.clone);peopleSchool.scene.style.paddingBottom="64px";
-  requestAnimationFrame(()=>{fitHelpClone(peopleSchool);addGuideCallout(peopleSchool.scene,helpControl(peopleSchool.clone,"cgEats"),"学童が給食を食べる日はチェック","operation","bottom");addGuideCallout(peopleSchool.scene,helpControl(peopleSchool.clone,"fruitAdult"),"果物を食べる大人の人数を選択","operation","top")});
+  const peopleSchool=makeHelpStep(container,"","学童の「食べる」と職員数",".people-card");prepareHelpPeople(peopleSchool.clone);peopleSchool.scene.style.paddingBottom="64px";
+  requestAnimationFrame(()=>{fitHelpClone(peopleSchool);addGuideCallout(peopleSchool.scene,helpControl(peopleSchool.clone,"cgEats"),"学童が給食を食べる日はチェック","operation","bottom");addGuideCallout(peopleSchool.scene,helpControl(peopleSchool.clone,"fruitAdult"),"学童に入る職員数を入力","operation","top")});
 
   const sampleFood=helpSampleFood(),foodPick=makeHelpStep(container,2,"メイン食材を選ぶ（分類・候補）",".food-card"),picker=prepareHelpFood(foodPick.clone,sampleFood,true);foodPick.scene.style.paddingBottom="70px";
   requestAnimationFrame(()=>{const mr=picker.category.getBoundingClientRect(),cr=foodPick.clone.getBoundingClientRect();picker.popup.style.top=`${mr.bottom-cr.top+10}px`;picker.popup.style.left="8px";fitHelpClone(foodPick);addGuideCallout(foodPick.scene,picker.category,"最初に魚の分類を選択","operation","top");addGuideCallout(foodPick.scene,picker.popup.querySelector('[aria-current="true"]'),"候補からししゃもを選択","operation","bottom")});
@@ -1538,13 +1621,25 @@ function renderHelpDaily(){
   const cuttingFood=DEFAULT_FOODS.find(food=>food.id==="chicken"),cuttingResult=makeHelpStep(container,"","切り分ける食材の結果",".result-card"),cuttingClone=cuttingResult.clone;fillHelpResult(cuttingClone,cuttingFood);cuttingResult.scene.style.paddingBottom="72px";
   requestAnimationFrame(()=>{fitHelpClone(cuttingResult);addGuideCallout(cuttingResult.scene,cuttingClone.querySelector(".sub"),"切り分ける食材では余りも表示します","info","top");addGuideCallout(cuttingResult.scene,cuttingClone.querySelector('[data-help-id="basisNotes"]'),"必要な切り分け方を表示","info","bottom")});
 }
-function renderHelpDry(){
-  const container=document.getElementById("helpDryLive");container.innerHTML="";
-  const inputs=makeHelpStep(container,"","食材と人数を選ぶ",".dry-calculator-card"),clone=inputs.clone;clone.querySelector('[data-help-id="dryCalculator"]')?.classList.remove("hidden");setHelpSelect(clone,"dryFood",dryState.selectedFoodId||dryFoods[0]?.id);const people=clone.querySelector('[data-help-id="dryPeople"]');if(people)people.value=String(dryInitialPeople());inputs.scene.style.paddingBottom="68px";
-  requestAnimationFrame(()=>{fitHelpClone(inputs);addGuideCallout(inputs.scene,helpControl(clone,"dryFood"),"乾物の食材を選択","operation","top");addGuideCallout(inputs.scene,people,"計算する人数を入力","operation","bottom")});
-  const mode=makeHelpStep(container,"","食事・おやつの必要量を見る",".dry-calculator-card"),modeClone=mode.clone;modeClone.querySelector('[data-help-id="dryCalculator"]')?.classList.remove("hidden");mode.scene.style.paddingBottom="68px";
-  requestAnimationFrame(()=>{fitHelpClone(mode);addGuideCallout(mode.scene,modeClone.querySelector('[data-help-id="drySnack"]'),"おやつ用の量に切り替える時はチェック","operation","top");addGuideCallout(mode.scene,modeClone.querySelector('[data-help-id="dryResultValue"]'),"登録した1人量から必要量を表示","info","bottom")});
+function helpText(text){const p=document.createElement("p");p.className="help-example-note";p.textContent=text;return p}
+function renderHelpCut(){
+ const container=document.getElementById("helpCutLive");container.replaceChildren();
+ const step=makeHelpStep(container,"","切数を選んで、境目の年齢をタップ",".cut-calculator-card");step.clone.querySelector('[data-help-id="cutCalculator"]').classList.remove("hidden");step.clone.querySelector(".cut-options").remove();step.clone.querySelector(".actions").remove();
+ step.section.append(helpText("「2切れ」→「3歳」で3歳以降が2切れ。「3切れ」→「大人」で大人だけ3切れ。1〜4切れを選べます。必要な総切数が大きく表示されます。"),helpText("今日の人数を自動使用。0歳は対象外、学童は「食べる」と連動。5歳児・大人の「その他」も反映します。"));fitHelpClone(step);
+ const optional=makeHelpStep(container,"","必要なときだけ名前・個数を追加",".cut-calculator-card");optional.clone.querySelector('[data-help-id="cutCalculator"]').classList.remove("hidden");optional.clone.querySelector(".cut-options").open=true;optional.clone.querySelector(".small")?.remove();optional.clone.querySelector('[data-help-id="cutRates"]').remove();optional.clone.querySelector('[data-help-id="cutAges"]').remove();
+ optional.section.append(helpText("名前なしですぐ使えます。「1個から何切れ」を入力した場合だけ必要個数を切り上げて表示。①〜④で複数の計算を保持できます。"));fitHelpClone(optional);
 }
+function renderHelpDry(){
+ const container=document.getElementById("helpDryLive");container.innerHTML="";
+ const meal=makeHelpStep(container,"","「乾物計算」をタップして開く",".dry-calculator-card");meal.clone.querySelector('[data-help-id="dryCalculator"]').classList.remove("hidden");
+ const food=DEFAULT_DRY_FOODS.find(f=>f.id==="hijiki"),n=dryInitialPeople();setHelpSelect(meal.clone,"dryFood",food.id);meal.clone.querySelector('[data-help-id="drySnack"]').checked=false;meal.clone.querySelector('[data-help-id="dryPeople"]').value=n;meal.clone.querySelector('[data-help-id="dryPeopleLabel"]').textContent="食事人数";meal.clone.querySelector('[data-help-id="dryModeNote"]').textContent="食事：今日の人数から自動（0歳を除く）";meal.clone.querySelector('[data-help-id="dryMealChoices"]').replaceChildren();meal.clone.querySelector('[data-help-id="dryResultValue"]').textContent=`${n*5}g`;meal.clone.querySelector('[data-help-id="dryResultNote"]').textContent=`食事用：1人 5g × ${n}人`;
+ meal.section.append(helpText("ひじきは食事5g／人。0歳を除き、学童は「食べる」と連動。「その他」の人数も自動反映されます。"));fitHelpClone(meal);
+ const snack=makeHelpStep(container,"","おやつは合計人数を入力",".dry-calculator-card");snack.clone.querySelector('[data-help-id="dryCalculator"]').classList.remove("hidden");setHelpSelect(snack.clone,"dryFood","somen");snack.clone.querySelector('[data-help-id="drySnack"]').checked=true;const input=snack.clone.querySelector('[data-help-id="dryPeople"]');input.readOnly=false;input.value="20";snack.clone.querySelector('[data-help-id="dryPeopleLabel"]').textContent="おやつ人数";snack.clone.querySelector('[data-help-id="dryModeNote"]').textContent="おやつ：食べる合計人数を入力";snack.clone.querySelector('[data-help-id="dryMealChoices"]').replaceChildren();snack.clone.querySelector('[data-help-id="dryResultValue"]').textContent="—";snack.clone.querySelector('[data-help-id="dryResultNote"]').textContent="1人量が未設定です";
+ snack.section.append(helpText("「おやつ」をチェックし、合計人数を入力。おやつ用1人量は食事とは別です。空欄なら「1人量が未設定です」と表示します。"));fitHelpClone(snack);
+ const less=makeHelpStep(container,"","切り干し大根：通常／少なめ",".dry-calculator-card");less.clone.querySelector('[data-help-id="dryCalculator"]').classList.remove("hidden");setHelpSelect(less.clone,"dryFood","kiriboshi_daikon");less.clone.querySelector('[data-help-id="drySnack"]').checked=false;less.clone.querySelector('[data-help-id="dryPeople"]').value=n;less.clone.querySelector('[data-help-id="dryPeopleLabel"]').textContent="食事人数";less.clone.querySelector('[data-help-id="dryModeNote"]').textContent="食事：今日の人数から自動（0歳を除く）";less.clone.querySelector('[data-help-id="dryMealChoices"]').innerHTML='<button class="btn secondary" aria-pressed="true">通常 10g</button><button class="btn secondary" aria-pressed="false">少なめ 8g</button>';less.clone.querySelector('[data-help-id="dryResultValue"]').textContent=`${n*10}g`;less.clone.querySelector('[data-help-id="dryResultNote"]').textContent=`食事用：1人 10g × ${n}人`;
+ less.section.append(helpText("食事で「通常10g」「少なめ8g」を選択。少なめはおやつとは別です。保存済みの量は維持します。以前の未設定が残る場合は「確認済みの量を設定」をタップできます。"));fitHelpClone(less);
+}
+
 function renderHelpSettings(){
   const container=document.getElementById("helpPeopleLive");container.innerHTML="";const step=makeHelpStep(container,"","基本人数を変更する",".defaults-settings-card"),clone=step.clone;step.scene.style.paddingBottom="140px";clone.querySelector(".editor-row")?.classList.remove("hidden");
   requestAnimationFrame(()=>{fitHelpClone(step);addGuideCallout(step.scene,helpControl(clone,"d0"),"普段の人数を入力","operation","top");addGuideCallout(step.scene,helpControl(clone,"dFruitAdult"),"学童に入る職員数を入力","operation","bottom");addGuideCallout(step.scene,clone.querySelector('[data-help-id="m0"]'),"選択できる最大人数を設定","operation","bottom");addGuideCallout(step.scene,clone.querySelector(".actions .primary"),"変更内容を保存","operation","bottom")});
@@ -1558,17 +1653,18 @@ function renderHelpFoodEditor(){
   const dry=makeHelpStep(container,"","乾物の設定",".food-editor-card"),dryParts=prepareHelpEditorClone(dry.clone,"dry"),dryFood=dryFoods[0];if(dryFood){const set=(id,value)=>{const el=dry.clone.querySelector(`[data-help-id="${id}"]`);if(el)el.value=value??""};set("dryEditName",dryFood.name);setHelpSelect(dry.clone,"dryEditUnitChoice",dryFood.unit);set("dryMealRate",dryFood.mealRate);set("drySnackRate",dryFood.snackRate)}dry.scene.style.paddingBottom="90px";
   requestAnimationFrame(()=>{fitHelpClone(dry);addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="dryEditName"]'),"乾物の食材名を入力","operation","top");addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="dryMealRate"]'),"食事用の1人量を入力","operation","bottom");addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="drySnackRate"]'),"おやつ用の1人量を入力","operation","bottom");addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="dryEditor"] .actions .primary'),"入力内容を保存・更新","operation","bottom")});
 }
-function renderHelpGuides(){renderHelpDaily();renderHelpDry();renderHelpSettings();renderHelpFoodEditor()}
+function renderHelpGuides(){renderHelpDaily();renderHelpCut();renderHelpDry();renderHelpSettings();renderHelpFoodEditor()}
 
 function init(){
-  setupAppChrome();load();renderCurrentCountOptions();restoreDailyState();fillDefaultsEditor();fillMaxEditor();buildEditorControls();buildVariantRows();setupCategoryEditor();decorateSettingsIcons();enhanceSelects();renderFoods(dailyState.foodId);renderDryFoods(dryState.selectedFoodId);document.getElementById("dryPeople").value=String(dryInitialPeople());restoringDailyState=false;update();updateDryResult();
+  setupAppChrome();load();renderCurrentCountOptions();restoreDailyState();fillDefaultsEditor();fillMaxEditor();buildEditorControls();buildVariantRows();setupCategoryEditor();decorateSettingsIcons();enhanceSelects();renderFoods(dailyState.foodId);renderDryFoods(dryState.selectedFoodId);document.getElementById("dryPeople").value=String(dryInitialPeople());restoringDailyState=false;initCut();if(dryState.snack)document.getElementById("dryPeople").value=dryState.snackPeople??"";update();updateDryResult();
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("change",update));
   document.getElementById("cgEats").addEventListener("change",handleSchoolMealChange);document.getElementById("fruitAdult").addEventListener("change",update);
   document.getElementById("porridgeEnabled").addEventListener("change",update);document.getElementById("porridgeCount").addEventListener("change",()=>{porridgeCountMemory=Math.max(1,Math.floor(num("porridgeCount")));update()});
   document.getElementById("food").addEventListener("change",()=>{saveSelectedFood();update();if(!document.getElementById("mainFoodEditor").classList.contains("hidden"))loadFoodEditor()});
   document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
   document.getElementById("useCutting").addEventListener("change",setCuttingSettings);
-  document.getElementById("dryFood").addEventListener("change",()=>{dryState.selectedFoodId=document.getElementById("dryFood").value;saveDryState();updateDryResult();if(!document.getElementById("dryEditor").classList.contains("hidden"))loadDryEditor()});document.getElementById("dryPeople").addEventListener("input",updateDryResult);document.getElementById("drySnack").addEventListener("change",updateDryResult);
+  document.getElementById("dryEditFood").addEventListener("change",()=>{renderDryFoods(document.getElementById("dryEditFood").value);loadDryEditor();updateDryResult()});
+  document.getElementById("dryFood").addEventListener("change",()=>{dryState.selectedFoodId=document.getElementById("dryFood").value;saveDryState();updateDryResult();if(!document.getElementById("dryEditor").classList.contains("hidden"))loadDryEditor()});document.getElementById("dryPeople").addEventListener("input",updateDryResult);document.getElementById("drySnack").addEventListener("change",()=>{document.getElementById("dryPeople").value=document.getElementById("drySnack").checked?(dryState.snackPeople??""):String(dryInitialPeople());updateDryResult()});
   document.querySelectorAll(".category-chip").forEach(button=>button.addEventListener("click",()=>openFoodChoicePanel(button.dataset.category,button)));document.getElementById("allFoodsButton").addEventListener("click",()=>openFoodChoicePanel("",document.getElementById("allFoodsButton")));
   document.addEventListener("pointerdown",event=>{if(activeSoftSelect&&!softSelectPopover?.contains(event.target)&&!activeSoftSelect.button.contains(event.target))closeSoftSelect();if(activeFoodChoicePanel&&!activeFoodChoicePanel.panel.contains(event.target)&&!activeFoodChoicePanel.anchor.contains(event.target))closeFoodChoicePanel()});
   document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeSoftSelect();closeFoodChoicePanel()}});window.addEventListener("resize",()=>{if(activeSoftSelect)positionSoftSelect(activeSoftSelect.button);closeFoodChoicePanel();layoutVisibleGuides()});window.addEventListener("orientationchange",layoutVisibleGuides);
