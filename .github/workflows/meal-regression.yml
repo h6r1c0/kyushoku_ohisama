@@ -1,11 +1,14 @@
 name: Meal calculator regression
 on:
   push:
-    branches: [update-september-counts-cutting]
+    branches: [main]
   pull_request:
     branches: [main]
 permissions:
   contents: read
+concurrency:
+  group: meal-regression-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   mobile-and-storage:
     runs-on: ubuntu-latest
