@@ -107,7 +107,7 @@ async function noOverflow(page,label){
           await page.locator(`#${topic} .help-live-clone`).first().waitFor();await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
           await noOverflow(page,topic+' '+width);
           // Expand only the scroll viewport for a complete artifact; geometry checks above use the real panel.
-          const captureStyle=await page.addStyleTag({content:'#helpEditor{max-height:none!important;overflow:visible!important}.global-help-header{position:static!important}'});
+          const captureStyle=await page.addStyleTag({content:'.app-header,.global-help{position:static!important}#helpEditor{position:absolute!important;top:0!important;max-height:none!important;overflow:visible!important}.global-help-header{position:static!important}'});
           const cards=page.locator(`#${topic} .guide-step`).filter({visible:true});
           const count=await cards.count();
           for(let i=0;i<count;i++)await cards.nth(i).screenshot({path:path.join(out,`${width}-${topic}-${i}.png`)});
