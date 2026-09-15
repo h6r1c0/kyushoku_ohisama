@@ -1,0 +1,31 @@
+name: Meal calculator regression
+on:
+  push:
+    branches: [update-september-counts-cutting]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  mobile-and-storage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated test dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/meal-tests" playwright@1.62.1 jsdom@30.0.1
+          "$RUNNER_TEMP/meal-tests/node_modules/.bin/playwright" install --with-deps chromium
+      - name: DOM and migration regression
+        run: NODE_PATH="$RUNNER_TEMP/meal-tests/node_modules" node tests/regression.cjs
+      - name: Mobile interaction and screenshots
+        run: NODE_PATH="$RUNNER_TEMP/meal-tests/node_modules" node tests/mobile.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: meal-mobile-verification
+          path: test-results/
+          retention-days: 7
