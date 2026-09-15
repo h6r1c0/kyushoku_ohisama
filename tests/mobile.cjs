@@ -24,6 +24,14 @@ async function noOverflow(page,label){
     }).map(e=>({tag:e.tagName,text:(e.innerText||e.id).slice(0,70),rect:e.getBoundingClientRect().toJSON()}));
   });
   assert.deepEqual(details,[],label+' horizontal overflow');
+  const clipped=await page.locator('#helpEditor .help-live-clone').evaluateAll(clones=>clones.flatMap(clone=>{
+    if(clone.closest('.hidden'))return [];
+    const bounds=clone.getBoundingClientRect();
+    return [...clone.querySelectorAll('button,input,.sub,.category-chip,.variant-choice')].filter(e=>{
+      const r=e.getBoundingClientRect();return r.width&&r.height&&!e.closest('.hidden')&&(r.right>bounds.right+3||r.left<bounds.left-3);
+    }).map(e=>({text:(e.innerText||e.id).slice(0,70),rect:e.getBoundingClientRect().toJSON()}));
+  }));
+  assert.deepEqual(clipped,[],label+' controls clipped within help card');
 }
 (async()=>{
   await new Promise(r=>server.listen(0,'127.0.0.1',r));
