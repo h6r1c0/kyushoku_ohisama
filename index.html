@@ -413,6 +413,12 @@ input[type="checkbox"]{accent-color:var(--orange)}
 .help-live-clone .people-summary{flex-wrap:wrap;justify-content:flex-start;gap:8px}
 .help-live-clone .cut-slots{grid-template-columns:repeat(2,minmax(0,1fr))}
 .help-live-clone .cut-ages,.help-live-clone .cut-rates{grid-template-columns:repeat(2,minmax(0,1fr))}
+.help-live-clone .category-editor-field{grid-column:1/-1}
+.help-live-clone .category-editor-choices{display:flex;flex-wrap:wrap}
+.help-live-clone .rate-fields{grid-template-columns:minmax(0,1fr)}
+.help-live-clone .rate-field{display:grid;grid-template-columns:minmax(48px,.8fr) minmax(0,1.2fr);align-items:center;gap:6px}
+.help-live-clone .rate-field .other-value{grid-column:1/-1}
+.help-live-clone [data-help-id="mainFoodEditor"]>.grid3,.help-live-clone .dry-editor-grid{grid-template-columns:minmax(0,1fr)}
 @media(max-width:350px){.cut-slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
@@ -1579,7 +1585,7 @@ function addGuideCallout(scene,target,text,type="operation",side="top"){
 function makeHelpStep(container,number,title,selector){
   const section=document.createElement("section"),head=document.createElement("div"),scene=document.createElement("div"),frame=document.createElement("div"),stage=document.createElement("div"),clone=cloneForHelp(selector);section.className="guide-step";head.className="guide-step-head";head.innerHTML=number?`<span class="guide-step-number">${number}</span><span class="guide-step-title">${title}</span>`:`<span class="guide-step-title">${title}</span>`;scene.className="help-live-scene";frame.className="help-live-frame";stage.className="help-live-stage";stage.appendChild(clone);frame.appendChild(stage);scene.appendChild(frame);section.append(head,scene);container.appendChild(section);return{section,scene,frame,stage,clone};
 }
-function fitHelpClone(step){step.stage.style.transform="none";step.frame.style.height="auto";step.scene.dataset.helpScale="1";return 1;}
+function fitHelpClone(step){step.stage.style.transform="none";step.frame.style.height="auto";step.scene.dataset.helpScale="1";step.clone.querySelectorAll('[aria-controls]').forEach(button=>{const panel=step.clone.querySelector(`[data-help-id="${button.getAttribute('aria-controls')}"]`);if(panel)button.setAttribute('aria-expanded',String(!panel.classList.contains('hidden')))});return 1;}
 
 function setHelpSelect(root,id,value){
   const select=root.querySelector(`[data-help-id="${id}"]`);if(!select)return;select.value=String(value);const button=select.closest(".soft-select-wrap")?.querySelector(".soft-select-button");if(button)button.textContent=select.options[select.selectedIndex]?.textContent||String(value);
@@ -1609,14 +1615,23 @@ function prepareHelpFood(clone,food,showPopup=false){
 function prepareHelpEditorClone(clone,mode){
   const outer=clone.querySelector('[data-help-id="foodEditor"]'),chooser=clone.querySelector('[data-help-id="foodEditorChooser"]'),main=clone.querySelector('[data-help-id="mainFoodEditor"]'),dry=clone.querySelector('[data-help-id="dryEditor"]');outer?.classList.remove("hidden");chooser?.classList.toggle("hidden",mode!==null);main?.classList.toggle("hidden",mode!=="main");dry?.classList.toggle("hidden",mode!=="dry");return{outer,chooser,main,dry};
 }
+function cropHelpPeople(clone,mode){
+  clone.querySelector('.people-footer')?.remove();clone.querySelector('.rice-note')?.remove();
+  if(mode==='counts'){clone.querySelector('.porridge-row')?.remove();clone.querySelector('.school-meal-toggle')?.remove();clone.querySelector('.fruit-adult-control')?.remove();return;}
+  clone.querySelector('.daily-section-head')?.remove();
+  [...clone.querySelector('.regular-people-grid').children].forEach(child=>{if(!child.matches(mode==='porridge'?'.zero-cell':'.school-cell'))child.remove()});
+}
 function renderHelpDaily(){
   const container=document.getElementById("helpDailyLive");container.innerHTML="";
   const peopleMain=makeHelpStep(container,1,"今日の人数を決める（人数）",".people-card");prepareHelpPeople(peopleMain.clone);peopleMain.scene.style.paddingBottom="64px";
+  cropHelpPeople(peopleMain.clone,"counts");
   requestAnimationFrame(()=>{fitHelpClone(peopleMain);addGuideCallout(peopleMain.scene,helpControl(peopleMain.clone,"c0"),"今日の人数をここで変更","operation","top");addGuideCallout(peopleMain.scene,peopleMain.clone.querySelector(".daily-section-head .secondary"),"いつもの人数に戻したい時はここをタップ","operation","top")});
   peopleMain.section.appendChild(helpText("5歳児・大人は、候補を超える人数を「その他」から入力できます。"));
   const peoplePorridge=makeHelpStep(container,"","0歳のおかゆ",".people-card");prepareHelpPeople(peoplePorridge.clone);peoplePorridge.scene.style.paddingBottom="64px";
+  cropHelpPeople(peoplePorridge.clone,"porridge");
   requestAnimationFrame(()=>{fitHelpClone(peoplePorridge);addGuideCallout(peoplePorridge.scene,helpControl(peoplePorridge.clone,"porridgeEnabled"),"おかゆを食べる子がいる場合はチェック","operation","bottom");addGuideCallout(peoplePorridge.scene,helpControl(peoplePorridge.clone,"porridgeCount"),"おかゆを食べる人数を選択","operation","top")});
   const peopleSchool=makeHelpStep(container,"","学童の「食べる」と職員数",".people-card");prepareHelpPeople(peopleSchool.clone);peopleSchool.scene.style.paddingBottom="64px";
+  cropHelpPeople(peopleSchool.clone,"school");
   requestAnimationFrame(()=>{fitHelpClone(peopleSchool);addGuideCallout(peopleSchool.scene,helpControl(peopleSchool.clone,"cgEats"),"学童が給食を食べる日はチェック","operation","bottom");addGuideCallout(peopleSchool.scene,helpControl(peopleSchool.clone,"fruitAdult"),"学童に入る職員数を入力","operation","top")});
 
   const sampleFood=helpSampleFood(),foodPick=makeHelpStep(container,2,"メイン食材を選ぶ（分類・候補）",".food-card"),picker=prepareHelpFood(foodPick.clone,sampleFood,true);foodPick.scene.style.paddingBottom="70px";
@@ -1659,6 +1674,7 @@ function renderHelpFoodEditor(){
   const chooser=makeHelpStep(container,"","編集する種類を選ぶ",".food-editor-card"),chooserParts=prepareHelpEditorClone(chooser.clone,null);chooser.scene.style.paddingBottom="64px";
   requestAnimationFrame(()=>{fitHelpClone(chooser);addGuideCallout(chooser.scene,chooserParts.chooser.querySelector('[data-editor-kind="main"]'),"メイン食材を編集する時はこちら","operation","top");addGuideCallout(chooser.scene,chooserParts.chooser.querySelector('[data-editor-kind="dry"]'),"乾物を編集する時はこちら","operation","bottom")});
   const main=makeHelpStep(container,"","メイン食材の設定",".food-editor-card"),mainParts=prepareHelpEditorClone(main.clone,"main");fillHelpFoodEditor(main.clone,sampleFood);main.scene.style.paddingBottom="115px";
+  mainParts.main.querySelectorAll(':scope > .box').forEach(box=>box.remove());main.section.append(helpText("サイズ違い・切り分け設定は、この下で編集できます。"));
   requestAnimationFrame(()=>{fitHelpClone(main);addGuideCallout(main.scene,main.clone.querySelector(`.category-editor-choice[data-category="${sampleFood.category}"]`),"食材の分類をアイコンで選択","operation","top");addGuideCallout(main.scene,main.clone.querySelector('[data-help-id="editName"]'),"食材名を入力","operation","top");addGuideCallout(main.scene,helpControl(main.clone,"r0Choice"),"年齢別の1人量を設定","operation","bottom");addGuideCallout(main.scene,main.clone.querySelector('[data-help-id="mainFoodEditor"] .actions .primary'),"入力内容を保存・更新","operation","bottom")});
   const dry=makeHelpStep(container,"","乾物の設定",".food-editor-card"),dryParts=prepareHelpEditorClone(dry.clone,"dry"),dryFood=dryFoods[0];if(dryFood){const set=(id,value)=>{const el=dry.clone.querySelector(`[data-help-id="${id}"]`);if(el)el.value=value??""};set("dryEditName",dryFood.name);setHelpSelect(dry.clone,"dryEditUnitChoice",dryFood.unit);set("dryMealRate",dryFood.mealRate);set("drySnackRate",dryFood.snackRate)}dry.scene.style.paddingBottom="90px";
   requestAnimationFrame(()=>{fitHelpClone(dry);addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="dryEditName"]'),"乾物の食材名を入力","operation","top");addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="dryMealRate"]'),"食事用の1人量を入力","operation","bottom");addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="drySnackRate"]'),"おやつ用の1人量を入力","operation","bottom");addGuideCallout(dry.scene,dry.clone.querySelector('[data-help-id="dryEditor"] .actions .primary'),"入力内容を保存・更新","operation","bottom")});
