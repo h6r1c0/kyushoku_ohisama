@@ -43,7 +43,7 @@ async function noOverflow(page,label){
 }
 (async()=>{
   await new Promise(r=>server.listen(0,'127.0.0.1',r));
-  const browser=await chromium.launch();
+  const browser=await chromium.launch(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}:{});
   const report=[];
   try{
     for(const width of [320,375,768]){
@@ -60,27 +60,30 @@ async function noOverflow(page,label){
         await select(page,'ca','その他');await page.locator('#caOther').fill('20');
         await page.reload();assert.equal(await page.locator('#c5Other').inputValue(),'14');assert.equal(await page.locator('#caOther').inputValue(),'20');
         await page.locator('[aria-controls="cutCalculator"]').click();
+        await page.locator('#cutSlots button').nth(2).click();
         await page.locator('#cutRates').getByRole('button',{name:'2切れ',exact:true}).click();
         await page.locator('#cutAges button').nth(2).click();
         await page.locator('#cutRates').getByRole('button',{name:'3切れ',exact:true}).click();
         await page.locator('#cutAges button').nth(6).click();
-        const total=await page.evaluate(()=>cutTotalFor(cutSlots[0]));
+        const total=await page.evaluate(()=>cutTotalFor(cutSlots[2]));
         assert.equal(total,await page.evaluate(()=>counts().c1+counts().c2+2*(counts().c3+counts().c4+counts().c5)+3*counts().ca));
         await page.locator('.cut-options summary').click();await page.locator('#cutMemo').fill('なす');await page.locator('#cutYield').fill('8');
         assert.equal(await page.locator('#cutPack').innerText(),`必要 ${Math.ceil(total/8)}個分`);
-        await page.locator('#cutSlots button').nth(1).click();await page.locator('#cutMemo').fill('厚揚げ');
-        await page.locator('#cutSlots button').nth(0).click();assert.equal(await page.locator('#cutMemo').inputValue(),'なす');
+        await page.locator('#cutSlots button').nth(3).click();await page.locator('#cutMemo').fill('厚揚げ');
+        await page.locator('#cutSlots button').nth(2).click();assert.equal(await page.locator('#cutMemo').inputValue(),'なす');
         await page.locator('.cut-calculator-card').screenshot({path:path.join(out,`${width}-cut.png`)});await noOverflow(page,'cut '+width);
         await page.locator('#cgEats').check();assert.equal(await page.evaluate(()=>cutPeople()[5]),await page.evaluate(()=>counts().cg));
         await page.locator('#cgEats').uncheck();assert.equal(await page.evaluate(()=>cutPeople()[5]),0);
         const lunchAdult=await page.evaluate(()=>counts().ca);
-        await page.locator('#cutSlots button').nth(2).click();await page.locator('#cutContext [data-context="snack"]').click();
+        await page.locator('#cutSlots button').nth(0).click();await page.locator('#cutContext [data-context="snack"]').click();
         assert.equal(await page.evaluate(()=>cutPeople()[5]),await page.evaluate(()=>counts().cg));
         await page.locator('#snackPeopleGrid .snack-person').nth(6).getByRole('button',{name:'＋'}).click();
         assert.equal(await page.evaluate(()=>counts().ca),lunchAdult);assert.equal(await page.evaluate(()=>cutPeople()[6]),lunchAdult+1);
         await page.locator('#cutRates').getByRole('button',{name:'1/5',exact:true}).click();await page.locator('#cutAges button').first().click();
-        assert.equal(await page.evaluate(()=>fractionPlan(cutSlots[2]).bins.every(bin=>bin.used<=FRACTION_BASE)),true);
+        assert.equal(await page.evaluate(()=>fractionPlan(cutSlots[0]).bins.every(bin=>bin.used<=FRACTION_BASE)),true);
         assert.ok((await page.locator('#fractionResult').innerText()).includes('用意する量'));
+        assert.ok((await page.locator('#fractionResult').innerText()).includes('5等分：'));
+        assert.ok(await page.locator('#fractionResult svg text').filter({hasText:'1/5'}).count());
         await page.locator('#fractionResult').getByRole('button',{name:'丸型'}).click();assert.ok(await page.locator('#fractionResult svg circle').count());
         await page.locator('.cut-calculator-card').screenshot({path:path.join(out,`${width}-fraction.png`)});await noOverflow(page,'fraction '+width);
         await page.locator('[aria-controls="dryCalculator"]').click();assert.equal(await page.locator('#cutCalculator').isVisible(),false);
@@ -135,17 +138,19 @@ async function noOverflow(page,label){
         await page.locator('[aria-controls="defaultsEditor"]').click();
         await page.locator('#porridgeEnabled').check();
         await page.locator('.global-help-button').click();
+        const locked=await page.evaluate(()=>({body:document.body.classList.contains('help-open'),modal:document.getElementById('helpEditor').getAttribute('aria-modal'),top:document.body.style.top}));assert.equal(locked.body,true);assert.equal(locked.modal,'true');assert.ok(locked.top.endsWith('px'));
         for(const topic of ['helpDaily','helpCut','helpDry','helpPeople','helpFoods']){
           await page.locator(`[aria-controls="${topic}"]`).click();
           await page.locator(`#${topic} .help-live-clone`).first().waitFor();await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
           await noOverflow(page,topic+' '+width);
           // Expand only the scroll viewport for a complete artifact; geometry checks above use the real panel.
-          const captureStyle=await page.addStyleTag({content:'.app-header,.global-help{position:static!important}#helpEditor{position:absolute!important;top:0!important;max-height:none!important;overflow:visible!important}.global-help-header{position:static!important}'});
+          const captureStyle=await page.addStyleTag({content:'body.help-open{position:static!important;top:auto!important}.app-header,.global-help{position:static!important}#helpEditor{position:absolute!important;top:0!important;max-height:none!important;overflow:visible!important}.global-help-header{position:static!important}'});
           const cards=page.locator(`#${topic} .guide-step`).filter({visible:true});
           const count=await cards.count();
           for(let i=0;i<count;i++)await cards.nth(i).screenshot({path:path.join(out,`${width}-${topic}-${i}.png`)});
           await captureStyle.evaluate(element=>element.remove());
         }
+        await page.locator('.global-help-close').click();assert.equal(await page.evaluate(()=>document.body.classList.contains('help-open')),false);
         assert.deepEqual(errors,[]);report.push({width,status:'passed'});
       }catch(error){report.push({width,status:'failed',error:error.stack,errors});await page.screenshot({path:path.join(out,`${width}-failure.png`),fullPage:true});throw error;}
       finally{await context.close();}
