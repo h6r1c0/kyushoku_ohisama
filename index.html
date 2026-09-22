@@ -372,7 +372,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
 
 /* 今回追加された正式PNGを、そのまま見出し素材として使う。 */
 .people-icon{background:none!important;object-fit:contain}
-.dry-settings-icon{background-image:url("09_乾物計算アイコン.png");filter:none!important}
+.dry-settings-icon{background-image:url("09_乾物計算アイコン.png");filter:sepia(1) saturate(3.1) hue-rotate(342deg) brightness(.95)!important}
 .heading-image-icon{display:block;flex:0 0 29px;width:29px;height:29px;object-fit:contain}
 .help-heading-label.no-icon{padding-left:1px}
 .help-heading-label .help-daily-icon,.help-heading-label .help-dry-icon{width:27px;height:27px;object-fit:contain;filter:sepia(1) saturate(.78) hue-rotate(350deg) brightness(.82)}
@@ -395,12 +395,14 @@ input[type="checkbox"]{accent-color:var(--orange)}
 
 .brand-logo-frame{width:min(210px,calc(100% - 52px));height:auto}.header-logo-image{display:block;width:100%;height:auto}
 .help-heading-label img{filter:none!important}.help-heading-label .settings-icon{filter:sepia(1) saturate(3.1) hue-rotate(342deg) brightness(.95)!important}
-.count-exception{width:100%;margin-top:6px;min-height:44px;padding:6px}.cut-icon{background-image:url("11_切り分け計算アイコン.png");filter:none!important}
+.help-heading-label img[src="09_乾物計算アイコン.png"]{filter:sepia(1) saturate(3.1) hue-rotate(342deg) brightness(.95)!important}
+.count-exception{width:100%;margin-top:6px;min-height:44px;padding:6px}.cut-icon{background-image:url("icon_norimaki_fraction.png");filter:none!important}
 .cut-slots,.cut-rates{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0}
 .cut-slots button,.cut-rates button,.cut-ages button{min-height:48px;border:1px solid #dcc8a9;border-radius:10px;background:#fffaf1;color:#654a2c;font:inherit;font-weight:700;overflow-wrap:anywhere;padding:7px 3px}
 .cut-slots button[aria-pressed="true"],.cut-rates button[aria-pressed="true"]{background:#f6d7a3;border:2px solid #a66321}
 .cut-slots small{display:block;font-size:12px;white-space:nowrap}.cut-ages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.cut-ages button span{display:block;font-size:16px;white-space:nowrap;color:#95591d}.cut-ages button small{display:block;font-weight:400;font-size:12px}.cut-ages button[aria-disabled="true"]{opacity:.5}
 .cut-total{text-align:center;margin:14px 0;font-size:19px;font-weight:800}.cut-total strong{font-size:42px}.cut-options{margin:12px 0}.cut-options summary{min-height:44px;padding:10px 0;cursor:pointer}.cut-options label{display:block;margin:8px 0}.cut-options input{width:100%;min-height:44px}.cut-status,.dry-mode-note{font-size:12px;color:#766955;margin:8px 0}.cut-pack{text-align:center;font-size:23px;font-weight:800}
+.cut-context{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}.cut-context button{min-height:44px;border:1px solid #dcc8a9;border-radius:10px;background:#fffaf1;color:#654a2c;font:800 14px/1.3 inherit}.cut-context button[aria-pressed="true"]{border:2px solid var(--orange);background:#f6d7a3}.snack-people{margin:8px 0;padding:10px;border:1px solid #efd8b1;border-radius:12px;background:#fffaf1}.snack-people.hidden{display:none}.snack-people-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.snack-people-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.snack-person{display:grid;justify-items:center;gap:4px;min-width:0;padding:6px 2px;border:1px solid #ead9bd;border-radius:9px;background:#fff}.snack-person span{font-size:12px;white-space:nowrap}.snack-stepper{display:flex;align-items:center;justify-content:center;gap:4px}.snack-stepper button{width:34px;height:34px;padding:0;border:1px solid #d9c39e;border-radius:9px;background:#fff8ea;color:#80572c;font-size:20px;font-weight:900}.snack-stepper strong{min-width:24px;text-align:center}.slot-icon{display:inline-block;width:22px;height:22px;margin-right:3px;object-fit:contain;vertical-align:middle}.fraction-result{display:grid;gap:8px;margin:10px 0}.fraction-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;text-align:center}.fraction-summary div{padding:8px 3px;border:1px solid #d9e7ce;border-radius:9px;background:#f8fff4}.fraction-summary span{display:block;font-size:11px;color:#66705f}.fraction-summary strong{font-size:17px;color:#477b37}.fraction-pieces,.fraction-plan{font-size:13px;line-height:1.65}.fraction-diagrams{display:grid;gap:8px}.fraction-pattern{padding:8px;border:1px solid #ead9bd;border-radius:10px;background:#fff}.fraction-pattern-head{margin-bottom:5px;font-size:12px;font-weight:800}.fraction-svg{display:block;width:100%;max-width:260px;height:auto;margin:auto}.fraction-shape{display:flex;gap:6px;margin:8px 0}.fraction-shape button{min-height:40px;padding:6px 12px}.fraction-shape button[aria-pressed="true"]{background:#e8f4df}.fraction-note{font-size:11px;color:#746957}.fraction-rates button.unset span{color:#999}.help-caption.guide-operation,.help-target-marker.guide-operation{--guide-color:#d95678;--guide-bg:#fff0f4}.help-caption.guide-info,.help-target-marker.guide-info{--guide-color:#4c8b45;--guide-bg:#eff9eb}.help-caption{border:2px solid var(--guide-color,#c59b60);background:var(--guide-bg,#fff4dd)}.help-marker{background:var(--guide-color,#a66321)}.help-target-marker{outline-color:var(--guide-color,#c59b60)}
 .dry-choice-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.dry-choice-row button{min-height:44px}.dry-choice-row button[aria-pressed="true"]{background:#f6d7a3}.dry-flow{grid-template-columns:minmax(0,1fr) 82px}.dry-snack-toggle{grid-column:1/-1}.dry-flow input[readonly]{background:#f3f1eb}
 .help-live-stage{position:relative;width:100%!important;transform:none!important}.help-live-clone{width:100%!important}.help-live-frame{height:auto!important}.help-live-scene{padding:4px 0!important}.help-live-clone .food-choice-panel{position:relative!important;top:auto!important;left:auto!important;width:100%;margin-top:10px}.help-live-clone .food-choice-panel:before,.help-live-clone .food-choice-panel:after{display:none}
 .help-caption{display:flex;align-items:flex-start;gap:8px;padding:9px;margin:8px 0;background:#fff4dd;border-radius:8px;font-size:13px;line-height:1.65}.help-marker{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:50%;background:#a66321;color:white;font-size:12px;vertical-align:middle}.help-target-marker{outline:2px solid #c59b60;outline-offset:2px}.help-example-note{font-size:13px;line-height:1.7;margin:8px 0}
@@ -425,7 +427,10 @@ input[type="checkbox"]{accent-color:var(--orange)}
 .help-live-clone .variant-choice-list{flex-direction:column;width:100%}.help-live-clone .variant-choice{min-width:0}
 .help-live-clone .big{flex-wrap:wrap;row-gap:8px}.help-live-clone .sub{flex-basis:100%;margin:0;white-space:normal;font-size:13px}
 .help-live-clone .dry-flow,.help-live-clone .editor-kind-chooser{grid-template-columns:minmax(0,1fr)}
+.help-live-clone .snack-person{padding-right:1px;padding-left:1px}.help-live-clone .snack-stepper{gap:1px}.help-live-clone .snack-stepper button{width:24px;height:30px}.help-live-clone .snack-stepper strong{min-width:14px}
 @media(max-width:350px){.cut-slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){.snack-people-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fraction-summary{grid-template-columns:1fr}.cut-slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.help-caption.guide-operation,.help-target-marker.guide-operation,.help-target-number.guide-operation{--guide-color:#d95678;--guide-bg:#fff0f4}.help-caption.guide-info,.help-target-marker.guide-info,.help-target-number.guide-info{--guide-color:#4c8b45;--guide-bg:#eff9eb}.help-marker,.help-target-number{background:var(--guide-color,#a66321)}.help-target-number{position:absolute;z-index:4;display:grid;place-items:center;width:22px;height:22px;border:2px solid #fff;border-radius:50%;color:#fff;font-size:12px;font-weight:900;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.18)}
 </style>
 </head>
 <body>
@@ -557,18 +562,21 @@ input[type="checkbox"]{accent-color:var(--orange)}
  <div class="section-head" onclick="handleSettingsHeaderClick(event)"><div class="settings-title"><span class="settings-icon cut-icon" aria-hidden="true"></span><strong>切り分け計算</strong></div><button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="cutCalculator" aria-label="切り分け計算を開く" data-label="切り分け計算" onclick="toggleSection('cutCalculator',this)"><span class="chevron" aria-hidden="true"></span></button></div>
  <div id="cutCalculator" class="hidden editor-row">
  <div id="cutSlots" class="cut-slots" aria-label="一時保存する計算枠"></div>
- <p class="cut-status">今日の人数を自動使用（0歳を除く）</p>
+ <div id="cutContext" class="cut-context" aria-label="切り分け計算の人数区分"><button type="button" data-context="meal" aria-pressed="true">給食</button><button type="button" data-context="snack" aria-pressed="false">おやつ</button></div>
+ <div id="snackPeople" class="snack-people hidden"><div class="snack-people-head"><strong>おやつ人数</strong><button type="button" class="btn secondary" id="snackPeopleReset">今日の人数に戻す</button></div><div id="snackPeopleGrid" class="snack-people-grid"></div><p class="cut-status">給食の人数は変わりません。学童は「食べる」に関係なく含みます。</p></div>
+ <p id="cutPeopleNote" class="cut-status">給食：今日の人数を自動使用（0歳を除く）</p>
  <div id="cutTotal" class="cut-total" aria-live="polite"></div>
  <div id="cutPack" class="cut-pack"></div>
- <p class="small">① 切数を選ぶ → ② その切数に変わる年齢をタップ</p>
+ <div id="fractionResult" class="fraction-result hidden"></div>
+ <p id="cutInstruction" class="small">① 切数を選ぶ → ② その切数に変わる年齢をタップ</p>
  <div id="cutRates" class="cut-rates" aria-label="1人あたりの切数"></div>
  <div id="cutAges" class="cut-ages" aria-label="この年齢以降の切数を変更"></div>
  <details class="cut-options"><summary>名前・1個からの切数（任意）</summary>
  <label>食材名／メモ<input id="cutMemo" maxlength="24" placeholder="例：なす"></label>
- <label>1個（1本・1丁など）から何切れ？<input id="cutYield" type="number" min="1" step="1" inputmode="numeric" placeholder="入力しなくても使えます"></label>
+ <label id="cutYieldLabel">1個（1本・1丁など）から何切れ？<input id="cutYield" type="number" min="1" step="1" inputmode="numeric" placeholder="入力しなくても使えます"></label>
  </details>
  <div class="actions"><button class="btn secondary" onclick="resetCutSlot()">この枠をクリア</button></div>
- <p class="cut-status">①〜④で計算を保持。人数を変えると全枠を再計算します。同じタブを閉じるまでの一時保存です。</p>
+ <p class="cut-status">①〜④で計算を保持し、おやつ人数は4枠で共通です。日付が変わるか、このタブを閉じるとリセットします。</p>
  </div></div>
 <div class="card settings-card dry-calculator-card">
   <div class="section-head settings-accordion-head" onclick="handleSettingsHeaderClick(event)">
@@ -583,6 +591,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
         <label class="dry-snack-toggle"><input id="drySnack" type="checkbox">おやつ</label>
       </div>
       <p id="dryModeNote" class="dry-mode-note">食事：今日の人数から自動（0歳を除く）</p>
+      <button id="dryEditSnackPeople" type="button" class="btn secondary hidden">年齢別のおやつ人数を調整</button>
       <div id="dryMealChoices" class="dry-choice-row"></div>
       <div class="dry-result" aria-live="polite">
         <div class="dry-result-label">必要量</div>
@@ -718,7 +727,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
       <button type="button" class="help-feature-button" aria-expanded="true" aria-controls="helpQuantity" aria-label="量計算の使い方を閉じる" data-label="量計算の使い方" onclick="toggleSection('helpQuantity',this)"><span class="help-heading-label no-icon">量計算</span><span class="chevron" aria-hidden="true"></span></button>
       <div id="helpQuantity" class="help-feature-content">
     <div class="help-topic">
-      <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpDaily" aria-label="毎日の使い方を開く" data-label="毎日の使い方" onclick="toggleSection('helpDaily',this)"><span class="help-heading-label"><img class="help-daily-icon" src="08_毎日の使い方アイコン.png" alt="">毎日の使い方</span><span class="chevron" aria-hidden="true"></span></button>
+      <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpDaily" aria-label="毎日の使い方を開く" data-label="毎日の使い方" onclick="toggleSection('helpDaily',this)"><span class="help-heading-label"><img class="help-daily-icon" src="10_kyo_no_ninzu_icon.png" alt="">毎日の使い方</span><span class="chevron" aria-hidden="true"></span></button>
       <div id="helpDaily" class="hidden help-content help-content-visual">
         <div id="helpDailyLive" class="visual-guide"></div>
         <div class="visual-guide help-legacy-guide" aria-hidden="true">
@@ -795,7 +804,7 @@ input[type="checkbox"]{accent-color:var(--orange)}
         </div>
       </div>
     </div>
-    <div class="help-topic"><button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpCut" aria-label="切り分け計算を開く" data-label="切り分け計算" onclick="toggleSection('helpCut',this)"><span class="help-heading-label"><img class="help-dry-icon" src="11_切り分け計算アイコン.png" alt="">切り分け計算</span><span class="chevron" aria-hidden="true"></span></button><div id="helpCut" class="hidden help-content"><div id="helpCutLive"></div></div></div>
+    <div class="help-topic"><button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpCut" aria-label="切り分け計算を開く" data-label="切り分け計算" onclick="toggleSection('helpCut',this)"><span class="help-heading-label"><img class="help-dry-icon" src="icon_norimaki_fraction.png" alt="">切り分け計算</span><span class="chevron" aria-hidden="true"></span></button><div id="helpCut" class="hidden help-content"><div id="helpCutLive"></div></div></div>
     <div class="help-topic">
       <button type="button" class="help-topic-button" aria-expanded="false" aria-controls="helpDry" aria-label="乾物計算を開く" data-label="乾物計算" onclick="toggleSection('helpDry',this)"><span class="help-heading-label"><img class="help-dry-icon" src="09_乾物計算アイコン.png" alt="">乾物計算</span><span class="chevron" aria-hidden="true"></span></button>
       <div id="helpDry" class="hidden help-content help-content-visual"><div id="helpDryLive" class="visual-guide"></div></div>
@@ -861,6 +870,7 @@ const HOKKE_MIGRATION_KEY="kyushokuHokkeAddedV1";
 const AJI_HIRAKI_MIGRATION_KEY="kyushokuAjiHirakiAddedV1";
 const AJI_SIZE_MIGRATION_KEY="kyushokuAjiSizeAddedV1";
 const MINCED_MEAT_MIGRATION_KEY="kyushokuMincedMeatAddedV1";
+const AKAUO_MIGRATION_KEY="kyushokuAkauoAddedV1";
 const FOOD_CUTTING_MIGRATION_KEY="kyushokuFoodCuttingV1";
 const DRY_FOODS_KEY="kyushokuDryFoodsV1";
 const DRY_STATE_KEY="kyushokuDryStateV1";
@@ -878,12 +888,15 @@ const DEFAULT_FOODS=[
  {id:"shishamo",name:"ししゃも",category:"fish",unit:"尾",r0:null,r12:1,rm:2,rg:2,ra:3,usesCutting:false,packSize:1,packLabel:"尾",note:"",optionTitle:"サイズ",variants:[
    {name:"標準",r0:null,r12:1,rm:2,rg:2,ra:3},{name:"小さめ",r0:null,r12:1,rm:2,rg:2,ra:4}]},
  {id:"buri",name:"ブリ",category:"fish",unit:"切れ",r0:null,r12:0.5,rm:1,rg:1,ra:1,usesCutting:false,packSize:1,packLabel:"切れ",note:"1〜2歳は1/2切れかも。未確定",optionTitle:"",variants:[]},
+ {id:"akauo",name:"赤魚",category:"fish",unit:"切れ",r0:null,r12:1,rm:1,rg:null,ra:1,usesCutting:false,packSize:1,packLabel:"切れ",note:"",optionTitle:"サイズ",variants:[
+   {name:"標準サイズ",r0:null,r12:1,rm:1,rg:null,ra:1},{name:"小さめサイズ",r0:null,r12:1,rm:2,rg:null,ra:2}]},
  {id:"tofu",name:"豆腐",category:"tofu",unit:"切れ",r0:1,r12:1,rm:2,rg:2,ra:3,usesCutting:true,sourceUnit:"丁",yieldPerSource:8,packSize:8,packLabel:"丁",note:"",optionTitle:"",variants:[]}
 ];
 const FOOD_ADDITIONS=[
  {id:"hokke",migrationKey:HOKKE_MIGRATION_KEY,copyFromId:"saba",afterId:"saba"},
  {id:"aji_hiraki",migrationKey:AJI_HIRAKI_MIGRATION_KEY,afterId:"hokke"},
  {id:"minced_meat",migrationKey:MINCED_MEAT_MIGRATION_KEY,afterId:"pork"}
+ ,{id:"akauo",migrationKey:AKAUO_MIGRATION_KEY,afterId:"buri"}
 ];
 const DEFAULT_DRY_FOODS=[
  {id:"kiriboshi_daikon",name:"切り干し大根",unit:"g",mealRate:10,snackRate:null,lessRate:8},
@@ -1114,7 +1127,10 @@ function mergeCatalogDefaults(saved,initial,key,legacyIds){
  localStorage.setItem(key,JSON.stringify([...new Set([...known,...initial.map(item=>item.id)])]));return result;
 }
 function nullableNumber(value){return value===null||value===undefined||value===""?null:(Number.isFinite(Number(value))?Number(value):null)}
-function normalizeDryFood(food){return{...food,id:String(food.id||`dry_${Date.now()}`),name:String(food.name||"").trim(),unit:String(food.unit||"g").trim()||"g",mealRate:nullableNumber(food.mealRate),snackRate:nullableNumber(food.snackRate)}}
+function normalizeDryFood(food){
+ const special=food.specialCalculation?.kind==="agar"?{...food.specialCalculation,kind:"agar",childWaterMl:nullableNumber(food.specialCalculation.childWaterMl),schoolAdultWaterMl:nullableNumber(food.specialCalculation.schoolAdultWaterMl),agarGramsPerWaterMl:nullableNumber(food.specialCalculation.agarGramsPerWaterMl)}:(Object.hasOwn(food,"specialCalculation")?food.specialCalculation:null);
+ return{...food,id:String(food.id||`dry_${Date.now()}`),name:String(food.name||"").trim(),unit:String(food.unit||"g").trim()||"g",mealRate:nullableNumber(food.mealRate),snackRate:nullableNumber(food.snackRate),specialCalculation:special};
+}
 function loadDryData(){
  const saved=stored(DRY_FOODS_KEY);if(Array.isArray(saved))saved.forEach(food=>{if(food.id==="kiriboshi_daikon"&&food.unit!=="g"&&!Object.hasOwn(food,"lessRate"))food.lessRate=null});dryFoods=mergeCatalogDefaults(Array.isArray(saved)?saved:clone(DEFAULT_DRY_FOODS),DEFAULT_DRY_FOODS,"kyushokuKnownDryDefaults",["kiriboshi_daikon","hijiki","somen","udon"]).map(normalizeDryFood);
  const state=stored(DRY_STATE_KEY)||{};dryState={...state,selectedFoodId:String(state.selectedFoodId||dryFoods[0]?.id||""),snack:Boolean(state.snack)};saveDryFoods();saveDryState();
@@ -1469,26 +1485,64 @@ function saveFood(){
 }
 function deleteFood(){if(!editingFoodId)return;if(!confirm("この食材を削除しますか？"))return;foods=foods.filter(f=>f.id!==editingFoodId);saveFoods();editingFoodId=null;renderFoods();clearFoodEditor()}
 
-const CUT_IDS=["c1","c2","c3","c4","c5","cg","ca"],CUT_LABELS=["1歳","2歳","3歳","4歳","5歳","学童","大人"];
-const emptyCut=()=>({rates:[1,1,2,2,2,2,3],memo:"",yield:""});
-let cutSlots=Array.from({length:4},emptyCut),cutSlot=0,cutBrush=2;
-try{const saved=JSON.parse(sessionStorage.getItem("kyushokuCutSession"));if(Array.isArray(saved)&&saved.length===4)cutSlots=saved.map(row=>({rates:CUT_IDS.map((_,i)=>Math.min(4,Math.max(1,Math.floor(Number(row.rates?.[i])||1)))),memo:String(row.memo||"").slice(0,24),yield:String(row.yield||"")}))}catch(e){}
-function cutPeople(){const c=counts();return CUT_IDS.map(id=>id==="cg"&&!document.getElementById("cgEats").checked?0:c[id])}
-function cutTotalFor(slot){return cutPeople().reduce((total,count,i)=>total+count*slot.rates[i],0)}
-function saveCutSlots(){sessionStorage.setItem("kyushokuCutSession",JSON.stringify(cutSlots))}
-function renderCutResults(){
- const current=cutSlots[cutSlot],people=cutPeople(),slots=document.getElementById("cutSlots");if(!slots)return;
- slots.replaceChildren();cutSlots.forEach((row,i)=>{const button=document.createElement("button");button.textContent=["①","②","③","④"][i]+(row.memo?" "+row.memo:"");button.setAttribute("aria-pressed",String(i===cutSlot));const result=document.createElement("small");result.textContent=`${cutTotalFor(row)}切れ`;button.append(result);button.onclick=()=>{cutSlot=i;renderCutResults();document.getElementById("cutMemo").value=cutSlots[i].memo;document.getElementById("cutYield").value=cutSlots[i].yield};slots.append(button)});
- const total=cutTotalFor(current);document.getElementById("cutTotal").innerHTML=`必要 <strong>${total}</strong>切れ`;
- const per=Number(current.yield);document.getElementById("cutPack").textContent=Number.isInteger(per)&&per>0?`必要 ${Math.ceil(total/per)}個分`:"";
- const rates=document.getElementById("cutRates");rates.replaceChildren();for(let rate=1;rate<=4;rate++){const b=document.createElement("button");b.textContent=rate+"切れ";b.setAttribute("aria-pressed",String(cutBrush===rate));b.onclick=()=>{cutBrush=rate;renderCutResults()};rates.append(b)}
- const ages=document.getElementById("cutAges");ages.replaceChildren();CUT_IDS.forEach((id,i)=>{const b=document.createElement("button");b.innerHTML=`${CUT_LABELS[i]}<span>${current.rates[i]}切れ</span><small>${people[i]}人</small>`;b.setAttribute("aria-label",`${CUT_LABELS[i]}以降を${cutBrush}切れにする。現在${current.rates[i]}切れ、${people[i]}人`);b.onclick=()=>{for(let j=i;j<CUT_IDS.length;j++)current.rates[j]=cutBrush;saveCutSlots();renderCutResults()};ages.append(b)});
+const CUT_IDS=["c1","c2","c3","c4","c5","cg","ca"],CUT_LABELS=["1歳","2歳","3歳","4歳","5歳","学童","大人"],FRACTION_DENOMS=[2,3,4,5,6,8],FRACTION_BASE=120;
+const localDay=()=>{const now=new Date(),offset=now.getTimezoneOffset()*60000;return new Date(now-offset).toISOString().slice(0,10)};
+const emptyCut=index=>index<2?{type:"pieces",rates:[1,1,2,2,2,2,3],memo:"",yield:""}:{type:"fraction",rates:[6,6,5,5,5,5,4],memo:"",yield:"",shape:"square"};
+let cutSlots=Array.from({length:4},(_,i)=>emptyCut(i)),cutSlot=0,cutBrush=2,cutFractionBrush=5,cutContext="meal",snackPeopleState=null;
+try{
+ const saved=JSON.parse(sessionStorage.getItem("kyushokuCutSession"));if(Array.isArray(saved)&&saved.length===4)cutSlots=saved.map((row,i)=>i<2?{...emptyCut(i),rates:CUT_IDS.map((_,j)=>Math.min(4,Math.max(1,Math.floor(Number(row.rates?.[j])||1)))),memo:String(row.memo||"").slice(0,24),yield:String(row.yield||"")}:{...emptyCut(i),rates:CUT_IDS.map((_,j)=>FRACTION_DENOMS.includes(Number(row.rates?.[j]))?Number(row.rates[j]):0),memo:String(row.memo||"").slice(0,24),shape:row.shape==="circle"?"circle":"square"});
+ const shared=JSON.parse(sessionStorage.getItem("kyushokuSnackPeopleV1"));if(shared?.date===localDay())snackPeopleState=shared;
+ cutContext=sessionStorage.getItem("kyushokuCutContext")==="snack"?"snack":"meal";
+}catch(e){}
+function todaySnackPeople(){const c=counts();return CUT_IDS.map(id=>Math.max(0,Math.floor(Number(c[id])||0)))}
+function syncSnackPeople(){
+ const base=todaySnackPeople(),signature=base.join(",");if(!snackPeopleState||snackPeopleState.date!==localDay())snackPeopleState={date:localDay(),base:signature,values:base,overrides:{}};
+ else if(snackPeopleState.base!==signature){snackPeopleState.values=base.map((value,i)=>snackPeopleState.overrides?.[i]?Math.max(0,Math.floor(Number(snackPeopleState.values?.[i])||0)):value);snackPeopleState.base=signature}
+ sessionStorage.setItem("kyushokuSnackPeopleV1",JSON.stringify(snackPeopleState));return snackPeopleState.values;
 }
-function resetCutSlot(){cutSlots[cutSlot]=emptyCut();document.getElementById("cutMemo").value="";document.getElementById("cutYield").value="";saveCutSlots();renderCutResults()}
-function initCut(){document.getElementById("cutMemo").value=cutSlots[cutSlot].memo;document.getElementById("cutYield").value=cutSlots[cutSlot].yield;["cutMemo","cutYield"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{const el=document.getElementById(id);if(id==="cutYield"&&el.value!=="")el.value=String(Math.max(1,Math.floor(Number(el.value)||1)));cutSlots[cutSlot][id==="cutMemo"?"memo":"yield"]=el.value;saveCutSlots();renderCutResults()}));renderCutResults()}
+function resetSnackPeople(){const base=todaySnackPeople();snackPeopleState={date:localDay(),base:base.join(","),values:base,overrides:{}};syncSnackPeople();renderCutResults();updateDryResult()}
+function cutPeople(){if(cutContext==="snack")return syncSnackPeople();const c=counts();return CUT_IDS.map(id=>id==="cg"&&!document.getElementById("cgEats").checked?0:c[id])}
+function cutTotalFor(slot,people=cutPeople()){return slot.type==="fraction"?people.reduce((total,count,i)=>slot.rates[i]?total+count*(FRACTION_BASE/slot.rates[i]):total,0):people.reduce((total,count,i)=>total+count*slot.rates[i],0)}
+function gcd(a,b){while(b)[a,b]=[b,a%b];return Math.abs(a)||1}
+function fractionText(units,withUnit=false){units=Math.max(0,Math.round(units));const whole=Math.floor(units/FRACTION_BASE),part=units%FRACTION_BASE;if(!part)return `${whole}${withUnit?"本分":""}`;const d=gcd(part,FRACTION_BASE),fraction=`${part/d}/${FRACTION_BASE/d}`;return `${whole?whole+"と":""}${fraction}${withUnit?"本分":""}`}
+function fractionPlan(slot,people=cutPeople()){
+ const items=[];slot.rates.forEach((denom,i)=>{if(!denom||!people[i])return;for(let n=0;n<people[i];n++)items.push({denom,units:FRACTION_BASE/denom})});items.sort((a,b)=>b.units-a.units||a.denom-b.denom);
+ const bins=[];items.forEach(item=>{let bin=bins.find(row=>row.used+item.units<=FRACTION_BASE);if(!bin){bin={used:0,pieces:[]};bins.push(bin)}bin.used+=item.units;bin.pieces.push(item)});
+ return{items,bins,total:items.reduce((sum,item)=>sum+item.units,0),remainder:bins.length*FRACTION_BASE-items.reduce((sum,item)=>sum+item.units,0)};
+}
+function polar(cx,cy,r,angle){const a=(angle-90)*Math.PI/180;return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}}
+function sectorPath(start,end){if(end-start>=359.999)return"M50 2 A48 48 0 1 1 49.999 2 Z";const a=polar(50,50,48,end),b=polar(50,50,48,start);return`M50 50 L${b.x} ${b.y} A48 48 0 ${end-start>180?1:0} 1 ${a.x} ${a.y} Z`}
+function fractionDiagram(bin,shape){
+ const colors=["#f4b6c2","#f7d58b","#b9dda9","#a8d7e8","#d1b7e8","#f1b3a0"],segments=[...bin.pieces.map(item=>({units:item.units,label:`1/${item.denom}`,rest:false})),...(bin.used<FRACTION_BASE?[{units:FRACTION_BASE-bin.used,label:"余り",rest:true}]:[])];let used=0,body="";
+ if(shape==="circle")segments.forEach((segment,i)=>{const start=used/FRACTION_BASE*360;used+=segment.units;const end=used/FRACTION_BASE*360;body+=`<path d="${sectorPath(start,end)}" fill="${segment.rest?"#f2f0ea":colors[i%colors.length]}" stroke="#fff" stroke-width="1.5"><title>${segment.label}</title></path>`});
+ else segments.forEach((segment,i)=>{const x=used/FRACTION_BASE*280;used+=segment.units;const width=segment.units/FRACTION_BASE*280;body+=`<rect x="${x}" y="2" width="${width}" height="56" fill="${segment.rest?"#f2f0ea":colors[i%colors.length]}" stroke="#fff"><title>${segment.label}</title></rect>`});
+ return shape==="circle"?`<svg class="fraction-svg" viewBox="0 0 100 100" role="img" aria-label="分割図">${body}<circle cx="50" cy="50" r="48" fill="none" stroke="#8b806e"/></svg>`:`<svg class="fraction-svg" viewBox="0 0 280 60" role="img" aria-label="分割図">${body}<rect x="1" y="1" width="278" height="58" fill="none" stroke="#8b806e"/></svg>`;
+}
+function renderSnackPeople(){const wrap=document.getElementById("snackPeople"),grid=document.getElementById("snackPeopleGrid"),people=syncSnackPeople();wrap.classList.toggle("hidden",cutContext!=="snack");grid.replaceChildren();CUT_LABELS.forEach((label,i)=>{const item=document.createElement("div");item.className="snack-person";item.innerHTML=`<span>${label}</span>`;const controls=document.createElement("div"),minus=document.createElement("button"),value=document.createElement("strong"),plus=document.createElement("button");controls.className="snack-stepper";minus.type=plus.type="button";minus.textContent="−";plus.textContent="＋";value.textContent=people[i];const change=delta=>{snackPeopleState.values[i]=Math.max(0,snackPeopleState.values[i]+delta);snackPeopleState.overrides[i]=true;syncSnackPeople();renderCutResults();updateDryResult()};minus.onclick=()=>change(-1);plus.onclick=()=>change(1);controls.append(minus,value,plus);item.append(controls);grid.append(item)});}
+function saveCutSlots(){sessionStorage.setItem("kyushokuCutSession",JSON.stringify(cutSlots));sessionStorage.setItem("kyushokuCutContext",cutContext)}
+function renderFractionResult(slot,people){
+ const result=document.getElementById("fractionResult"),plan=fractionPlan(slot,people);result.classList.remove("hidden");result.replaceChildren();
+ const objectUnit=slot.shape==="circle"?"個":"本",amount=units=>`${fractionText(units)}${objectUnit}分`,summary=document.createElement("div");summary.className="fraction-summary";summary.innerHTML=`<div><span>必要量</span><strong>${amount(plan.total)}</strong></div><div><span>用意する量</span><strong>${plan.bins.length}${objectUnit}</strong></div><div><span>余り</span><strong>${amount(plan.remainder)}</strong></div>`;result.append(summary);
+ const counts=new Map();plan.items.forEach(item=>counts.set(item.denom,(counts.get(item.denom)||0)+1));const pieces=document.createElement("div");pieces.className="fraction-pieces";pieces.textContent=plan.items.length?[...counts].sort((a,b)=>a[0]-b[0]).map(([d,n])=>`1/${d}を${n}切れ`).join("、"):"設定された人数・分数がありません";result.append(pieces);
+ const shape=document.createElement("div");shape.className="fraction-shape";[["square","四角"],["circle","丸型"]].forEach(([value,label])=>{const b=document.createElement("button");b.className="btn secondary";b.textContent=label;b.setAttribute("aria-pressed",String(slot.shape===value));b.onclick=()=>{slot.shape=value;saveCutSlots();renderCutResults()};shape.append(b)});result.append(shape);
+ const diagrams=document.createElement("div");diagrams.className="fraction-diagrams";const groups=new Map();plan.bins.forEach(bin=>{const key=bin.pieces.map(p=>p.denom).sort((a,b)=>a-b).join(",")+`|${FRACTION_BASE-bin.used}`;if(!groups.has(key))groups.set(key,{bin,count:0});groups.get(key).count++});[...groups.values()].forEach(({bin,count})=>{const card=document.createElement("div");card.className="fraction-pattern";const pieceCounts=new Map();bin.pieces.forEach(p=>pieceCounts.set(p.denom,(pieceCounts.get(p.denom)||0)+1));const description=[...pieceCounts].sort((a,b)=>a[0]-b[0]).map(([d,n])=>`1/${d}を${n}切れ`).join("、"),rest=FRACTION_BASE-bin.used;card.innerHTML=`<div class="fraction-pattern-head">${count>1?`${count}本とも：`:""}${description}${rest?`、余り${fractionText(rest)}`:""}</div>${fractionDiagram(bin,slot.shape)}`;diagrams.append(card)});result.append(diagrams);const note=document.createElement("p");note.className="fraction-note";note.textContent="各図は1本（1個）を左から順に切る方法です。切れ端同士は合体していません。";result.append(note);
+}
+function selectCutSlot(i){cutSlot=i;document.getElementById("cutMemo").value=cutSlots[i].memo;document.getElementById("cutYield").value=cutSlots[i].yield||"";renderCutResults()}
+function renderCutResults(){
+ const current=cutSlots[cutSlot],people=cutPeople(),slots=document.getElementById("cutSlots");if(!slots)return;renderSnackPeople();
+ document.querySelectorAll("#cutContext button").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.context===cutContext)));document.getElementById("cutPeopleNote").textContent=cutContext==="snack"?"おやつ：調整した人数を4枠で共通利用":"給食：今日の人数を自動使用（0歳を除く・学童は「食べる」と連動）";
+ slots.replaceChildren();cutSlots.forEach((row,i)=>{const button=document.createElement("button"),icon=document.createElement("img");icon.className="slot-icon";icon.src=i<2?"11_切り分け計算アイコン.png":"icon_norimaki_fraction.png";icon.alt="";button.append(icon,document.createTextNode(["① 切れ数","② 切れ数","③ 分数","④ 分数"][i]+(row.memo?` ${row.memo}`:"")));button.setAttribute("aria-pressed",String(i===cutSlot));const result=document.createElement("small");result.textContent=row.type==="fraction"?`${fractionText(cutTotalFor(row,people))}${row.shape==="circle"?"個分":"本分"}`:`${cutTotalFor(row,people)}切れ`;button.append(result);button.onclick=()=>selectCutSlot(i);slots.append(button)});
+ const total=cutTotalFor(current,people),fraction=current.type==="fraction";document.getElementById("cutTotal").classList.toggle("hidden",fraction);document.getElementById("cutPack").classList.toggle("hidden",fraction);document.getElementById("cutInstruction").textContent=fraction?"① 分数を選ぶ → ② その分数に変わる年齢をタップ":"① 切数を選ぶ → ② その切数に変わる年齢をタップ";document.getElementById("cutYieldLabel").classList.toggle("hidden",fraction);
+ if(fraction)renderFractionResult(current,people);else{document.getElementById("fractionResult").classList.add("hidden");document.getElementById("cutTotal").innerHTML=`必要 <strong>${total}</strong>切れ`;const per=Number(current.yield);document.getElementById("cutPack").textContent=Number.isInteger(per)&&per>0?`必要 ${Math.ceil(total/per)}個分`:""}
+ const rates=document.getElementById("cutRates");rates.classList.toggle("fraction-rates",fraction);rates.replaceChildren();const choices=fraction?[0,...FRACTION_DENOMS]:[1,2,3,4];choices.forEach(rate=>{const b=document.createElement("button"),brush=fraction?cutFractionBrush:cutBrush;b.textContent=fraction?(rate?`1/${rate}`:"未設定"):`${rate}切れ`;b.setAttribute("aria-pressed",String(brush===rate));b.onclick=()=>{if(fraction)cutFractionBrush=rate;else cutBrush=rate;renderCutResults()};rates.append(b)});
+ const brush=fraction?cutFractionBrush:cutBrush,ages=document.getElementById("cutAges");ages.replaceChildren();CUT_IDS.forEach((id,i)=>{const value=current.rates[i],label=fraction?(value?`1/${value}`:"未設定"):`${value}切れ`,b=document.createElement("button");b.classList.toggle("unset",fraction&&!value);b.innerHTML=`${CUT_LABELS[i]}<span>${label}</span><small>${people[i]}人</small>`;b.setAttribute("aria-label",`${CUT_LABELS[i]}以降を${fraction?(brush?`1/${brush}`:"未設定"):`${brush}切れ`}にする。現在${label}、${people[i]}人`);b.onclick=()=>{for(let j=i;j<CUT_IDS.length;j++)current.rates[j]=brush;saveCutSlots();renderCutResults()};ages.append(b)});
+}
+function resetCutSlot(){cutSlots[cutSlot]=emptyCut(cutSlot);document.getElementById("cutMemo").value="";document.getElementById("cutYield").value="";saveCutSlots();renderCutResults()}
+function initCut(){document.getElementById("cutMemo").value=cutSlots[cutSlot].memo;document.getElementById("cutYield").value=cutSlots[cutSlot].yield||"";document.querySelectorAll("#cutContext button").forEach(button=>button.addEventListener("click",()=>{cutContext=button.dataset.context;saveCutSlots();renderCutResults();updateDryResult()}));document.getElementById("snackPeopleReset").addEventListener("click",resetSnackPeople);["cutMemo","cutYield"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{const el=document.getElementById(id);if(id==="cutYield"&&el.value!=="")el.value=String(Math.max(1,Math.floor(Number(el.value)||1)));cutSlots[cutSlot][id==="cutMemo"?"memo":"yield"]=el.value;saveCutSlots();renderCutResults()}));renderCutResults()}
 function dryInitialPeople(){const c=counts();return c.c1+c.c2+c.c3+c.c4+c.c5+c.ca+(document.getElementById("cgEats").checked?c.cg:0)}
+function snackPeopleTotal(){return syncSnackPeople().reduce((sum,value)=>sum+value,0)}
 function toggleDryCalculator(button){
-  if(toggleSection("dryCalculator",button)){document.getElementById("dryPeople").value=dryState.snack?(dryState.snackPeople??""):String(dryInitialPeople());renderDryFoods(dryState.selectedFoodId);updateDryResult()}
+  if(toggleSection("dryCalculator",button)){document.getElementById("dryPeople").value=dryState.snack?String(snackPeopleTotal()):String(dryInitialPeople());renderDryFoods(dryState.selectedFoodId);updateDryResult()}
 }
 function selectedDryFood(){return dryFoods.find(food=>food.id===document.getElementById("dryFood").value)||dryFoods[0]}
 function renderDryFoods(preferredId){
@@ -1500,11 +1554,12 @@ function renderDryFoods(preferredId){
 }
 function updateDryResult(){
  const food=selectedDryFood(),input=document.getElementById("dryPeople"),snack=document.getElementById("drySnack").checked;
- if(!snack)input.value=String(dryInitialPeople());input.readOnly=!snack;
+ input.value=String(snack?snackPeopleTotal():dryInitialPeople());input.readOnly=true;
  document.getElementById("dryPeopleLabel").textContent=snack?"おやつ人数":"食事人数";
- document.getElementById("dryModeNote").textContent=snack?"おやつ：食べる合計人数を入力":"食事：今日の人数から自動（0歳を除く・学童は「食べる」と連動）";
+ document.getElementById("dryModeNote").textContent=snack?"おやつ：切り分け計算と共通の年齢別人数を使用":"食事：今日の人数から自動（0歳を除く・学童は「食べる」と連動）";
+ document.getElementById("dryEditSnackPeople").classList.toggle("hidden",!snack);
  const people=input.value===""?null:Math.max(0,Math.floor(Number(input.value))),rate=food?(snack?food.snackRate:(dryState.less&&food.lessRate!=null?food.lessRate:food.mealRate)):null,value=document.getElementById("dryResultValue"),note=document.getElementById("dryResultNote");
- dryState.selectedFoodId=food?.id||"";dryState.snack=snack;if(snack)dryState.snackPeople=input.value;saveDryState();
+ dryState.selectedFoodId=food?.id||"";dryState.snack=snack;saveDryState();
  const choices=document.getElementById("dryMealChoices");choices.replaceChildren();
  if(!snack&&food?.lessRate!=null){[[false,`通常 ${food.mealRate==null?"未設定":fmt(food.mealRate)+food.unit}`],[true,`少なめ ${fmt(food.lessRate)}${food.unit}`]].forEach(([less,label])=>{const b=document.createElement("button");b.className="btn secondary";b.textContent=label;b.setAttribute("aria-pressed",String(Boolean(dryState.less)===less));b.onclick=()=>{dryState.less=less;updateDryResult()};choices.append(b)})}
  // Legacy null may be an intentional user choice. Offer confirmed data without overwriting it.
@@ -1585,7 +1640,7 @@ function scheduleGuideLayout(scene){
 function layoutVisibleGuides(){guideScenes.forEach(scene=>{if(scene.isConnected&&!scene.closest(".hidden"))scheduleGuideLayout(scene);else if(!scene.isConnected)guideScenes.delete(scene)})}
 function addGuideCallout(scene,target,text,type="operation",side="top"){
  if(!target)return;
- const note=document.createElement("div");note.className="help-caption";note.textContent=text;scene.append(note);target.classList.add("help-target-marker");
+ const number=scene._guideNumber=(scene._guideNumber||0)+1,note=document.createElement("div"),marker=document.createElement("span"),badge=document.createElement("span");note.className=`help-caption guide-${type}`;marker.className="help-marker";marker.textContent=number;note.append(marker,document.createTextNode(text));scene.append(note);target.classList.add("help-target-marker",`guide-${type}`);badge.className=`help-target-number guide-${type}`;badge.textContent=number;scene.append(badge);requestAnimationFrame(()=>{const sr=scene.getBoundingClientRect(),tr=target.getBoundingClientRect();badge.style.left=`${Math.max(1,tr.left-sr.left-7)}px`;badge.style.top=`${Math.max(1,tr.top-sr.top-7)}px`});
 }
 
 function makeHelpStep(container,number,title,selector){
@@ -1654,21 +1709,20 @@ function renderHelpDaily(){
 }
 function helpText(text){const p=document.createElement("p");p.className="help-example-note";p.textContent=text;return p}
 function renderHelpCut(){
- const container=document.getElementById("helpCutLive");container.replaceChildren();
- const step=makeHelpStep(container,"","切数を選んで、境目の年齢をタップ",".cut-calculator-card");step.clone.querySelector('[data-help-id="cutCalculator"]').classList.remove("hidden");step.clone.querySelector(".cut-options").remove();step.clone.querySelector(".actions").remove();
- step.section.append(helpText("「2切れ」→「3歳」で3歳以降が2切れ。「3切れ」→「大人」で大人だけ3切れ。1〜4切れを選べます。必要な総切数が大きく表示されます。"),helpText("今日の人数を自動使用。0歳は対象外、学童は「食べる」と連動。5歳児・大人の「その他」も反映します。"));fitHelpClone(step);
- const optional=makeHelpStep(container,"","必要なときだけ名前・個数を追加",".cut-calculator-card");optional.clone.querySelector('[data-help-id="cutCalculator"]').classList.remove("hidden");optional.clone.querySelector(".cut-options").open=true;optional.clone.querySelector(".small")?.remove();optional.clone.querySelector('[data-help-id="cutRates"]').remove();optional.clone.querySelector('[data-help-id="cutAges"]').remove();
- optional.section.append(helpText("名前なしですぐ使えます。「1個から何切れ」を入力した場合だけ必要個数を切り上げて表示。①〜④で複数の計算を保持できます。"));fitHelpClone(optional);
+ const container=document.getElementById("helpCutLive"),previousSlot=cutSlot,previousContext=cutContext;container.replaceChildren();
+ cutSlot=0;cutContext="meal";renderCutResults();const pieces=makeHelpStep(container,"","①② 切れ数計算",".cut-calculator-card");pieces.clone.querySelector('[data-help-id="cutCalculator"]').classList.remove("hidden");pieces.clone.querySelector(".cut-options")?.remove();pieces.clone.querySelector(".actions")?.remove();pieces.scene.style.paddingBottom="88px";requestAnimationFrame(()=>{fitHelpClone(pieces);addGuideCallout(pieces.scene,pieces.clone.querySelector('[data-help-id="cutRates"]'),"1人あたりの切れ数を選びます","operation");addGuideCallout(pieces.scene,pieces.clone.querySelector('[data-help-id="cutAges"] button:nth-child(3)'),"切れ数が変わる年齢を押します","operation");addGuideCallout(pieces.scene,pieces.clone.querySelector('[data-help-id="cutTotal"]'),"必要な総切数を確認します","info")});pieces.section.append(helpText("給食は今日の人数を使用します。0歳は対象外で、学童は給食の「食べる」と連動します。"));
+ cutSlot=2;cutContext="snack";renderCutResults();const fractions=makeHelpStep(container,"","③④ 分数計算",".cut-calculator-card");fractions.clone.querySelector('[data-help-id="cutCalculator"]').classList.remove("hidden");fractions.clone.querySelector(".cut-options")?.remove();fractions.clone.querySelector(".actions")?.remove();fractions.scene.style.paddingBottom="105px";requestAnimationFrame(()=>{fitHelpClone(fractions);addGuideCallout(fractions.scene,fractions.clone.querySelector('[data-help-id="cutContext"] button:last-child'),"おやつを選ぶと年齢別人数を調整できます","operation");addGuideCallout(fractions.scene,fractions.clone.querySelector('[data-help-id="cutRates"]'),"1/2〜1/8から1人分を選びます","operation");addGuideCallout(fractions.scene,fractions.clone.querySelector('[data-help-id="fractionResult"] .fraction-summary'),"必要量・用意する本数・余りを表示します","info");addGuideCallout(fractions.scene,fractions.clone.querySelector('[data-help-id="fractionResult"] .fraction-diagrams'),"実際に切れる分割図を表示します","info")});fractions.section.append(helpText("おやつ人数は4枠と乾物計算で共通です。学童は給食の「食べる」がOFFでも含みます。名前は入力せずに使えます。"));
+ cutSlot=previousSlot;cutContext=previousContext;renderCutResults();
 }
 function renderHelpDry(){
  const container=document.getElementById("helpDryLive");container.innerHTML="";
  const meal=makeHelpStep(container,"","「乾物計算」をタップして開く",".dry-calculator-card");meal.clone.querySelector('[data-help-id="dryCalculator"]').classList.remove("hidden");
  const food=DEFAULT_DRY_FOODS.find(f=>f.id==="hijiki"),n=dryInitialPeople();setHelpSelect(meal.clone,"dryFood",food.id);meal.clone.querySelector('[data-help-id="drySnack"]').checked=false;meal.clone.querySelector('[data-help-id="dryPeople"]').value=n;meal.clone.querySelector('[data-help-id="dryPeopleLabel"]').textContent="食事人数";meal.clone.querySelector('[data-help-id="dryModeNote"]').textContent="食事：今日の人数から自動（0歳を除く）";meal.clone.querySelector('[data-help-id="dryMealChoices"]').replaceChildren();meal.clone.querySelector('[data-help-id="dryResultValue"]').textContent=`${n*5}g`;meal.clone.querySelector('[data-help-id="dryResultNote"]').textContent=`食事用：1人 5g × ${n}人`;
- meal.section.append(helpText("ひじきは食事5g／人。0歳を除き、学童は「食べる」と連動。「その他」の人数も自動反映されます。"));fitHelpClone(meal);
- const snack=makeHelpStep(container,"","おやつは合計人数を入力",".dry-calculator-card");snack.clone.querySelector('[data-help-id="dryCalculator"]').classList.remove("hidden");setHelpSelect(snack.clone,"dryFood","somen");snack.clone.querySelector('[data-help-id="drySnack"]').checked=true;const input=snack.clone.querySelector('[data-help-id="dryPeople"]');input.readOnly=false;input.value="20";snack.clone.querySelector('[data-help-id="dryPeopleLabel"]').textContent="おやつ人数";snack.clone.querySelector('[data-help-id="dryModeNote"]').textContent="おやつ：食べる合計人数を入力";snack.clone.querySelector('[data-help-id="dryMealChoices"]').replaceChildren();snack.clone.querySelector('[data-help-id="dryResultValue"]').textContent="—";snack.clone.querySelector('[data-help-id="dryResultNote"]').textContent="1人量が未設定です";
- snack.section.append(helpText("「おやつ」をチェックし、合計人数を入力。おやつ用1人量は食事とは別です。空欄なら「1人量が未設定です」と表示します。"));fitHelpClone(snack);
+ meal.section.append(helpText("ひじきは食事5g／人。0歳を除き、学童は「食べる」と連動。「その他」の人数も自動反映されます。"));requestAnimationFrame(()=>{fitHelpClone(meal);addGuideCallout(meal.scene,meal.clone.querySelector('[data-help-id="dryFood"]')?.closest("label"),"乾物を選びます","operation");addGuideCallout(meal.scene,meal.clone.querySelector('[data-help-id="dryResultValue"]'),"必要量を確認します","info")});
+ const snack=makeHelpStep(container,"","おやつ人数は切り分け計算と共通",".dry-calculator-card");snack.clone.querySelector('[data-help-id="dryCalculator"]').classList.remove("hidden");setHelpSelect(snack.clone,"dryFood","somen");snack.clone.querySelector('[data-help-id="drySnack"]').checked=true;const input=snack.clone.querySelector('[data-help-id="dryPeople"]');input.readOnly=true;input.value=String(snackPeopleTotal());snack.clone.querySelector('[data-help-id="dryPeopleLabel"]').textContent="おやつ人数";snack.clone.querySelector('[data-help-id="dryModeNote"]').textContent="おやつ：切り分け計算と共通の年齢別人数を使用";snack.clone.querySelector('[data-help-id="dryEditSnackPeople"]')?.classList.remove("hidden");snack.clone.querySelector('[data-help-id="dryMealChoices"]').replaceChildren();snack.clone.querySelector('[data-help-id="dryResultValue"]').textContent="—";snack.clone.querySelector('[data-help-id="dryResultNote"]').textContent="1人量が未設定です";
+ snack.section.append(helpText("人数を変える場合は「年齢別のおやつ人数を調整」を押します。おやつ用1人量が空欄なら計算せず、未設定と表示します。"));requestAnimationFrame(()=>{fitHelpClone(snack);addGuideCallout(snack.scene,snack.clone.querySelector('[data-help-id="drySnack"]'),"おやつに切り替えます","operation");addGuideCallout(snack.scene,snack.clone.querySelector('[data-help-id="dryEditSnackPeople"]'),"年齢別人数を調整します","operation");addGuideCallout(snack.scene,snack.clone.querySelector('[data-help-id="dryResultNote"]'),"未設定のときは結果を出しません","info")});
  const less=makeHelpStep(container,"","切り干し大根：通常／少なめ",".dry-calculator-card");less.clone.querySelector('[data-help-id="dryCalculator"]').classList.remove("hidden");setHelpSelect(less.clone,"dryFood","kiriboshi_daikon");less.clone.querySelector('[data-help-id="drySnack"]').checked=false;less.clone.querySelector('[data-help-id="dryPeople"]').value=n;less.clone.querySelector('[data-help-id="dryPeopleLabel"]').textContent="食事人数";less.clone.querySelector('[data-help-id="dryModeNote"]').textContent="食事：今日の人数から自動（0歳を除く）";less.clone.querySelector('[data-help-id="dryMealChoices"]').innerHTML='<button class="btn secondary" aria-pressed="true">通常 10g</button><button class="btn secondary" aria-pressed="false">少なめ 8g</button>';less.clone.querySelector('[data-help-id="dryResultValue"]').textContent=`${n*10}g`;less.clone.querySelector('[data-help-id="dryResultNote"]').textContent=`食事用：1人 10g × ${n}人`;
- less.section.append(helpText("食事で「通常10g」「少なめ8g」を選択。少なめはおやつとは別です。保存済みの量は維持します。以前の未設定が残る場合は「確認済みの量を設定」をタップできます。"));fitHelpClone(less);
+ less.section.append(helpText("食事で「通常10g」「少なめ8g」を選択。少なめはおやつとは別です。保存済みの量は維持します。以前の未設定が残る場合は「確認済みの量を設定」をタップできます。"));requestAnimationFrame(()=>{fitHelpClone(less);addGuideCallout(less.scene,less.clone.querySelector('[data-help-id="dryMealChoices"]'),"通常・少なめを選びます","operation");addGuideCallout(less.scene,less.clone.querySelector('[data-help-id="dryResultValue"]'),"選んだ量で必要量を表示します","info")});
 }
 
 function renderHelpSettings(){
@@ -1688,7 +1742,7 @@ function renderHelpFoodEditor(){
 function renderHelpGuides(){renderHelpDaily();renderHelpCut();renderHelpDry();renderHelpSettings();renderHelpFoodEditor()}
 
 function init(){
-  setupAppChrome();load();renderCurrentCountOptions();restoreDailyState();fillDefaultsEditor();fillMaxEditor();buildEditorControls();buildVariantRows();setupCategoryEditor();decorateSettingsIcons();enhanceSelects();renderFoods(dailyState.foodId);renderDryFoods(dryState.selectedFoodId);document.getElementById("dryPeople").value=String(dryInitialPeople());restoringDailyState=false;initCut();if(dryState.snack)document.getElementById("dryPeople").value=dryState.snackPeople??"";update();updateDryResult();
+  setupAppChrome();load();renderCurrentCountOptions();restoreDailyState();fillDefaultsEditor();fillMaxEditor();buildEditorControls();buildVariantRows();setupCategoryEditor();decorateSettingsIcons();enhanceSelects();renderFoods(dailyState.foodId);renderDryFoods(dryState.selectedFoodId);document.getElementById("dryPeople").value=String(dryInitialPeople());restoringDailyState=false;initCut();if(dryState.snack)document.getElementById("dryPeople").value=String(snackPeopleTotal());update();updateDryResult();
   ["c0","c1","c2","c3","c4","c5","cg","ca"].forEach(id=>document.getElementById(id).addEventListener("change",update));
   document.getElementById("cgEats").addEventListener("change",handleSchoolMealChange);document.getElementById("fruitAdult").addEventListener("change",update);
   document.getElementById("porridgeEnabled").addEventListener("change",update);document.getElementById("porridgeCount").addEventListener("change",()=>{porridgeCountMemory=Math.max(1,Math.floor(num("porridgeCount")));update()});
@@ -1696,7 +1750,7 @@ function init(){
   document.getElementById("foodOption").addEventListener("change",update);document.getElementById("gakudoRate").addEventListener("change",update);document.getElementById("useOptions").addEventListener("change",setOptionSettings);
   document.getElementById("useCutting").addEventListener("change",setCuttingSettings);
   document.getElementById("dryEditFood").addEventListener("change",()=>{renderDryFoods(document.getElementById("dryEditFood").value);loadDryEditor();updateDryResult()});
-  document.getElementById("dryFood").addEventListener("change",()=>{dryState.selectedFoodId=document.getElementById("dryFood").value;saveDryState();updateDryResult();if(!document.getElementById("dryEditor").classList.contains("hidden"))loadDryEditor()});document.getElementById("dryPeople").addEventListener("input",updateDryResult);document.getElementById("drySnack").addEventListener("change",()=>{document.getElementById("dryPeople").value=document.getElementById("drySnack").checked?(dryState.snackPeople??""):String(dryInitialPeople());updateDryResult()});
+  document.getElementById("dryFood").addEventListener("change",()=>{dryState.selectedFoodId=document.getElementById("dryFood").value;saveDryState();updateDryResult();if(!document.getElementById("dryEditor").classList.contains("hidden"))loadDryEditor()});document.getElementById("dryPeople").addEventListener("input",updateDryResult);document.getElementById("drySnack").addEventListener("change",updateDryResult);document.getElementById("dryEditSnackPeople").addEventListener("click",()=>{cutContext="snack";saveCutSlots();renderCutResults();const button=document.querySelector('[aria-controls="cutCalculator"]');if(document.getElementById("cutCalculator").classList.contains("hidden"))toggleSection("cutCalculator",button);document.querySelector(".cut-calculator-card")?.scrollIntoView({behavior:"smooth",block:"start"})});
   document.querySelectorAll(".category-chip").forEach(button=>button.addEventListener("click",()=>openFoodChoicePanel(button.dataset.category,button)));document.getElementById("allFoodsButton").addEventListener("click",()=>openFoodChoicePanel("",document.getElementById("allFoodsButton")));
   document.addEventListener("pointerdown",event=>{if(activeSoftSelect&&!softSelectPopover?.contains(event.target)&&!activeSoftSelect.button.contains(event.target))closeSoftSelect();if(activeFoodChoicePanel&&!activeFoodChoicePanel.panel.contains(event.target)&&!activeFoodChoicePanel.anchor.contains(event.target))closeFoodChoicePanel()});
   document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeSoftSelect();closeFoodChoicePanel()}});window.addEventListener("resize",()=>{if(activeSoftSelect)positionSoftSelect(activeSoftSelect.button);closeFoodChoicePanel();layoutVisibleGuides()});window.addEventListener("orientationchange",layoutVisibleGuides);
