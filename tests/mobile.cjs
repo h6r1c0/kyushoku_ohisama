@@ -32,6 +32,14 @@ async function noOverflow(page,label){
     }).map(e=>({text:(e.innerText||e.id).slice(0,70),rect:e.getBoundingClientRect().toJSON()}));
   }));
   assert.deepEqual(clipped,[],label+' controls clipped within help card');
+  const cramped=await page.locator('#helpEditor .help-live-clone .snack-person').evaluateAll(items=>items.flatMap(item=>{
+    if(item.closest('.hidden'))return [];
+    const bounds=item.getBoundingClientRect();
+    return [...item.querySelectorAll('button,strong')].filter(e=>{
+      const r=e.getBoundingClientRect();return r.width&&r.height&&(r.right>bounds.right+2||r.left<bounds.left-2);
+    }).map(e=>({text:(e.innerText||e.id).slice(0,30),rect:e.getBoundingClientRect().toJSON(),parent:bounds.toJSON()}));
+  }));
+  assert.deepEqual(cramped,[],label+' snack controls clipped within help person card');
 }
 (async()=>{
   await new Promise(r=>server.listen(0,'127.0.0.1',r));
