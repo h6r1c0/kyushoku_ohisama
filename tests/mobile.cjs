@@ -87,7 +87,9 @@ async function noOverflow(page,label){
         await select(page,'dryEditFood','ひじき');await page.locator('#drySnackRate').fill('2');await page.locator('#dryEditor').getByRole('button',{name:'保存 / 更新'}).click();
         await page.locator('[aria-controls="dryCalculator"]').click();assert.equal(await page.locator('#dryResultValue').innerText(),(await page.evaluate(()=>snackPeopleTotal()*2))+'g');
         await page.locator('[aria-controls="dryCalculator"]').click();
-        await page.locator('.category-chip[data-category="fish"]').click();await page.locator('.food-choice-list').getByRole('button',{name:'赤魚',exact:true}).click();
+        // The category tiles are covered by native selects on touch devices.
+        // Select through the same control a user opens, rather than the desktop-only popup.
+        await page.locator('#fishFoodsSelect').selectOption({label:'赤魚'});
         assert.equal(await page.locator('#currentFoodName').innerText(),'赤魚');assert.equal(await page.locator('#foodOptionChoices .variant-choice').count(),2);
         await page.locator('#foodOptionChoices .variant-choice').nth(0).click();assert.equal(Number(await page.locator('#resultNumber').innerText()),await page.evaluate(()=>counts().c1+counts().c2+counts().c3+counts().c4+counts().c5+counts().ca));
         await page.locator('#foodOptionChoices .variant-choice').nth(1).click();assert.equal(Number(await page.locator('#resultNumber').innerText()),await page.evaluate(()=>counts().c1+counts().c2+2*(counts().c3+counts().c4+counts().c5)+2*counts().ca));
