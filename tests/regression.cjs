@@ -2,15 +2,17 @@
 const {JSDOM,VirtualConsole}=require('jsdom');
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const html=fs.readFileSync(require('node:path').join(__dirname,'../index.html'),'utf8');
-async function boot(seed={}){
+async function boot(seed={},sessionSeed={}){
  const errors=[];const vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e));
- const dom=new JSDOM(html,{url:'https://test.invalid/',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole:vc,beforeParse(w){for(const [k,v]of Object.entries(seed))w.localStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v));w.alert=()=>{};w.confirm=()=>true;}});
+ const dom=new JSDOM(html,{url:'https://test.invalid/',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole:vc,beforeParse(w){for(const [k,v]of Object.entries(seed))w.localStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v));for(const [k,v]of Object.entries(sessionSeed))w.sessionStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v));w.alert=()=>{};w.confirm=()=>true;}});
  await new Promise(r=>setTimeout(r,30));assert.equal(errors.length,0,errors.map(e=>e.stack).join('\n'));
  const w=dom.window;return {w,d:w.document,errors,close:()=>w.close(),ev:code=>w.eval(code),snapshot:()=>Object.fromEntries(Array.from({length:w.localStorage.length},(_,i)=>{const k=w.localStorage.key(i);return[k,w.localStorage.getItem(k)]}))};
 }
 function change(app,id,value){const e=app.d.getElementById(id);if(e.type==='checkbox')e.checked=value;else e.value=String(value);e.dispatchEvent(new app.w.Event(e.tagName==='INPUT'&&e.type!=='checkbox'?'input':'change',{bubbles:true}));}
 (async()=>{
  let a=await boot();assert.equal(a.d.querySelectorAll('.feature-tab').length,1);assert.equal(a.d.getElementById('cutCalculator').classList.contains('hidden'),true);
+ assert.deepEqual([...a.d.querySelectorAll('#cutSlots .slot-icon')].map(img=>img.getAttribute('src')),['icon_norimaki_fraction.png','icon_norimaki_fraction.png','11_切り分け計算アイコン.png','11_切り分け計算アイコン.png']);
+ const iconStyles=[...a.d.querySelectorAll('.dry-settings-icon,.people-settings-icon,.food-settings-icon')].slice(0,3).map(el=>a.w.getComputedStyle(el));assert.equal(new Set(iconStyles.map(style=>style.backgroundColor)).size,1);assert.ok(iconStyles.every(style=>style.filter==='none'));
  assert.equal(a.ev('dryFoods.find(f=>f.id==="hijiki").mealRate'),5);assert.equal(a.ev('dryFoods.find(f=>f.id==="kiriboshi_daikon").mealRate'),10);
  for(const id of ['somen','udon'])assert.equal(a.ev(`dryFoods.find(f=>f.id==='${id}').snackRate`),null);
  for(const id of ['c5','ca'])assert.equal(a.d.getElementById(id).lastElementChild.value,'other');
@@ -18,7 +20,7 @@ function change(app,id,value){const e=app.d.getElementById(id);if(e.type==='chec
  change(a,'c5','other');change(a,'c5Other',14);change(a,'ca','other');change(a,'caOther',20);
  assert.equal(a.ev('counts().c5'),14);assert.equal(a.ev('counts().ca'),20);assert.equal(a.ev('maxCounts.c5'),6);
  const n=a.ev('dryInitialPeople()');assert.equal(Number(a.d.getElementById('allMealCount').textContent),n+a.ev('counts().c0'));
- const expectedCut=a.ev('counts().c1+counts().c2+2*(counts().c3+counts().c4+counts().c5)+3*counts().ca');assert.equal(a.ev('cutTotalFor(cutSlots[0])'),expectedCut);
+ const expectedCut=a.ev('counts().c1+counts().c2+2*(counts().c3+counts().c4+counts().c5)+3*counts().ca');assert.equal(a.ev('cutTotalFor(cutSlots[2])'),expectedCut);
  change(a,'dryFood','hijiki');assert.equal(a.d.getElementById('dryResultValue').textContent,n*5+'g');assert.equal(a.d.getElementById('dryPeople').readOnly,true);
  const riceBefore=a.d.getElementById('riceAmount').textContent;
  change(a,'cgEats',true);assert.equal(a.ev('cutPeople()[5]'),a.ev('counts().cg'));assert.equal(a.d.getElementById('dryResultValue').textContent,a.ev('dryInitialPeople()*5')+'g');assert.notEqual(a.d.getElementById('riceAmount').textContent,riceBefore);
@@ -27,20 +29,20 @@ function change(app,id,value){const e=app.d.getElementById(id);if(e.type==='chec
  a.ev('dryFoods.find(f=>f.id==="hijiki").snackRate=2;saveDryFoods();updateDryResult()');assert.equal(a.d.getElementById('dryResultValue').textContent,a.ev('snackPeopleTotal()*2')+'g');
  const saved=a.snapshot();a.close();a=await boot(saved);assert.equal(a.ev('counts().c5'),14);assert.equal(a.ev('counts().ca'),20);assert.equal(a.d.getElementById('c5Other').classList.contains('hidden'),false);assert.equal(a.d.getElementById('drySnack').checked,true);assert.equal(a.d.getElementById('dryResultValue').textContent,a.ev('snackPeopleTotal()*2')+'g');
  change(a,'c5',5);assert.equal(a.d.getElementById('c5Other').classList.contains('hidden'),true);change(a,'drySnack',false);change(a,'dryFood','kiriboshi_daikon');assert.equal(a.d.getElementById('dryResultValue').textContent,a.ev('dryInitialPeople()*10')+'g');a.d.getElementById('dryMealChoices').children[1].click();assert.equal(a.d.getElementById('dryResultValue').textContent,a.ev('dryInitialPeople()*8')+'g');change(a,'drySnack',true);assert.equal(a.d.getElementById('dryResultNote').textContent,'1人量が未設定です');
- a.d.querySelector('[aria-controls="cutCalculator"]').click();a.d.querySelector('#cutRates button').click();a.d.querySelector('#cutAges button').click();assert.equal(a.ev('cutTotalFor(cutSlots[0])'),a.ev('dryInitialPeople()'));
- a.d.querySelectorAll('#cutRates button')[3].click();a.d.querySelectorAll('#cutAges button')[6].click();assert.equal(a.ev('cutSlots[0].rates[6]'),4);change(a,'cutMemo','なす');change(a,'cutYield',8);assert.equal(a.d.getElementById('cutPack').textContent,`必要 ${Math.ceil(a.ev('cutTotalFor(cutSlots[0])')/8)}個分`);a.d.querySelectorAll('#cutSlots button')[1].click();assert.equal(a.ev('cutSlots[0].memo'),'なす');assert.equal(a.d.getElementById('cutMemo').value,'');
+ a.d.querySelector('[aria-controls="cutCalculator"]').click();a.d.querySelectorAll('#cutSlots button')[2].click();assert.equal(a.w.getComputedStyle(a.d.getElementById('fractionResult')).display,'none');a.d.querySelector('#cutRates button').click();a.d.querySelector('#cutAges button').click();assert.equal(a.ev('cutTotalFor(cutSlots[2])'),a.ev('dryInitialPeople()'));
+ a.d.querySelectorAll('#cutRates button')[3].click();a.d.querySelectorAll('#cutAges button')[6].click();assert.equal(a.ev('cutSlots[2].rates[6]'),4);change(a,'cutMemo','なす');change(a,'cutYield',8);assert.equal(a.d.getElementById('cutPack').textContent,`必要 ${Math.ceil(a.ev('cutTotalFor(cutSlots[2])')/8)}個分`);a.d.querySelectorAll('#cutSlots button')[3].click();assert.equal(a.ev('cutSlots[2].memo'),'なす');assert.equal(a.d.getElementById('cutMemo').value,'');
  a.d.querySelector('[aria-controls="dryCalculator"]').click();assert.equal(a.d.getElementById('cutCalculator').classList.contains('hidden'),true);
  // The explicit 51 slices / 8 per item example rounds up to 7 items.
- a.ev('cutSlot=0;cutSlots[0]=emptyCut(0);["c1","c2","c3","c4","c5","cg"].forEach(id=>setCountSelectValue(id,0));setCountSelectValue("c1",5);setCountSelectValue("c3",2);setCountSelectValue("ca",14);update()');
- change(a,'cutYield',8);assert.equal(a.ev('cutTotalFor(cutSlots[0])'),51);assert.equal(a.d.getElementById('cutPack').textContent,'必要 7個分');
+ a.ev('cutSlot=2;cutSlots[2]=emptyCut(2);["c1","c2","c3","c4","c5","cg"].forEach(id=>setCountSelectValue(id,0));setCountSelectValue("c1",5);setCountSelectValue("c3",2);setCountSelectValue("ca",14);update()');
+ change(a,'cutYield',8);assert.equal(a.ev('cutTotalFor(cutSlots[2])'),51);assert.equal(a.d.getElementById('cutPack').textContent,'必要 7個分');
  // Snack counts are shared without changing lunch counts; school children remain included.
  a.ev('cutContext="snack";resetSnackPeople()');const lunchAdult=a.ev('counts().ca');assert.equal(a.ev('cutPeople()[5]'),a.ev('counts().cg'));a.ev('snackPeopleState.values[6]+=2;snackPeopleState.overrides[6]=true;syncSnackPeople();renderCutResults();updateDryResult()');assert.equal(a.ev('counts().ca'),lunchAdult);assert.equal(a.ev('cutPeople()[6]'),lunchAdult+2);assert.equal(Number(a.d.getElementById('dryPeople').value),a.ev('snackPeopleTotal()'));
  a.ev('snackPeopleState={date:"2000-01-01",base:"",values:[99,99,99,99,99,99,99],overrides:{6:true}};syncSnackPeople()');assert.deepEqual(a.ev('cutPeople()'),a.ev('todaySnackPeople()'));
  // Exact fraction calculations and each displayed cutting plan are physically feasible.
- a.ev('cutSlot=2;cutContext="snack";snackPeopleState={date:localDay(),base:todaySnackPeople().join(","),values:[1,1,1,1,1,1,0],overrides:{}};cutSlots[2]={...emptyCut(2),rates:[2,3,4,5,6,8,0]};renderCutResults()');
- assert.equal(a.ev('cutTotalFor(cutSlots[2])'),189);assert.equal(a.ev('fractionText(189,true)'),'1と23/40本分');assert.equal(a.ev('fractionPlan(cutSlots[2]).bins.every(b=>b.used<=FRACTION_BASE)'),true);assert.equal(a.ev('fractionPlan(cutSlots[2]).items.length'),6);assert.ok(a.d.querySelectorAll('#fractionResult .fraction-pattern').length>0);
- a.ev('snackPeopleState.values=[32,0,0,0,0,0,0];cutSlots[2].rates=[5,0,0,0,0,0,0];renderCutResults()');assert.equal(a.ev('fractionText(fractionPlan(cutSlots[2]).total,true)'),'6と2/5本分');assert.equal(a.ev('fractionPlan(cutSlots[2]).bins.length'),7);assert.equal(a.ev('fractionText(fractionPlan(cutSlots[2]).remainder,true)'),'3/5本分');
- for(const denom of [2,3,4,5,6,8]){a.ev(`snackPeopleState.values=[1,0,0,0,0,0,0];cutSlots[2].rates=[${denom},0,0,0,0,0,0]`);assert.equal(a.ev('cutTotalFor(cutSlots[2])'),120/denom)}
+ a.ev('cutSlot=0;cutContext="snack";snackPeopleState={date:localDay(),base:todaySnackPeople().join(","),values:[1,1,1,1,1,1,0],overrides:{}};cutSlots[0]={...emptyCut(0),rates:[2,3,4,5,6,8,0]};renderCutResults()');
+ assert.equal(a.ev('cutTotalFor(cutSlots[0])'),189);assert.equal(a.ev('fractionText(189,true)'),'1と23/40本分');assert.equal(a.ev('fractionPlan(cutSlots[0]).bins.every(b=>b.used<=FRACTION_BASE)'),true);assert.equal(a.ev('fractionPlan(cutSlots[0]).items.length'),6);assert.ok(a.d.querySelectorAll('#fractionResult .fraction-pattern').length>0);assert.deepEqual([...a.d.querySelectorAll('#fractionResult svg text')].filter(e=>e.textContent==='1/4').map(e=>e.previousElementSibling.getAttribute('fill')),[a.ev('FRACTION_COLORS[4]')]);
+ a.ev('snackPeopleState.values=[32,0,0,0,0,0,0];cutSlots[0].rates=[5,0,0,0,0,0,0];renderCutResults()');assert.equal(a.ev('fractionText(fractionPlan(cutSlots[0]).total,true)'),'6と2/5本分');assert.equal(a.ev('fractionPlan(cutSlots[0]).bins.length'),7);assert.equal(a.ev('fractionText(fractionPlan(cutSlots[0]).remainder,true)'),'3/5本分');assert.ok(a.d.getElementById('fractionResult').textContent.includes('5等分：7本'));
+ for(const denom of [2,3,4,5,6,8]){a.ev(`snackPeopleState.values=[1,0,0,0,0,0,0];cutSlots[0].rates=[${denom},0,0,0,0,0,0]`);assert.equal(a.ev('cutTotalFor(cutSlots[0])'),120/denom)}
  // Main food calculation, remainder, rice and porridge independently checked.
  a.ev('resetCurrentCounts();selectFoodCandidate("chicken")');const units=a.ev('counts().c1+counts().c2+2*(counts().c3+counts().c4+counts().c5)+3*counts().ca');assert.equal(Number(a.d.getElementById('resultNumber').textContent),Math.ceil(units/5));assert.ok(a.d.getElementById('subResult').textContent.includes('余り '+(Math.ceil(units/5)*5-units)));
  change(a,'porridgeEnabled',true);assert.equal(a.d.getElementById('riceAmount').textContent,a.ev('fmt(Math.ceil((Number(document.getElementById("allMealCount").textContent)-1)/3*2)/2)+"合"'));
@@ -58,5 +60,8 @@ function change(app,id,value){const e=app.d.getElementById(id);if(e.type==='chec
  assert.equal(a.ev(`mergeCatalogDefaults([{id:'a',v:7}],[{id:'a',v:10},{id:'b',v:5}],'testCatalog',['a']).length`),1);a.close();
  a=await boot({kyushokuFoodsV6:[],kyushokuDryFoodsV1:[]});assert.equal(a.ev('foods.length'),1);assert.equal(a.ev('foods[0].id'),'akauo');assert.equal(a.ev('dryFoods.length'),0);change(a,'ca','other');change(a,'caOther',20);assert.ok(Number(a.d.getElementById('allMealCount').textContent)>20);a.close();
  a=await boot();assert.equal(a.ev('foods.filter(f=>f.id==="akauo").length'),1);assert.equal(a.ev('foods.find(f=>f.id==="akauo").variants[0].r12'),1);assert.equal(a.ev('foods.find(f=>f.id==="akauo").variants[1].rm'),2);assert.equal(a.ev('foods.find(f=>f.id==="akauo").variants[1].rg'),null);a.close();
- console.log('PASS: counts, snack sharing, exact fractions, feasible cutting plans, restoration, rice, porridge, school meals, main/remainders, dry modes, help structure, saved-value preservation and catalog migration');
+ // Legacy session slots migrate once: old fractions ③④ -> new ①②, old pieces ①② -> new ③④.
+ const legacyCuts=[{rates:[1,1,2,2,2,2,3],memo:'旧切れ1',yield:'8'},{rates:[2,2,2,2,2,2,2],memo:'旧切れ2',yield:'6'},{rates:[4,4,5,5,6,6,8],memo:'旧分数3',shape:'circle'},{rates:[3,3,3,4,4,5,5],memo:'旧分数4',shape:'square'}];
+ a=await boot({}, {kyushokuCutSession:legacyCuts});assert.equal(a.ev('JSON.stringify(cutSlots.map(s=>[s.type,s.memo]))'),JSON.stringify([['fraction','旧分数3'],['fraction','旧分数4'],['pieces','旧切れ1'],['pieces','旧切れ2']]));assert.ok(a.w.sessionStorage.getItem('kyushokuCutSessionV2'));assert.deepEqual([...a.d.querySelectorAll('#cutSlots button')].map(b=>b.childNodes[1].textContent.trim().split(' ')[0]),['①','②','③','④']);a.close();
+ console.log('PASS: counts, snack sharing, fraction-first slot migration, exact labeled/color-stable fractions, feasible cutting plans, restoration, rice, porridge, school meals, main/remainders, dry modes, help structure, saved-value preservation and catalog migration');
 })().catch(e=>{console.error(e);process.exit(1)});
