@@ -19,7 +19,7 @@ async function select(page,id,text){
 async function noOverflow(page,label){
   const details=await page.evaluate(()=>{
     const vw=innerWidth;
-    return [...document.querySelectorAll('#quantityPanel input,#quantityPanel button,#helpEditor .help-caption,#helpEditor .help-live-clone')].filter(e=>{
+    return [...document.querySelectorAll('#quantityPanel input,#quantityPanel button,#helpEditor .help-caption,#helpEditor .help-target-number,#helpEditor .help-live-clone')].filter(e=>{
       const r=e.getBoundingClientRect();return r.width&&r.height&&(r.right>vw+2||r.left< -2)&&!e.closest('.hidden')&&!e.classList.contains('soft-select-native');
     }).map(e=>({tag:e.tagName,text:(e.innerText||e.id).slice(0,70),rect:e.getBoundingClientRect().toJSON()}));
   });
@@ -65,17 +65,32 @@ async function noOverflow(page,label){
         await page.locator('.cut-calculator-card').screenshot({path:path.join(out,`${width}-cut.png`)});await noOverflow(page,'cut '+width);
         await page.locator('#cgEats').check();assert.equal(await page.evaluate(()=>cutPeople()[5]),await page.evaluate(()=>counts().cg));
         await page.locator('#cgEats').uncheck();assert.equal(await page.evaluate(()=>cutPeople()[5]),0);
+        const lunchAdult=await page.evaluate(()=>counts().ca);
+        await page.locator('#cutSlots button').nth(2).click();await page.locator('#cutContext [data-context="snack"]').click();
+        assert.equal(await page.evaluate(()=>cutPeople()[5]),await page.evaluate(()=>counts().cg));
+        await page.locator('#snackPeopleGrid .snack-person').nth(6).getByRole('button',{name:'＋'}).click();
+        assert.equal(await page.evaluate(()=>counts().ca),lunchAdult);assert.equal(await page.evaluate(()=>cutPeople()[6]),lunchAdult+1);
+        await page.locator('#cutRates').getByRole('button',{name:'1/5',exact:true}).click();await page.locator('#cutAges button').first().click();
+        assert.equal(await page.evaluate(()=>fractionPlan(cutSlots[2]).bins.every(bin=>bin.used<=FRACTION_BASE)),true);
+        assert.ok((await page.locator('#fractionResult').innerText()).includes('用意する量'));
+        await page.locator('#fractionResult').getByRole('button',{name:'丸型'}).click();assert.ok(await page.locator('#fractionResult svg circle').count());
+        await page.locator('.cut-calculator-card').screenshot({path:path.join(out,`${width}-fraction.png`)});await noOverflow(page,'fraction '+width);
         await page.locator('[aria-controls="dryCalculator"]').click();assert.equal(await page.locator('#cutCalculator').isVisible(),false);
         await select(page,'dryFood','ひじき');assert.equal(await page.locator('#dryResultValue').innerText(),(await page.evaluate(()=>dryInitialPeople()*5))+'g');
         await select(page,'dryFood','切り干し大根');await page.locator('#dryMealChoices').getByRole('button',{name:'少なめ 8g'}).click();
         assert.equal(await page.locator('#dryResultValue').innerText(),(await page.evaluate(()=>dryInitialPeople()*8))+'g');
         await page.locator('.dry-calculator-card').screenshot({path:path.join(out,`${width}-dry-meal.png`)});
-        await page.locator('#drySnack').check();await page.locator('#dryPeople').fill('23');assert.equal(await page.locator('#dryResultNote').innerText(),'1人量が未設定です');
+        await page.locator('#drySnack').check();assert.equal(await page.locator('#dryPeople').isEditable(),false);assert.equal(Number(await page.locator('#dryPeople').inputValue()),await page.evaluate(()=>snackPeopleTotal()));assert.equal(await page.locator('#dryResultNote').innerText(),'1人量が未設定です');
         await page.locator('.dry-calculator-card').screenshot({path:path.join(out,`${width}-dry-snack.png`)});
         await page.locator('[aria-controls="foodEditor"]').click();assert.equal(await page.locator('#mainFoodEditor').isVisible(),false);assert.equal(await page.locator('#dryEditor').isVisible(),false);
         await page.locator('#foodEditorChooser [data-editor-kind="dry"]').click();
         await select(page,'dryEditFood','ひじき');await page.locator('#drySnackRate').fill('2');await page.locator('#dryEditor').getByRole('button',{name:'保存 / 更新'}).click();
-        await page.locator('[aria-controls="dryCalculator"]').click();assert.equal(await page.locator('#dryResultValue').innerText(),'46g');
+        await page.locator('[aria-controls="dryCalculator"]').click();assert.equal(await page.locator('#dryResultValue').innerText(),(await page.evaluate(()=>snackPeopleTotal()*2))+'g');
+        await page.locator('[aria-controls="dryCalculator"]').click();
+        await page.locator('.category-chip[data-category="fish"]').click();await page.locator('.food-choice-list').getByRole('button',{name:'赤魚',exact:true}).click();
+        assert.equal(await page.locator('#currentFoodName').innerText(),'赤魚');assert.equal(await page.locator('#foodOptionChoices .variant-choice').count(),2);
+        await page.locator('#foodOptionChoices .variant-choice').nth(0).click();assert.equal(Number(await page.locator('#resultNumber').innerText()),await page.evaluate(()=>counts().c1+counts().c2+counts().c3+counts().c4+counts().c5+counts().ca));
+        await page.locator('#foodOptionChoices .variant-choice').nth(1).click();assert.equal(Number(await page.locator('#resultNumber').innerText()),await page.evaluate(()=>counts().c1+counts().c2+2*(counts().c3+counts().c4+counts().c5)+2*counts().ca));
         await select(page,'c5','5');assert.equal(await page.locator('#c5Other').isVisible(),false);
         await page.getByRole('button',{name:'基本人数に戻す',exact:true}).click();
         await page.locator('[aria-controls="foodEditor"]').click();
