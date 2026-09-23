@@ -41,6 +41,18 @@ async function noOverflow(page,label){
   }));
   assert.deepEqual(cramped,[],label+' snack controls clipped within help person card');
 }
+async function tapCutCell(page,rowIndex,cellNumber){
+  await page.locator('#cutAges .pieces-scroll').nth(rowIndex).evaluate((el,n)=>{const cell=el.querySelector(`.piece-cell:nth-child(${n})`),r=cell.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:41,button:0,clientX:x,clientY:y}));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:41,button:0,clientX:x,clientY:y}))},cellNumber);
+}
+async function tapFractionStep(page,rowIndex,stepIndex){
+  await page.locator('#cutAges .fraction-control').nth(rowIndex).evaluate((el,step)=>{const r=el.querySelector('.fraction-track').getBoundingClientRect(),x=r.left+r.width*step/7,y=r.top+r.height/2;el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:42,button:0,clientX:x,clientY:y}));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:42,button:0,clientX:x,clientY:y}))},stepIndex);
+}
+async function dragPiecesPastEdge(page,rowIndex){
+  await page.locator('#cutAges .pieces-scroll').nth(rowIndex).evaluate(async el=>{const r=el.getBoundingClientRect(),y=r.top+r.height/2;el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:43,button:0,clientX:r.left+20,clientY:y}));el.dispatchEvent(new PointerEvent('pointermove',{bubbles:true,pointerId:43,button:0,clientX:r.right+12,clientY:y}));await new Promise(resolve=>setTimeout(resolve,1100));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:43,button:0,clientX:r.right+12,clientY:y}))});
+}
+async function verticalGesture(page,rowIndex){
+  await page.locator('#cutAges .fraction-control').nth(rowIndex).evaluate(el=>{const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:44,button:0,clientX:x,clientY:y}));el.dispatchEvent(new PointerEvent('pointermove',{bubbles:true,pointerId:44,button:0,clientX:x+2,clientY:y+35}));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:44,button:0,clientX:x+2,clientY:y+35}))});
+}
 (async()=>{
   await new Promise(r=>server.listen(0,'127.0.0.1',r));
   const browser=await chromium.launch(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}:{});
@@ -61,12 +73,13 @@ async function noOverflow(page,label){
         await page.reload();assert.equal(await page.locator('#c5Other').inputValue(),'14');assert.equal(await page.locator('#caOther').inputValue(),'20');
         await page.locator('[aria-controls="cutCalculator"]').click();
         await page.locator('#cutSlots button').nth(2).click();
-        await page.locator('#cutRates').getByRole('button',{name:'2切れ',exact:true}).click();
-        await page.locator('#cutAges button').nth(2).click();
-        await page.locator('#cutRates').getByRole('button',{name:'3切れ',exact:true}).click();
-        await page.locator('#cutAges button').nth(6).click();
+        await page.locator('#cutAges .cut-age-select').nth(2).click();await page.locator('#cutAges .cut-age-select').nth(3).click();await page.locator('#cutAges .cut-age-select').nth(4).click();
+        await tapCutCell(page,2,3);assert.deepEqual(await page.evaluate(()=>cutSlots[2].rates.slice(2,5)),[3,3,3]);assert.equal(await page.locator('#cutSelectionClear').isDisabled(),true);
+        await tapCutCell(page,2,2);await tapCutCell(page,3,2);await tapCutCell(page,4,2);await tapCutCell(page,6,3);
         const total=await page.evaluate(()=>cutTotalFor(cutSlots[2]));
         assert.equal(total,await page.evaluate(()=>counts().c1+counts().c2+2*(counts().c3+counts().c4+counts().c5)+3*counts().ca));
+        await dragPiecesPastEdge(page,0);assert.ok(await page.evaluate(()=>cutSlots[2].rates[0]>=10));assert.ok(await page.locator('#cutAges .pieces-scroll').first().getAttribute('aria-valuemax').then(Number)>=10);await tapCutCell(page,0,10);assert.equal(await page.evaluate(()=>cutSlots[2].rates[0]),10);
+        await tapCutCell(page,0,1);
         await page.locator('.cut-options summary').click();await page.locator('#cutMemo').fill('なす');await page.locator('#cutYield').fill('8');
         assert.equal(await page.locator('#cutPack').innerText(),`必要 ${Math.ceil(total/8)}個分`);
         await page.locator('#cutSlots button').nth(3).click();await page.locator('#cutMemo').fill('厚揚げ');
@@ -79,7 +92,11 @@ async function noOverflow(page,label){
         assert.equal(await page.evaluate(()=>cutPeople()[5]),await page.evaluate(()=>counts().cg));
         await page.locator('#snackPeopleGrid .snack-person').nth(6).getByRole('button',{name:'＋'}).click();
         assert.equal(await page.evaluate(()=>counts().ca),lunchAdult);assert.equal(await page.evaluate(()=>cutPeople()[6]),lunchAdult+1);
-        await page.locator('#cutRates').getByRole('button',{name:'1/5',exact:true}).click();await page.locator('#cutAges button').first().click();
+        await page.locator('#cutAges .cut-age-select').nth(2).click();await page.locator('#cutAges .cut-age-select').nth(3).click();await page.locator('#cutAges .cut-age-select').nth(4).click();await tapFractionStep(page,2,3);
+        assert.deepEqual(await page.evaluate(()=>cutSlots[0].rates.slice(2,5)),[5,5,5]);assert.equal(await page.locator('#cutSelectionClear').isDisabled(),true);
+        const beforeVertical=await page.evaluate(()=>cutSlots[0].rates[0]);await verticalGesture(page,0);assert.equal(await page.evaluate(()=>cutSlots[0].rates[0]),beforeVertical);
+        for(let step=1;step<8;step++){await tapFractionStep(page,0,step);assert.equal(await page.evaluate(()=>cutSlots[0].rates[0]),[0,8,6,5,4,3,2,1][step])}
+        await tapFractionStep(page,0,3);
         assert.equal(await page.evaluate(()=>fractionPlan(cutSlots[0]).bins.every(bin=>bin.used<=FRACTION_BASE)),true);
         assert.ok((await page.locator('#fractionResult').innerText()).includes('用意する量'));
         assert.ok((await page.locator('#fractionResult').innerText()).includes('5等分：'));
