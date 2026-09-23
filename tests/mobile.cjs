@@ -48,7 +48,7 @@ async function tapFractionStep(page,rowIndex,stepIndex){
   await page.locator('#cutAges .fraction-control').nth(rowIndex).evaluate((el,step)=>{const r=el.querySelector('.fraction-track').getBoundingClientRect(),x=r.left+r.width*step/7,y=r.top+r.height/2;el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:42,button:0,clientX:x,clientY:y}));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:42,button:0,clientX:x,clientY:y}))},stepIndex);
 }
 async function dragPiecesPastEdge(page,rowIndex){
-  await page.locator('#cutAges .pieces-scroll').nth(rowIndex).evaluate(async el=>{const r=el.getBoundingClientRect(),y=r.top+r.height/2;el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:43,button:0,clientX:r.left+20,clientY:y}));el.dispatchEvent(new PointerEvent('pointermove',{bubbles:true,pointerId:43,button:0,clientX:r.right+12,clientY:y}));await new Promise(resolve=>setTimeout(resolve,380));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:43,button:0,clientX:r.right+12,clientY:y}))});
+  await page.locator('#cutAges .pieces-scroll').nth(rowIndex).evaluate(async el=>{const r=el.getBoundingClientRect(),y=r.top+r.height/2;el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:43,button:0,clientX:r.left+20,clientY:y}));el.dispatchEvent(new PointerEvent('pointermove',{bubbles:true,pointerId:43,button:0,clientX:r.right+12,clientY:y}));await new Promise(resolve=>setTimeout(resolve,1100));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:43,button:0,clientX:r.right+12,clientY:y}))});
 }
 async function verticalGesture(page,rowIndex){
   await page.locator('#cutAges .fraction-control').nth(rowIndex).evaluate(el=>{const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:44,button:0,clientX:x,clientY:y}));el.dispatchEvent(new PointerEvent('pointermove',{bubbles:true,pointerId:44,button:0,clientX:x+2,clientY:y+35}));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:44,button:0,clientX:x+2,clientY:y+35}))});
@@ -78,7 +78,7 @@ async function verticalGesture(page,rowIndex){
         await tapCutCell(page,2,2);await tapCutCell(page,3,2);await tapCutCell(page,4,2);await tapCutCell(page,6,3);
         const total=await page.evaluate(()=>cutTotalFor(cutSlots[2]));
         assert.equal(total,await page.evaluate(()=>counts().c1+counts().c2+2*(counts().c3+counts().c4+counts().c5)+3*counts().ca));
-        await dragPiecesPastEdge(page,0);assert.ok(await page.evaluate(()=>cutSlots[2].rates[0]>5));assert.ok(await page.locator('#cutAges .pieces-scroll').first().getAttribute('aria-valuemax').then(Number)>5);
+        await dragPiecesPastEdge(page,0);assert.ok(await page.evaluate(()=>cutSlots[2].rates[0]>=10));assert.ok(await page.locator('#cutAges .pieces-scroll').first().getAttribute('aria-valuemax').then(Number)>=10);await tapCutCell(page,0,10);assert.equal(await page.evaluate(()=>cutSlots[2].rates[0]),10);
         await tapCutCell(page,0,1);
         await page.locator('.cut-options summary').click();await page.locator('#cutMemo').fill('なす');await page.locator('#cutYield').fill('8');
         assert.equal(await page.locator('#cutPack').innerText(),`必要 ${Math.ceil(total/8)}個分`);
