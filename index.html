@@ -470,6 +470,22 @@ body.help-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .menu-detail{margin-top:10px;padding:10px;border:1px solid #a9d3e3;border-radius:12px;background:#fff}.menu-detail h3{font-size:18px;margin:4px 0 9px;overflow-wrap:anywhere}.menu-back{border:0;background:none;padding:6px 2px;color:#24799b;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer}.menu-date-picker{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:800}.menu-date{flex:1;min-width:0;max-width:230px;height:40px;border:1px solid #afd7e7;border-radius:9px;padding:6px 9px;background:#f4fbfe;color:#265f77;font-family:inherit;font-size:16px;cursor:pointer}.menu-day{margin-top:10px;border-top:1px solid #e2edf1;padding-top:9px}.menu-original{font-weight:800;overflow-wrap:anywhere}.menu-day strong{display:block;margin-top:10px}.menu-day ul{margin:5px 0 0;padding-left:1.3em}.menu-day li{margin:4px 0;overflow-wrap:anywhere}.menu-day span{color:#67818b;font-size:12px}
 @media(max-width:350px){.menu-categories{gap:5px}.menu-category{font-size:13px}.menu-controls{grid-template-columns:minmax(0,1fr) 126px;gap:4px}.menu-controls input::placeholder{font-size:11px}.menu-controls select{font-size:12px}}
 .menu-help-button{border-color:#a9d3e3;background:#eaf7fc;color:#286883}.menu-help-copy{padding:9px 12px;border-left:2px solid #a9d3e3;color:#49636d;font-size:13px;line-height:1.6}
+/* The inactive index sits behind the active page's continuous top border. */
+.feature-tab[aria-selected="false"]{border-bottom:0;transform:translateY(-3px)}
+/* Direct entry, choice and action have distinct silhouettes in both features. */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]){border-radius:7px}
+select,.soft-select-button{border-radius:10px}
+.menu-controls input,.menu-controls select{height:40px;margin-top:0;line-height:normal}
+.menu-controls input{border-color:#a9c4cf;border-radius:6px}
+.menu-controls select,.menu-date{border-color:#a9d3e3;border-radius:10px}
+.menu-date{margin-top:0;appearance:none;padding-right:30px;background:#f4fbfe url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23587986' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 11px center}
+.menu-controls input:focus,.menu-controls select:focus,.menu-date:focus{border-color:#348cb0;outline:3px solid #d3edf8}
+.menu-controls .soft-select-wrap{height:40px;margin-top:0}
+.menu-controls .soft-select-button{height:40px;min-height:40px;padding:5px 25px 5px 8px;border-color:#a9d3e3;border-radius:10px;color:#244c5e;font-size:13px}
+.menu-controls .soft-select-button::after{right:10px}
+.menu-date-picker .soft-select-wrap{flex:1;max-width:230px;margin-top:0}
+.menu-date-picker .soft-select-button{min-height:40px;padding:6px 30px 6px 9px;border-color:#a9d3e3;border-radius:10px;background:#f4fbfe;color:#265f77;font-size:16px}
+.menu-search .soft-select-button:focus-visible,.menu-search .soft-select-button[aria-expanded="true"]{border-color:#348cb0;outline:3px solid #d3edf8}
 </style>
 </head>
 <body>
@@ -511,8 +527,8 @@ body.help-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 </header>
 <section class="feature-shell">
 <div class="feature-tabs" role="tablist" aria-label="機能">
-  <button id="quantityTab" class="feature-tab" type="button" role="tab" aria-selected="true" aria-controls="quantityPanel">量計算</button>
-  <button id="menuTab" class="feature-tab menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menuPanel">献立検索</button>
+  <button id="quantityTab" class="feature-tab" data-feature="quantity" type="button" role="tab" aria-selected="true" aria-controls="quantityPanel">量計算</button>
+  <button id="menuTab" class="feature-tab menu-tab" data-feature="menu" type="button" role="tab" aria-selected="false" aria-controls="menuPanel">献立検索</button>
 </div>
 <main id="quantityPanel" class="feature-panel" role="tabpanel" aria-labelledby="quantityTab">
 

@@ -44,6 +44,9 @@
   }
   function normalizeSearch(value){
     return String(value||'').normalize('NFKC').toLocaleLowerCase('ja-JP')
+      // Keep dried daikon as its own ingredient token before joining delimiters.
+      // A dish listing both dried and fresh daikon still contains the latter.
+      .replace(/切(?:り)?干(?:し)?大根/g,'\uE000')
       .replace(/じゃが芋|ジャガイモ/g,'じゃがいも')
       .replace(/玉ネギ|たまねぎ/g,'玉ねぎ')
       .replace(/インゲン/g,'いんげん')
@@ -98,12 +101,13 @@
     for(const list of dates.values())list.sort((a,b)=>a.order-b.order||categories.indexOf(a.category)-categories.indexOf(b.category));
     return {categories,dates,dishes:[...dishes.values()]};
   }
-  function search(index,category='',query='',sort='new'){
+  function search(index,category='',query='',sort='new',dateDirection='new'){
     const q=normalizeSearch(query);
     const list=index.dishes.filter(x=>(!category||x.category===category)&&(!q||x.search.includes(q)));
     const cmp=(a,b)=>a.display.localeCompare(b.display,'ja');
-    list.sort((a,b)=>sort==='count'?b.dates.length-a.dates.length||b.dates[0].localeCompare(a.dates[0])||cmp(a,b):
-      sort==='few'?a.dates.length-b.dates.length||b.dates[0].localeCompare(a.dates[0])||cmp(a,b):
+    const byDate=(a,b)=>dateDirection==='old'?a.dates[0].localeCompare(b.dates[0]):b.dates[0].localeCompare(a.dates[0]);
+    list.sort((a,b)=>sort==='count'?b.dates.length-a.dates.length||byDate(a,b)||cmp(a,b):
+      sort==='few'?a.dates.length-b.dates.length||byDate(a,b)||cmp(a,b):
       sort==='old'?a.dates[0].localeCompare(b.dates[0])||cmp(a,b):
       b.dates[0].localeCompare(a.dates[0])||cmp(a,b));
     return list;
