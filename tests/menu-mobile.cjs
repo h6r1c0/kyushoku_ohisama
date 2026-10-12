@@ -16,7 +16,7 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    await page.addInitScript(()=>{window.OHISAMA_MENU_FEED={url:'https://example.invalid/menu.csv'};});
    await page.route('**/menu.csv',route=>{
     requests++;if(fail)return route.abort();
-    const rows=version==='v1'?original:[...original,row(2026,9,10,'メイン','新しい豆腐料理',1)];
+    const rows=version==='v1'?original:original.map(r=>r[0]===2026&&r[1]===9&&r[2]===8&&r[3]==='サラダ'?row(2026,9,8,'サラダ','修正したコーンのサラダ（きゅうり・赤玉ねぎ）',1):r);
     const body=['年度,月,日,区分,料理名,記載順',...rows.map(r=>r.join(','))].join('\n');
     route.fulfill({status:200,headers:{'access-control-allow-origin':'*','cache-control':'private, max-age=300'},contentType:'text/csv',body});
    });
@@ -61,9 +61,8 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    await page.getByRole('status').getByText(/カテゴリーを選ぶか/).waitFor();
    assert.equal(requests,3,'再読み込みとタブを開いた時だけ更新を確認する');
    version='v2';await page.getByRole('tab',{name:'量計算'}).click();await page.getByRole('tab',{name:'献立検索'}).click();
-   await page.getByRole('button',{name:'メイン',exact:true}).click();
-   await page.locator('#menuQuery').fill('');
-   await page.getByRole('button',{name:/新しい豆腐料理/}).waitFor();
+   await page.locator('#menuQuery').fill('修正した');
+   await page.getByRole('button',{name:/修正したコーンのサラダ/}).waitFor();
    assert.equal(requests,4,'古い提供日を保持した訂正にも更新を検知する');
    fail=true;await page.getByRole('tab',{name:'量計算'}).click();await page.getByRole('tab',{name:'献立検索'}).click();
    await page.getByRole('status').getByText(/最新データを確認できません/).waitFor();
