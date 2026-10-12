@@ -4,14 +4,21 @@
   // Only the dedicated six-column publication is exposed to this public app.
   const feed=window.OHISAMA_MENU_FEED||{};
   const source=feed.url||'';
-  const shell=document.querySelector('.feature-shell'),quantity=document.getElementById('quantityPanel');
-  const menu=document.getElementById('menuPanel'),quantityTab=document.getElementById('quantityTab'),menuTab=document.getElementById('menuTab');
+  const shell=document.querySelector('.feature-shell'),quantityTab=document.getElementById('quantityTab'),menuTab=document.getElementById('menuTab');
+  const tabs=[...shell.querySelectorAll('.feature-tabs [role="tab"][aria-controls]')];
   const categories=document.getElementById('menuCategories'),controls=document.getElementById('menuControls');
   const query=document.getElementById('menuQuery'),sort=document.getElementById('menuSort');
   const status=document.getElementById('menuStatus'),results=document.getElementById('menuResults'),detail=document.getElementById('menuDetail');
   let index=null,snapshot='',pending=null,category='',selected=null;
-  const sortKey='ohisama-menu-sort';
-  try{const saved=localStorage.getItem(sortKey);if([...sort.options].some(o=>o.value===saved))sort.value=saved;}catch(_){}
+  const sortKey='ohisama-menu-sort',directionKey='ohisama-menu-date-direction',tabKey='ohisama-active-feature-tab';
+  let dateDirection='new';
+  try{
+    const saved=localStorage.getItem(sortKey);
+    if([...sort.options].some(o=>o.value===saved))sort.value=saved;
+    const direction=localStorage.getItem(directionKey);
+    if(direction==='new'||direction==='old')dateDirection=direction;
+    else if(sort.value==='old')dateDirection='old';
+  }catch(_){}
   const dateLabel=s=>`${Number(s.slice(0,4))}年${Number(s.slice(5,7))}月${Number(s.slice(8,10))}日`;
   function briefDate(s){
     const now=new Date(),date=new Date(Number(s.slice(0,4)),Number(s.slice(5,7))-1,Number(s.slice(8,10)));
@@ -20,11 +27,17 @@
   }
   function button(label,className,action){const b=document.createElement('button');b.type='button';b.className=className;b.textContent=label;b.addEventListener('click',action);return b;}
   function setStatus(value){status.textContent=value;}
-  function showTab(which){
-    const active=which==='menu';shell.dataset.feature=which;
-    quantity.hidden=active;quantity.classList.toggle('hidden',active);menu.hidden=!active;menu.classList.toggle('hidden',!active);
-    quantityTab.setAttribute('aria-selected',String(!active));menuTab.setAttribute('aria-selected',String(active));
-    if(active){refresh().catch(()=>{});render();}
+  function validTab(id){return tabs.find(tab=>tab.id===id&&document.getElementById(tab.getAttribute('aria-controls')));}
+  function showTab(id){
+    const active=validTab(id)||quantityTab;
+    shell.dataset.feature=active.dataset.feature||'quantity';
+    for(const tab of tabs){
+      const selected=tab===active,panel=document.getElementById(tab.getAttribute('aria-controls'));
+      tab.setAttribute('aria-selected',String(selected));
+      if(panel){panel.hidden=!selected;panel.classList.toggle('hidden',!selected);}
+    }
+    try{localStorage.setItem(tabKey,active.id);}catch(_){}
+    if(active===menuTab){refresh().catch(()=>{});render();}
   }
   async function loadPublished(){
     if(!source)return Promise.reject(new Error('献立データの接続が未設定です'));
@@ -57,7 +70,7 @@
     detail.classList.add('hidden');
     results.replaceChildren();
     if(!category&&!query.value.trim()){setStatus('カテゴリーを選ぶか、料理名・食材名を入力してください');return;}
-    const found=core.search(index,category,query.value,sort.value);
+    const found=core.search(index,category,query.value,sort.value,dateDirection);
     setStatus(`${found.length}件の料理`);
     if(!found.length){setStatus('該当する料理はありません');return;}
     const fragment=document.createDocumentFragment();
@@ -98,9 +111,14 @@
   controls.classList.remove('hidden');
   for(const c of core.categories){const b=button(c,'menu-category',()=>{category=category===c?'':c;selected=null;for(const item of categories.children)item.setAttribute('aria-pressed',String(item===b&&category===c));render();});b.setAttribute('aria-pressed','false');categories.append(b);}
   query.addEventListener('input',()=>{selected=null;results.classList.remove('hidden');render();});
-  sort.addEventListener('change',()=>{try{localStorage.setItem(sortKey,sort.value);}catch(_){}selected=null;results.classList.remove('hidden');render();});
-  quantityTab.addEventListener('click',()=>showTab('quantity'));
-  menuTab.addEventListener('click',()=>showTab('menu'));
+  sort.addEventListener('change',()=>{
+    if(sort.value==='new'||sort.value==='old')dateDirection=sort.value;
+    try{localStorage.setItem(sortKey,sort.value);localStorage.setItem(directionKey,dateDirection);}catch(_){}
+    selected=null;results.classList.remove('hidden');render();
+  });
+  for(const tab of tabs)tab.addEventListener('click',()=>showTab(tab.id));
+  let savedTab='';try{savedTab=localStorage.getItem(tabKey)||'';}catch(_){}
+  showTab(savedTab||quantityTab.id);
   const help=document.querySelector('#helpEditor .help-feature');
   if(help){
     const toggle=button('献立検索','help-feature-button menu-help-button',()=>{const open=copy.classList.toggle('hidden');toggle.setAttribute('aria-expanded',String(!open));});

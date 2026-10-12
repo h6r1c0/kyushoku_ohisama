@@ -53,6 +53,25 @@ assert.ok(menu.search(index,'おやつ','柿ジャム').some(x=>x.name==='柿ジ
 assert.ok(index.dates.get('2026-09-11').some(x=>x.name.includes('絹さや')));
 assert.deepEqual(menu.parts('梅酢きゅうり・かき氷','おやつ'),['かき氷']);
 assert.equal(menu.normalizeSearch('大根と人参'),menu.normalizeSearch('大根・人参'));
+const daikon=menu.build([
+  [2026,9,1,'煮物','切干大根煮（人参・あげ）',1],
+  [2026,9,2,'煮物','切干し大根煮（人参・ごぼう）',1],
+  [2026,9,3,'煮物','切り干し大根煮（人参）',1],
+  [2026,9,4,'煮物','大根と人参の煮物',1],
+  [2026,9,5,'煮物','切干大根と大根・人参の煮物',1]
+]);
+assert.deepEqual(menu.search(daikon,'煮物','大根 人参').map(x=>x.dates[0]),['2026-09-05','2026-09-04']);
+assert.equal(menu.search(daikon,'煮物','切干大根').length,4);
+assert.equal(menu.search(daikon,'煮物','切り干し大根').length,4);
+assert.equal(menu.search(daikon,'煮物','大根').length,2);
+const ties=menu.build([
+  [2026,9,1,'メイン','古い料理',1],[2026,9,2,'メイン','古い料理',1],
+  [2026,9,4,'メイン','新しい料理',1],[2026,9,5,'メイン','新しい料理',1],
+  [2026,9,3,'メイン','一度だけ',1]
+]);
+assert.deepEqual(menu.search(ties,'メイン','','count','new').slice(0,2).map(x=>x.name),['新しい料理','古い料理']);
+assert.deepEqual(menu.search(ties,'メイン','','count','old').slice(0,2).map(x=>x.name),['古い料理','新しい料理']);
+assert.deepEqual(menu.search(ties,'メイン','','few','old').map(x=>x.name),['一度だけ','古い料理','新しい料理']);
 assert.equal(menu.normalizeSearch('さといも'),'さといも');
 assert.equal(menu.dateKey(2026,2,30),null);
 assert.deepEqual(menu.parts('サラダ（レタス／トマト）／みそ汁','おやつ'),['サラダ（レタス／トマト）']);
