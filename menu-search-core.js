@@ -4,7 +4,10 @@
   root.MenuSearchCore=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
-  const categories=['メイン','サラダ','煮物','汁物','ご飯','おやつ'];
+  const categories=['サラダ','煮物','メイン','汁物','ご飯','おやつ'];
+  const chewing=/^(?:梅酢人参|梅酢きゅうり|梅ごぼう|昆布|早煮昆布|煮干し|にぼし|いりこ|するめ|蒸干し|ブロッコリーの茎|ブロッコリーの芯|キャベツの芯|昆布またはブロッコリーの芯|きゅうり|ゆかりきゅうり|ミディトマト|ミニトマト|葉付き人参|スティックセニョール|ブロッコリー|田作り|スナップえんどう)$/;
+  const ingredients='(?:大根|だいこん|人参|にんじん|玉ねぎ|玉ネギ|じゃがいも|じゃが芋|蓮根|れんこん|きゅうり|胡瓜|キャベツ|白菜|かぼちゃ|南瓜|こんにゃく|糸こんにゃく|トマト|なす|茄子|豆腐|小松菜|法蓮草|ほうれん草|わかめ|昆布|ごぼう|牛蒡)';
+  const conjunction=new RegExp('('+ingredients+')と(?='+ingredients+')','g');
   function categoryOf(value){
     const s=String(value||'');
     if(s==='メイン'||s==='主菜'||s.startsWith('メイン・'))return 'メイン';
@@ -12,29 +15,65 @@
     if(s.startsWith('煮物'))return '煮物';
     if(s==='汁物'||s==='汁')return '汁物';
     if(s==='ご飯'||s.startsWith('ご飯・')||s==='主食'||s.startsWith('行事'))return 'ご飯';
-    if(s.startsWith('おやつ')||s==='0歳児おやつ')return 'おやつ';
+    if(s==='おやつ'||s==='おやつ・共通'||s==='おやつ・高年齢'||
+      /^おやつ（(?:高年齢|3[～〜-]5歳|3歳以上|3,4,5歳)）$/.test(s))return 'おやつ';
     return null;
   }
   function parts(text,category){
     const original=String(text||'').trim();
-    if(category!=='おやつ'||!original.includes('／'))return original?[original]:[];
+    if(!original)return [];
+    if(category!=='おやつ')return [original];
     // 元資料の「／」だけを料理の区切りとして扱う。材料の括弧内は分割しない。
     const result=[];let depth=0,part='';
     for(const ch of original){
       if(ch==='（'||ch==='(')depth++;
       if(ch==='）'||ch===')')depth=Math.max(0,depth-1);
-      if(ch==='／'&&depth===0){if(part.trim())result.push(part.trim());part='';}
+      if((ch==='／'||ch==='/')&&depth===0){if(part.trim())result.push(part.trim());part='';}
       else part+=ch;
     }
     if(part.trim())result.push(part.trim());
-    return result;
+    return result.map(s=>{
+      const prefix=s.match(/^([^・]+)・(.+)$/);
+      return prefix&&chewing.test(prefix[1])?prefix[2].trim():s;
+    }).filter(s=>s&&!chewing.test(s)&&!/^みそ汁$|^味噌汁$/.test(s));
   }
   function dateKey(year,month,day){
     const y=Number(year),m=Number(month),d=Number(day),date=new Date(Date.UTC(y,m-1,d));
     if(!Number.isInteger(y)||!Number.isInteger(m)||!Number.isInteger(d)||date.getUTCFullYear()!==y||date.getUTCMonth()!==m-1||date.getUTCDate()!==d)return null;
     return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
   }
-  function normalizeSearch(s){return String(s||'').normalize('NFKC').toLocaleLowerCase('ja-JP').replace(/\s+/g,'');}
+  function normalizeSearch(value){
+    return String(value||'').normalize('NFKC').toLocaleLowerCase('ja-JP')
+      .replace(/じゃが芋|ジャガイモ/g,'じゃがいも')
+      .replace(/玉ネギ|たまねぎ/g,'玉ねぎ')
+      .replace(/インゲン/g,'いんげん')
+      .replace(/\s+/g,'')
+      .replace(conjunction,'$1')
+      .replace(/[\s\u3000・／/、,()（）「」『』［］\[\]]+/g,'');
+  }
+  function identity(name,category){
+    if(category==='煮物'&&/^じゃが煮(?:[（(].*[）)])?$/.test(name)){
+      const konjac=/こんにゃく/.test(name);
+      return konjac?{key:'じゃが煮（こんにゃく入り）',display:'じゃが煮（こんにゃく入り）',alias:'じゃがいも'}:
+        {key:'じゃが煮',display:'じゃが煮',alias:'じゃがいも'};
+    }
+    if(category==='煮物'&&/^ごろっとじゃが煮/.test(name))
+      return {key:name,display:name,alias:'じゃがいも'};
+    if(category==='汁物'&&/^(?:みそ汁|味噌汁)(?:[（(].*[）)])?$/.test(name))
+      return {key:'味噌汁',display:'味噌汁',alias:'みそ汁'};
+    if(category==='サラダ'){
+      const base=name.split(/[（(]/)[0];
+      const explicit=[
+        ['豆乳マヨ',/豆乳マヨ(?:ネーズ)?/],['バルサミコ',/バルサミコ/],
+        ['三杯酢',/三杯酢/],['柚子',/(?:柚子|ゆず)(?:ドレ|ポン酢)/],
+        ['レモン',/レモン(?:ドレ|すだち)/],['ごま',/(?:ごま|胡麻)(?:ドレ|酢|和え|サラダ)/]
+      ].find(([,pattern])=>pattern.test(name));
+      const flavor=explicit?.[0]||'';
+      const short=base.replace(/の(?:三杯酢|柚子ドレッシング|豆乳ドレッシング|生姜ドレッシング)$/, '').trim();
+      return {key:name,display:flavor?`${flavor}｜${short}`:short,alias:flavor};
+    }
+    return {key:name,display:name,alias:''};
+  }
   function build(rows){
     const dates=new Map(),dishes=new Map();
     for(const source of rows){
@@ -43,24 +82,28 @@
       if(!date||!category||!rawName)continue;
       const list=parts(rawName,category);
       for(const name of list){
-        const key=`${category}\u0000${name}`;
+        const id=identity(name,category),key=`${category}\u0000${id.key}`;
         let dish=dishes.get(key);
-        if(!dish){dish={key,category,name,dates:[],search:normalizeSearch(name)};dishes.set(key,dish);}
+        if(!dish){dish={key,category,name:id.key,display:id.display,dates:[],search:''};dishes.set(key,dish);}
+        dish.search+=` ${normalizeSearch(name)} ${normalizeSearch(id.alias)}`;
         if(!dish.dates.includes(date))dish.dates.push(date);
         let dayList=dates.get(date);
         if(!dayList){dayList=[];dates.set(date,dayList);}
-        if(!dayList.some(x=>x.key===key))dayList.push({key,category,name,order:Number(order)||0});
+        if(!dayList.some(x=>x.key===key&&x.name===name))dayList.push({key,category,name,order:Number(order)||0});
       }
     }
     for(const dish of dishes.values())dish.dates.sort((a,b)=>b.localeCompare(a));
     for(const list of dates.values())list.sort((a,b)=>a.order-b.order||categories.indexOf(a.category)-categories.indexOf(b.category));
     return {categories,dates,dishes:[...dishes.values()]};
   }
-  function search(index,category,query='',sort='new'){
+  function search(index,category='',query='',sort='new'){
     const q=normalizeSearch(query);
-    const list=index.dishes.filter(x=>x.category===category&&(!q||x.search.includes(q)));
-    const cmp=(a,b)=>a.name.localeCompare(b.name,'ja');
-    list.sort((a,b)=>sort==='count'?b.dates.length-a.dates.length||b.dates[0].localeCompare(a.dates[0])||cmp(a,b):sort==='old'?a.dates.at(-1).localeCompare(b.dates.at(-1))||cmp(a,b):b.dates[0].localeCompare(a.dates[0])||cmp(a,b));
+    const list=index.dishes.filter(x=>(!category||x.category===category)&&(!q||x.search.includes(q)));
+    const cmp=(a,b)=>a.display.localeCompare(b.display,'ja');
+    list.sort((a,b)=>sort==='count'?b.dates.length-a.dates.length||b.dates[0].localeCompare(a.dates[0])||cmp(a,b):
+      sort==='few'?a.dates.length-b.dates.length||b.dates[0].localeCompare(a.dates[0])||cmp(a,b):
+      sort==='old'?a.dates.at(-1).localeCompare(b.dates.at(-1))||cmp(a,b):
+      b.dates[0].localeCompare(a.dates[0])||cmp(a,b));
     return list;
   }
   function gvizRows(response){
@@ -88,5 +131,5 @@
     if(!rows.length||rows[0].length!==6||headers.some((h,i)=>rows[0][i]!==h)||rows.some(r=>r.length!==6))throw new Error('献立データの列構成が不正です');
     return rows.slice(1);
   }
-  return {categories,categoryOf,parts,dateKey,normalizeSearch,build,search,gvizRows,csvRows};
+  return {categories,categoryOf,parts,dateKey,normalizeSearch,identity,build,search,gvizRows,csvRows};
 });
