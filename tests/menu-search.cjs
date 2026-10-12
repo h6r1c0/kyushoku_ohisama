@@ -74,6 +74,19 @@ assert.deepEqual(menu.search(ties,'メイン','','count','old').slice(0,2).map(x
 assert.deepEqual(menu.search(ties,'メイン','','few','old').map(x=>x.name),['一度だけ','古い料理','新しい料理']);
 assert.equal(menu.normalizeSearch('さといも'),'さといも');
 assert.equal(menu.dateKey(2026,2,30),null);
+const seasonal=menu.build([
+  [2025,10,8,'おやつ','蒸しパン',1],
+  [2025,10,10,'おやつ','焼きおにぎり',1],
+  [2025,10,12,'煮物','じゃが煮（人参）',1],
+  [2025,10,14,'おやつ','プリン',1],
+  [2024,10,10,'おやつ','過去の蒸しパン',1]
+]);
+assert.deepEqual(menu.previousYear(seasonal,'おやつ',new Date(2026,9,12)),{
+  target:'2025-10-12',anchor:'2025-10-10',dates:['2025-10-14','2025-10-10','2025-10-08']
+});
+assert.equal(menu.previousYear(seasonal,'煮物',new Date(2026,9,12)).anchor,'2025-10-12');
+assert.equal(menu.previousYear(seasonal,'おやつ',new Date(2026,9,1)).anchor,'2025-10-08');
+assert.deepEqual(menu.previousYear(seasonal,'サラダ',new Date(2026,9,12)).dates,[]);
 assert.deepEqual(menu.parts('サラダ（レタス／トマト）／みそ汁','おやつ'),['サラダ（レタス／トマト）']);
 assert.deepEqual(menu.gvizRows({status:'ok',table:{rows:[{c:[{v:'年度'}]},{c:[{v:2026},{v:9},{v:7},{v:'メイン'},{v:'豆腐ハンバーグ'},{v:2}]}]}}),[[2026,9,7,'メイン','豆腐ハンバーグ',2]]);
 assert.deepEqual(menu.csvRows('年度,月,日,区分,料理名,記載順\r\n2026,9,7,サラダ,"野菜,豆（ごま）",1\r\n'),[['2026','9','7','サラダ','野菜,豆（ごま）','1']]);

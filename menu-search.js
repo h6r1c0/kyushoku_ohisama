@@ -9,7 +9,7 @@
   const categories=document.getElementById('menuCategories'),controls=document.getElementById('menuControls');
   const query=document.getElementById('menuQuery'),sort=document.getElementById('menuSort');
   const status=document.getElementById('menuStatus'),results=document.getElementById('menuResults'),detail=document.getElementById('menuDetail');
-  let index=null,snapshot='',pending=null,category='',selected=null;
+  let index=null,snapshot='',pending=null,category='',selected=null,yearMode=false,listScroll=0;
   const sortKey='ohisama-menu-sort',directionKey='ohisama-menu-date-direction',tabKey='ohisama-active-feature-tab';
   let dateDirection='new';
   try{
@@ -30,6 +30,9 @@
   }
   function button(label,className,action){const b=document.createElement('button');b.type='button';b.className=className;b.textContent=label;b.addEventListener('click',action);return b;}
   function setStatus(value){status.textContent=value;}
+  const yearButton=button('前年同時期','menu-year-trigger',()=>{yearMode=true;yearButton.classList.add('hidden');renderYear(true);});
+  controls.after(yearButton);
+  const yearView=document.createElement('div');yearView.id='menuYear';yearView.className='menu-year hidden';results.after(yearView);
   function validTab(id){return tabs.find(tab=>tab.id===id&&document.getElementById(tab.getAttribute('aria-controls')));}
   function showTab(id){
     const active=validTab(id)||quantityTab;
@@ -68,9 +71,12 @@
   }
   function render(){
     if(!index)return;
+    yearButton.classList.toggle('hidden',!category||!!selected||yearMode);
     if(selected){renderDetail();return;}
+    if(yearMode){renderYear();return;}
     results.classList.remove('hidden');
     detail.classList.add('hidden');
+    yearView.classList.add('hidden');
     results.replaceChildren();
     if(!category&&!query.value.trim()){setStatus('カテゴリーを選ぶか、料理名・食材名を入力してください');return;}
     const found=core.search(index,category,query.value,sort.value,dateDirection);
@@ -78,20 +84,40 @@
     if(!found.length){setStatus('該当する料理はありません');return;}
     const fragment=document.createDocumentFragment();
     for(const dish of found){
-      const b=button('','menu-result',()=>{selected=dish.key;renderDetail();});
+      const b=button('','menu-result',()=>{listScroll=window.scrollY;selected=dish.key;renderDetail();detail.scrollIntoView({block:'start'});});
       const name=document.createElement('strong');name.textContent=dish.display;
       const meta=document.createElement('small');meta.textContent=`${dish.dates.length}回\n${briefDate(dish.dates[0])}`;
       b.append(name,meta);fragment.append(b);
     }
     results.append(fragment);
   }
-  function renderDetail(){
+  function renderYear(jump=false){
+    results.classList.add('hidden');detail.classList.add('hidden');yearView.classList.remove('hidden');
+    yearView.replaceChildren();
+    const back=button('‹ 検索結果へ戻る','menu-back',()=>{yearMode=false;render();});
+    const heading=document.createElement('strong');heading.textContent=`前年同時期｜${category}`;
+    const head=document.createElement('div');head.className='menu-year-head';head.append(back,heading);yearView.append(head);
+    const period=core.previousYear(index,category);
+    setStatus(period.dates.length?`${period.dates.length}日分の実績`:'前年の実績はありません');
+    for(const date of period.dates){
+      const dayItems=index.dates.get(date).filter(item=>item.category===category);
+      for(const item of dayItems){
+        const row=button('','menu-year-row',()=>{listScroll=window.scrollY;selected=item.key;renderDetail(date);detail.scrollIntoView({block:'start'});});
+        const day=document.createElement('time');day.dateTime=date;day.textContent=`${date.slice(0,4)}/${Number(date.slice(5,7))}/${Number(date.slice(8,10))}`;
+        const name=document.createElement('span');name.textContent=item.name;
+        row.append(day,name);if(date===period.anchor)row.classList.add('menu-year-anchor');
+        yearView.append(row);
+      }
+    }
+    if(jump&&period.anchor)yearView.querySelector('.menu-year-anchor')?.scrollIntoView({block:'center'});
+  }
+  function renderDetail(initialDate){
     const dish=index?.dishes.find(x=>x.key===selected);
     if(!dish){selected=null;render();return;}
     const previousDate=detail.dataset.dishKey===dish.key?detail.querySelector('.menu-date')?.value:null;
-    results.classList.add('hidden');detail.classList.remove('hidden');detail.replaceChildren();
+    results.classList.add('hidden');yearView.classList.add('hidden');detail.classList.remove('hidden');detail.replaceChildren();
     detail.dataset.dishKey=dish.key;
-    detail.append(button('‹ 検索結果へ戻る','menu-back',()=>{selected=null;results.classList.remove('hidden');render();}));
+    detail.append(button(yearMode?'‹ 前年同時期へ戻る':'‹ 検索結果へ戻る','menu-back',()=>{selected=null;render();window.scrollTo(0,listScroll);}));
     const title=document.createElement('h3');title.textContent=dish.display;detail.append(title);
     const picker=document.createElement('label');picker.className='menu-date-picker';picker.textContent='提供日';
     const dates=document.createElement('select');dates.className='menu-date';dates.setAttribute('aria-label','提供日');
@@ -100,28 +126,26 @@
     const day=document.createElement('div');day.className='menu-day';detail.append(day);
     function showDate(date){
       day.replaceChildren();
-      const own=(index.dates.get(date)||[]).filter(item=>item.key===dish.key);
-      const recordLabel=document.createElement('strong');recordLabel.textContent='その日の記録';day.append(recordLabel);
-      const original=document.createElement('div');original.className='menu-original';
-      original.textContent=own.map(item=>item.name).join('／');day.append(original);
-      const others=(index.dates.get(date)||[]).filter(item=>item.key!==dish.key);
-      if(others.length){
-        const h=document.createElement('strong');h.textContent='同日の献立';day.append(h);
-        const ul=document.createElement('ul');for(const item of others){const li=document.createElement('li'),label=document.createElement('span');label.textContent=`${item.category}　`;li.append(label,document.createTextNode(item.name));ul.append(li);}day.append(ul);
-      }
+      const h=document.createElement('strong');h.textContent='同日の献立';day.append(h);
+      const ul=document.createElement('ul');
+      const items=[...(index.dates.get(date)||[])].sort((a,b)=>
+        core.categories.indexOf(a.category)-core.categories.indexOf(b.category)||a.order-b.order);
+      for(const item of items){const li=document.createElement('li'),label=document.createElement('span');label.textContent=`${item.category}　`;li.append(label,document.createTextNode(item.name));ul.append(li);}
+      day.append(ul);
     }
     dates.addEventListener('change',()=>showDate(dates.value));
-    if(previousDate&&dish.dates.includes(previousDate))dates.value=previousDate;
+    if(initialDate&&dish.dates.includes(initialDate))dates.value=initialDate;
+    else if(previousDate&&dish.dates.includes(previousDate))dates.value=previousDate;
     if(dish.dates.length)showDate(dates.value);
     setStatus(`${dish.dates.length}回提供`);
   }
   controls.classList.remove('hidden');
-  for(const c of core.categories){const b=button(c,'menu-category',()=>{category=category===c?'':c;selected=null;for(const item of categories.children)item.setAttribute('aria-pressed',String(item===b&&category===c));render();});b.setAttribute('aria-pressed','false');categories.append(b);}
-  query.addEventListener('input',()=>{selected=null;results.classList.remove('hidden');render();});
+  for(const c of core.categories){const b=button(c,'menu-category',()=>{category=category===c?'':c;selected=null;yearMode=false;for(const item of categories.children)item.setAttribute('aria-pressed',String(item===b&&category===c));render();});b.setAttribute('aria-pressed','false');categories.append(b);}
+  query.addEventListener('input',()=>{selected=null;yearMode=false;render();});
   sort.addEventListener('change',()=>{
     if(sort.value==='new'||sort.value==='old')dateDirection=sort.value;
     try{localStorage.setItem(sortKey,sort.value);localStorage.setItem(directionKey,dateDirection);}catch(_){}
-    selected=null;results.classList.remove('hidden');render();
+    selected=null;yearMode=false;render();
   });
   for(const tab of tabs)tab.addEventListener('click',()=>showTab(tab.id));
   let savedTab='';try{savedTab=localStorage.getItem(tabKey)||'';}catch(_){}
@@ -131,7 +155,7 @@
     const toggle=button('献立検索','help-feature-button menu-help-button',()=>{const open=copy.classList.toggle('hidden');toggle.setAttribute('aria-expanded',String(!open));});
     toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls','menuHelpCopy');
     const copy=document.createElement('div');copy.id='menuHelpCopy';copy.className='menu-help-copy hidden';
-    copy.textContent='カテゴリーを選ぶと候補が出ます。選ばずに料理名・食材名から全カテゴリーを検索することもできます。料理を選び、提供日の欄から過去の日と同日の献立を確認できます。';
+    copy.textContent='カテゴリーを選ぶと候補が出ます。選ばずに料理名・食材名から全カテゴリーを検索することもできます。カテゴリー選択中の「前年同時期」から、前年の同じ季節の料理を見られます。料理を選び、提供日と同日の献立を確認できます。';
     help.append(toggle,copy);
   }
 })();
