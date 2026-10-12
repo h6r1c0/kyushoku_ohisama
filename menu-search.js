@@ -101,7 +101,8 @@
     const heading=document.createElement('strong');heading.textContent=`前年同時期｜${category}`;
     const head=document.createElement('div');head.className='menu-year-head';head.append(back,heading);yearView.append(head);
     const period=core.previousYear(index,category);
-    setStatus(period.dates.length?`${period.dates.length}日分の実績`:'前年の実績はありません');
+    const anchor=period.anchor?`${Number(period.anchor.slice(5,7))}/${Number(period.anchor.slice(8,10))}`:'';
+    setStatus(period.dates.length?`${period.dates.length}日分・${period.target.replace(/-/g,'/')}以前の直近：${anchor}`:'前年の実績はありません');
     for(const date of period.dates){
       const dayItems=index.dates.get(date).filter(item=>item.category===category);
       for(const item of dayItems){

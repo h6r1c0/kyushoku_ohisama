@@ -82,6 +82,7 @@ const original=[
     await page.getByRole('button',{name:category,exact:true}).click();
     await page.getByRole('button',{name:'前年同時期'}).click();
     assert.equal(await page.locator('#menuControls').isVisible(),false,'前年一覧では通常検索欄を隠す');
+    if(category==='おやつ')assert.match(await page.locator('#menuStatus').innerText(),/2025\/10\/12以前の直近：10\/10/);
     assert.match(await page.locator('#menuYear').innerText(),new RegExp(`前年同時期｜${category}`));
     assert.ok(await page.locator('#menuYear .menu-year-row').count()>0,`${category}に前年実績`);
     if(category==='おやつ'){
