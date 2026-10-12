@@ -24,6 +24,8 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    assert.equal(requests,0,'量計算中は献立を取得しない');
    const count=await page.locator('#allMealCount').innerText();
    await page.getByRole('tab',{name:'献立検索'}).click();
+   const sortLabel=()=>page.locator('.menu-controls .soft-select-button').innerText();
+   assert.equal(await sortLabel(),'新しい順','初回の並び替え表示');
    await page.locator('#menuQuery').fill('じゃがいも');
    await page.getByRole('status').getByText('2件の料理').waitFor();
    await page.locator('#menuQuery').fill('');
@@ -42,17 +44,37 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    await page.getByRole('button',{name:'サラダ',exact:true}).click();
    await page.locator('#menuQuery').fill('じゃがいも');
    await page.getByRole('button',{name:/じゃが煮.*2回/}).click();
+   assert.equal(await page.locator('#menuDetail h3').innerText(),'じゃが煮');
+   assert.match(await page.locator('.menu-day').innerText(),/その日の記録/);
+   assert.equal(await page.locator('.menu-original').innerText(),'じゃが煮（人参・玉ネギ・絹さや）');
    assert.match(await page.locator('.menu-original').innerText(),/絹さや/);
    await page.locator('.menu-date').selectOption('2026-09-08');
-   assert.match(await page.locator('.menu-original').innerText(),/玉ネギ/);
+   assert.equal(await page.locator('.menu-original').innerText(),'じゃが煮（人参・玉ネギ）');
+   assert.match(await page.locator('.menu-day').innerText(),/コーンのサラダ/);
+   await page.getByRole('tab',{name:'量計算'}).click();
+   await page.getByRole('tab',{name:'献立検索'}).click();
+   assert.equal(await page.locator('.menu-date').inputValue(),'2026-09-08','更新確認後も選択日を維持');
    await page.screenshot({path:path.join(out,`menu-detail-${width}.png`),fullPage:true});
    await page.getByRole('button',{name:/検索結果へ戻る/}).click();
+   assert.equal(await page.locator('#menuQuery').inputValue(),'じゃがいも');
+   assert.equal(await sortLabel(),'新しい順');
+   for(const [value,label] of [['new','新しい順'],['old','古い順'],['count','多い順'],['few','少ない順']]){
+    await page.locator('#menuSort').selectOption(value);
+    await page.getByRole('button',{name:/じゃが煮.*2回/}).click();
+    await page.getByRole('button',{name:/検索結果へ戻る/}).click();
+    assert.equal(await page.locator('#menuQuery').inputValue(),'じゃがいも');
+    assert.equal(await sortLabel(),label,`${label}を詳細から戻っても維持`);
+   }
    await page.locator('#menuSort').selectOption('few');
+   assert.equal(await sortLabel(),'少ない順');
    assert.equal(await page.evaluate(()=>localStorage.getItem('ohisama-menu-sort')),'few');
    await page.locator('#menuSort').selectOption('old');
+   assert.equal(await sortLabel(),'古い順');
    await page.locator('#menuSort').selectOption('count');
+   assert.equal(await sortLabel(),'多い順');
    assert.equal(await page.evaluate(()=>localStorage.getItem('ohisama-menu-date-direction')),'old');
    await page.locator('#menuSort').selectOption('few');
+   assert.equal(await sortLabel(),'少ない順');
    assert.equal(await page.evaluate(()=>localStorage.getItem('ohisama-menu-date-direction')),'old');
    const controlHeights=await page.evaluate(()=>[document.getElementById('menuQuery'),document.querySelector('.menu-controls .soft-select-button')].map(e=>e.getBoundingClientRect().height));
    assert.deepEqual(controlHeights,[40,40],`${width}px input/select height`);
@@ -62,6 +84,7 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    await page.reload();
    assert.equal(await page.getByRole('tab',{name:'献立検索'}).getAttribute('aria-selected'),'true');
    assert.equal(await page.locator('#menuSort').inputValue(),'few');
+   assert.equal(await sortLabel(),'少ない順','再読込後の見える並び替え表示');
    assert.equal(await page.evaluate(()=>localStorage.getItem('ohisama-menu-date-direction')),'old');
    await page.getByRole('tab',{name:'量計算'}).click();
    assert.equal(await page.locator('#allMealCount').innerText(),count);
@@ -69,7 +92,7 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    assert.equal(await page.getByRole('tab',{name:'量計算'}).getAttribute('aria-selected'),'true');
    await page.getByRole('tab',{name:'献立検索'}).click();
    await page.getByRole('status').getByText(/カテゴリーを選ぶか/).waitFor();
-   assert.equal(requests,3,'検索タブ再訪時だけ更新を確認する');
+   assert.equal(requests,4,'検索タブ再訪時だけ更新を確認する');
    await page.evaluate(()=>localStorage.setItem('ohisama-active-feature-tab','removedTab'));
    await page.reload();
    assert.equal(await page.getByRole('tab',{name:'量計算'}).getAttribute('aria-selected'),'true');
@@ -78,7 +101,7 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    version='v2';await page.getByRole('tab',{name:'量計算'}).click();await page.getByRole('tab',{name:'献立検索'}).click();
    await page.locator('#menuQuery').fill('修正した');
    await page.getByRole('button',{name:/修正したコーンのサラダ/}).waitFor();
-   assert.equal(requests,5,'古い提供日を保持した訂正にも更新を検知する');
+   assert.equal(requests,6,'古い提供日を保持した訂正にも更新を検知する');
    fail=true;await page.getByRole('tab',{name:'量計算'}).click();await page.getByRole('tab',{name:'献立検索'}).click();
    await page.getByRole('status').getByText(/最新データを確認できません/).waitFor();
    await page.getByRole('tab',{name:'量計算'}).click();assert.equal(await page.locator('#allMealCount').innerText(),count);
