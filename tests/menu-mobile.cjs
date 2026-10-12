@@ -54,7 +54,7 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    assert.equal(await page.evaluate(()=>localStorage.getItem('ohisama-menu-date-direction')),'old');
    await page.locator('#menuSort').selectOption('few');
    assert.equal(await page.evaluate(()=>localStorage.getItem('ohisama-menu-date-direction')),'old');
-   const controlHeights=await page.evaluate(()=>['menuQuery','menuSort'].map(id=>document.getElementById(id).getBoundingClientRect().height));
+   const controlHeights=await page.evaluate(()=>[document.getElementById('menuQuery'),document.querySelector('.menu-controls .soft-select-button')].map(e=>e.getBoundingClientRect().height));
    assert.deepEqual(controlHeights,[40,40],`${width}px input/select height`);
    await page.screenshot({path:path.join(out,`menu-${width}.png`),fullPage:true});
    const overflow=await page.evaluate(()=>[...document.querySelectorAll('#menuPanel button,#menuPanel input,#menuPanel select')].filter(e=>{if(e.closest('.hidden'))return false;const b=e.getBoundingClientRect();return b.width&&b.height&&(b.left< -2||b.right>innerWidth+2);}).map(e=>e.textContent||e.id));
