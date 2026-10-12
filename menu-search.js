@@ -71,6 +71,7 @@
   }
   function render(){
     if(!index)return;
+    controls.classList.toggle('hidden',yearMode);
     yearButton.classList.toggle('hidden',!category||!!selected||yearMode);
     if(selected){renderDetail();return;}
     if(yearMode){renderYear();return;}
@@ -92,6 +93,7 @@
     results.append(fragment);
   }
   function renderYear(jump=false){
+    controls.classList.add('hidden');
     results.classList.add('hidden');detail.classList.add('hidden');yearView.classList.remove('hidden');
     yearView.replaceChildren();
     const back=button('‹ 検索結果へ戻る','menu-back',()=>{yearMode=false;render();});
@@ -114,6 +116,7 @@
   function renderDetail(initialDate){
     const dish=index?.dishes.find(x=>x.key===selected);
     if(!dish){selected=null;render();return;}
+    controls.classList.toggle('hidden',yearMode);
     const previousDate=detail.dataset.dishKey===dish.key?detail.querySelector('.menu-date')?.value:null;
     results.classList.add('hidden');yearView.classList.add('hidden');detail.classList.remove('hidden');detail.replaceChildren();
     detail.dataset.dishKey=dish.key;

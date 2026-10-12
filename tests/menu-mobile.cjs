@@ -80,6 +80,7 @@ const original=[
    for(const category of ['サラダ','煮物','メイン','汁物','ご飯','おやつ']){
     await page.getByRole('button',{name:category,exact:true}).click();
     await page.getByRole('button',{name:'前年同時期'}).click();
+    assert.equal(await page.locator('#menuControls').isVisible(),false,'前年一覧では通常検索欄を隠す');
     assert.match(await page.locator('#menuYear').innerText(),new RegExp(`前年同時期｜${category}`));
     assert.ok(await page.locator('#menuYear .menu-year-row').count()>0,`${category}に前年実績`);
     if(category==='おやつ'){
@@ -87,6 +88,7 @@ const original=[
      assert.equal(await page.locator('#menuYear .menu-year-anchor time').innerText(),'2025/10/10','前年同日が空なら直前日');
      await page.screenshot({path:path.join(out,`menu-year-${width}.png`),fullPage:true});
      await page.getByRole('button',{name:/2025\/10\/10.*さつまいも蒸しパン/}).click();
+     assert.equal(await page.locator('#menuControls').isVisible(),false);
      assert.equal(await page.locator('#menuDetail h3').innerText(),'さつまいも蒸しパン');
      assert.equal(await page.locator('.menu-date').inputValue(),'2025-10-10');
      assert.equal(await page.locator('.menu-day strong').innerText(),'同日の献立');
@@ -98,6 +100,7 @@ const original=[
      assert.equal(await page.locator('#menuYear .menu-year-row').count(),3);
     }
     await page.getByRole('button',{name:/検索結果へ戻る/}).click();
+    assert.equal(await page.locator('#menuControls').isVisible(),true);
     assert.equal(await page.locator('#menuQuery').inputValue(),'じゃがいも');
     assert.equal(await sortLabel(),'新しい順');
     await page.getByRole('button',{name:category,exact:true}).click();
