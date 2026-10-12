@@ -58,16 +58,16 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    assert.equal(await page.locator('#allMealCount').innerText(),count);
    await page.getByRole('tab',{name:'献立検索'}).click();
    await page.getByRole('status').getByText(/カテゴリーを選ぶか/).waitFor();
-   assert.equal(requests,2,'タブを開いた時だけ更新を確認する');
+   assert.equal(requests,3,'再読み込みとタブを開いた時だけ更新を確認する');
    version='v2';await page.getByRole('tab',{name:'量計算'}).click();await page.getByRole('tab',{name:'献立検索'}).click();
    await page.getByRole('button',{name:'メイン',exact:true}).click();
    await page.locator('#menuQuery').fill('');
    await page.getByRole('button',{name:/新しい豆腐料理/}).waitFor();
-   assert.equal(requests,3,'古い提供日を保持した訂正にも更新を検知する');
+   assert.equal(requests,4,'古い提供日を保持した訂正にも更新を検知する');
    fail=true;await page.getByRole('tab',{name:'量計算'}).click();await page.getByRole('tab',{name:'献立検索'}).click();
    await page.getByRole('status').getByText(/最新データを確認できません/).waitFor();
    await page.getByRole('tab',{name:'量計算'}).click();assert.equal(await page.locator('#allMealCount').innerText(),count);
-   assert.ok(requests>=4);await context.close();
+   assert.ok(requests>=5);await context.close();
   }
   console.log('menu browser: 320/375/430/768, refresh and calculator isolation OK');
  }finally{await browser.close();server.close();}
