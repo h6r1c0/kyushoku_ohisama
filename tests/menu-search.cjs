@@ -1,5 +1,7 @@
 const assert=require('node:assert/strict');
 const menu=require('../menu-search-core.js');
+const fs=require('node:fs'),path=require('node:path');
+assert.match(fs.readFileSync(path.join(__dirname,'../index.html'),'utf8'),/<script src="menu-search-config\.js"><\/script>\s*<script src="menu-search\.js"><\/script>/);
 const rows=[
   [2026,9,7,'サラダ','コーンのサラダ（きゅうり・赤玉ねぎ）',1],
   [2026,9,7,'主菜','豆腐ハンバーグ',2],
