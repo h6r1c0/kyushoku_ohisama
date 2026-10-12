@@ -45,6 +45,7 @@ const original=[row(2026,9,7,'サラダ','コーンのサラダ（きゅうり�
    assert.match(await page.locator('.menu-original').innerText(),/絹さや/);
    await page.locator('.menu-date').selectOption('2026-09-08');
    assert.match(await page.locator('.menu-original').innerText(),/玉ネギ/);
+   await page.screenshot({path:path.join(out,`menu-detail-${width}.png`),fullPage:true});
    await page.getByRole('button',{name:/検索結果へ戻る/}).click();
    await page.locator('#menuSort').selectOption('few');
    assert.equal(await page.evaluate(()=>localStorage.getItem('ohisama-menu-sort')),'few');
