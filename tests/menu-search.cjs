@@ -45,7 +45,8 @@ assert.equal(menu.search(index,'煮物','玉ネギ').some(x=>x.name==='じゃが
 assert.equal(menu.search(index,'煮物','インゲン').some(x=>x.name==='じゃが煮'),true);
 assert.equal(menu.search(index,'サラダ','豆乳マヨ')[0].display,'豆乳マヨ｜かぼちゃサラダ');
 assert.ok(menu.search(index,'汁物','みそ汁').some(x=>x.display==='味噌汁'));
-assert.ok(menu.search(index,'汁物','冷やし').some(x=>x.display==='冷やしみそ汁'));
+assert.ok(menu.search(index,'汁物','冷やし').some(x=>x.display==='冷やし味噌汁'));
+assert.ok(menu.search(index,'汁物','冷やし味噌汁').some(x=>x.display==='冷やし味噌汁'));
 assert.ok(menu.search(index,'おやつ','柿ジャム').some(x=>x.name==='柿ジャムの豆乳寒天'));
 assert.ok(index.dates.get('2026-09-11').some(x=>x.name.includes('絹さや')));
 assert.deepEqual(menu.parts('梅酢きゅうり・かき氷','おやつ'),['かき氷']);

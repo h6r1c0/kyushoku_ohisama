@@ -60,7 +60,9 @@
     if(category==='煮物'&&/^ごろっとじゃが煮/.test(name))
       return {key:name,display:name,alias:'じゃがいも'};
     if(category==='汁物'&&/^(?:みそ汁|味噌汁)(?:[（(].*[）)])?$/.test(name))
-      return {key:'味噌汁',display:'味噌汁',alias:'みそ汁'};
+      return {key:'味噌汁',display:'味噌汁',alias:'みそ汁 味噌汁'};
+    if(category==='汁物'&&name.includes('みそ汁'))
+      return {key:name,display:name.replace(/みそ汁/g,'味噌汁'),alias:name.replace(/みそ汁/g,'味噌汁')};
     if(category==='サラダ'){
       const base=name.split(/[（(]/)[0];
       const explicit=[
