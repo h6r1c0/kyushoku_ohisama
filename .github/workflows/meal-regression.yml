@@ -23,9 +23,13 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/meal-tests" playwright@1.62.1 jsdom@30.0.1
           "$RUNNER_TEMP/meal-tests/node_modules/.bin/playwright" install --with-deps chromium
       - name: DOM and migration regression
-        run: NODE_PATH="$RUNNER_TEMP/meal-tests/node_modules" node tests/regression.cjs
+        run: |
+          NODE_PATH="$RUNNER_TEMP/meal-tests/node_modules" node tests/regression.cjs
+          node tests/menu-search.cjs
       - name: Mobile interaction and screenshots
-        run: NODE_PATH="$RUNNER_TEMP/meal-tests/node_modules" node tests/mobile.cjs
+        run: |
+          NODE_PATH="$RUNNER_TEMP/meal-tests/node_modules" node tests/mobile.cjs
+          NODE_PATH="$RUNNER_TEMP/meal-tests/node_modules" node tests/menu-mobile.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

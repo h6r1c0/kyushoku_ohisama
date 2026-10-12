@@ -13,6 +13,8 @@ NODE_PATH=/tmp/kyushoku-verification/node_modules node tests/regression.cjs
 
 ## 実ブラウザでの自動確認
 
+献立検索は `node tests/menu-search.cjs` で分類、括弧内の食材、日付ごとの重複排除を確認します。`NODE_PATH=/tmp/kyushoku-verification/node_modules node tests/menu-mobile.cjs` では公開データの応答を模擬し、320・375・430・768pxでタブ切り替え、検索、詳細、更新検知、通信失敗時の量計算への影響を確認します。実際の公開データの接続と匿名アクセスは公開前に別途確認してください。
+
 `tests/mobile.cjs` は、GitHub Actionsの独立したChromiumで320px・375px・768px幅の操作と横はみ出しを確認します。公開中のアプリ・実利用者の保存データには触れません。
 
 例外人数、切り分け枠、乾物のモード、食材の追加・削除、基本人数・最大人数の保存復元をUI経由で操作します。全ヘルプのカード画像と `report.json` は `meal-mobile-verification` 成果物に7日間保持します。画像撮影時だけスクロール領域を展開し、全文を確認可能にします。画面幅の検査は展開前の実際の表示で行います。

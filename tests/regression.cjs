@@ -10,7 +10,7 @@ async function boot(seed={},sessionSeed={}){
 }
 function change(app,id,value){const e=app.d.getElementById(id);if(e.type==='checkbox')e.checked=value;else e.value=String(value);e.dispatchEvent(new app.w.Event(e.tagName==='INPUT'&&e.type!=='checkbox'?'input':'change',{bubbles:true}));}
 (async()=>{
- let a=await boot();assert.equal(a.d.querySelectorAll('.feature-tab').length,1);assert.equal(a.d.getElementById('cutCalculator').classList.contains('hidden'),true);
+ let a=await boot();assert.equal(a.d.querySelectorAll('.feature-tab').length,2);assert.equal(a.d.getElementById('cutCalculator').classList.contains('hidden'),true);
  assert.deepEqual([...a.d.querySelectorAll('#cutSlots .slot-icon')].map(img=>img.getAttribute('src')),['icon_norimaki_fraction.png','icon_norimaki_fraction.png','11_切り分け計算アイコン.png','11_切り分け計算アイコン.png']);
  const iconStyles=[...a.d.querySelectorAll('.dry-settings-icon,.people-settings-icon,.food-settings-icon')].slice(0,3).map(el=>a.w.getComputedStyle(el));assert.equal(new Set(iconStyles.map(style=>style.backgroundColor)).size,1);assert.ok(iconStyles.every(style=>style.filter==='none'));
  assert.equal(a.ev('dryFoods.find(f=>f.id==="hijiki").mealRate'),5);assert.equal(a.ev('dryFoods.find(f=>f.id==="kiriboshi_daikon").mealRate'),10);

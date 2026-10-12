@@ -455,6 +455,18 @@ body.help-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .fraction-pattern{min-width:0;padding:1px;border:0;background:transparent}.fraction-pattern-head{display:none}.fraction-svg{width:100%;max-width:none}.fraction-group{gap:7px}.fraction-group .fraction-pattern{padding:1px}.fraction-shape{margin:5px 0}.fraction-shape button{min-height:36px;padding:5px 11px}.fraction-key{display:none}
 .help-live-clone .cut-ages{grid-template-columns:minmax(0,1fr)}.help-live-clone .cut-age-row{grid-template-columns:64px minmax(0,1fr)}
 @media(max-width:350px){.cut-age-row{grid-template-columns:62px minmax(0,1fr);gap:4px}.piece-cell{flex-basis:32px}.cut-batch-row span{font-size:11px}}
+.feature-shell[data-feature="menu"]{--feature-border:#76b9d4;--feature-surface:#f6fcff}
+.feature-tab.menu-tab{border-color:#8cc2d9;background:linear-gradient(180deg,#b9e2f1,#eaf7fc);color:#286883}
+.feature-tab.menu-tab[aria-selected="true"]{border-color:#76b9d4;background:linear-gradient(180deg,#66b9db,#b6e3f2 70%,#f6fcff);color:#154f69}
+.feature-tab.menu-tab[aria-selected="false"]{background:linear-gradient(180deg,#d5edf6,#edf8fb);color:#467d93}
+.feature-shell[data-feature="menu"] #quantityTab{border-color:#e8c994;background:linear-gradient(180deg,#fff8ed,#f8ead4);color:#80694e}
+.menu-search{padding:12px 10px 18px;color:#284f5e}.menu-search h2{margin:2px 0 10px;font-size:19px}
+.menu-categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.menu-category{min-height:45px;border:1px solid #a9d3e3;border-radius:12px;background:white;color:#236581;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer}.menu-category[aria-pressed="true"]{background:#348cb0;border-color:#348cb0;color:white}
+.menu-controls{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:8px;margin:12px 0}.menu-controls input,.menu-controls select{box-sizing:border-box;width:100%;min-height:43px;border:1px solid #a9d3e3;border-radius:10px;background:#fff;color:#244c5e;font-size:16px;padding:8px}
+.menu-status{min-height:22px;margin:10px 0;color:#54717c;font-size:13px}.menu-results{display:grid;gap:7px}.menu-result{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;padding:10px 12px;border:1px solid #d1e5ec;border-radius:11px;background:white;text-align:left;color:#254e5d;font-family:inherit;cursor:pointer}.menu-result strong{min-width:0;font-size:15px;overflow-wrap:anywhere}.menu-result small{flex:none;color:#5c7d89;font-size:11px;text-align:right}
+.menu-detail{margin-top:12px;padding:12px;border:1px solid #a9d3e3;border-radius:12px;background:#fff}.menu-detail h3{font-size:18px;margin:4px 0 9px;overflow-wrap:anywhere}.menu-back{border:0;background:none;padding:6px 2px;color:#24799b;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer}.menu-dates{display:flex;flex-wrap:wrap;gap:6px}.menu-date{border:1px solid #afd7e7;border-radius:9px;padding:7px 9px;background:#f4fbfe;color:#265f77;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}.menu-date[aria-pressed="true"]{background:#318bb0;color:white}.menu-day{margin-top:11px;border-top:1px solid #e2edf1;padding-top:9px}.menu-day ul{margin:7px 0 0;padding-left:1.3em}.menu-day li{margin:4px 0;overflow-wrap:anywhere}.menu-day span{color:#67818b;font-size:12px}
+@media(max-width:350px){.menu-categories{gap:5px}.menu-category{font-size:13px}.menu-controls{grid-template-columns:1fr}.menu-controls select{max-width:180px}}
+.menu-help-button{border-color:#a9d3e3;background:#eaf7fc;color:#286883}.menu-help-copy{padding:9px 12px;border-left:2px solid #a9d3e3;color:#49636d;font-size:13px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -497,6 +509,7 @@ body.help-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 <section class="feature-shell">
 <div class="feature-tabs" role="tablist" aria-label="機能">
   <button id="quantityTab" class="feature-tab" type="button" role="tab" aria-selected="true" aria-controls="quantityPanel">量計算</button>
+  <button id="menuTab" class="feature-tab menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menuPanel">献立検索</button>
 </div>
 <main id="quantityPanel" class="feature-panel" role="tabpanel" aria-labelledby="quantityTab">
 
@@ -876,6 +889,17 @@ body.help-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 </aside>
 
 </main>
+<section id="menuPanel" class="feature-panel menu-search hidden" role="tabpanel" aria-labelledby="menuTab" hidden>
+  <h2>献立検索</h2>
+  <div id="menuCategories" class="menu-categories" role="group" aria-label="料理のカテゴリー"></div>
+  <div id="menuControls" class="menu-controls hidden">
+    <input id="menuQuery" type="search" placeholder="料理名・食材名で絞り込む" aria-label="料理名・食材名で絞り込む">
+    <select id="menuSort" aria-label="並び替え"><option value="new">新しい順</option><option value="old">古い順</option><option value="count">提供回数が多い順</option></select>
+  </div>
+  <div id="menuStatus" class="menu-status" role="status">カテゴリーを選んでください</div>
+  <div id="menuResults" class="menu-results"></div>
+  <div id="menuDetail" class="menu-detail hidden"></div>
+</section>
 </section>
 <div class="version">v1.0</div>
 </div>
@@ -1803,5 +1827,8 @@ function init(){
 }
 init();
 </script>
+<script src="menu-search-core.js"></script>
+<script src="menu-search-config.js"></script>
+<script src="menu-search.js"></script>
 </body>
 </html>
