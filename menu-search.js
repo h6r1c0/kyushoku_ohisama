@@ -4,13 +4,12 @@
   // Only the dedicated six-column publication is exposed to this public app.
   const feed=window.OHISAMA_MENU_FEED||{};
   const source=feed.url||'';
-  const sheetId=feed.sheetId||'';
   const shell=document.querySelector('.feature-shell'),quantity=document.getElementById('quantityPanel');
   const menu=document.getElementById('menuPanel'),quantityTab=document.getElementById('quantityTab'),menuTab=document.getElementById('menuTab');
   const categories=document.getElementById('menuCategories'),controls=document.getElementById('menuControls');
   const query=document.getElementById('menuQuery'),sort=document.getElementById('menuSort');
   const status=document.getElementById('menuStatus'),results=document.getElementById('menuResults'),detail=document.getElementById('menuDetail');
-  let index=null,signature='',pending=null,category='',selected=null;
+  let index=null,snapshot='',pending=null,category='',selected=null;
   const dateLabel=s=>`${Number(s.slice(0,4))}年${Number(s.slice(5,7))}月${Number(s.slice(8,10))}日`;
   function button(label,className,action){const b=document.createElement('button');b.type='button';b.className=className;b.textContent=label;b.addEventListener('click',action);return b;}
   function setStatus(value){status.textContent=value;}
@@ -20,28 +19,24 @@
     quantityTab.setAttribute('aria-selected',String(!active));menuTab.setAttribute('aria-selected',String(active));
     if(active){refresh().catch(()=>{});render();}
   }
-  function loadPublished(sig){
-    if(!source||!sheetId)return Promise.reject(new Error('献立データの接続が未設定です'));
-    return new Promise((resolve,reject)=>{
-      const callback='__ohisamaMenuReceive',old=window[callback];let done=false;
-      const script=document.createElement('script');
-      const finish=(err,data)=>{if(done)return;done=true;clearTimeout(timer);script.remove();if(old===undefined)delete window[callback];else window[callback]=old;err?reject(err):resolve(data);};
-      const timer=setTimeout(()=>finish(new Error('通信がタイムアウトしました')),15000);
-      window[callback]=response=>finish(null,response);
-      script.onerror=()=>finish(new Error('献立データを取得できませんでした'));
-      const tx=['out:json',`responseHandler:${callback}`];if(sig)tx.push(`sig:${sig}`);
-      script.src=`${source}?gid=${sheetId}&headers=1&tqx=${encodeURIComponent(tx.join(';'))}&_=${Date.now()}`;
-      document.head.appendChild(script);
-    });
+  async function loadPublished(){
+    if(!source)return Promise.reject(new Error('献立データの接続が未設定です'));
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+    try{
+      // The published CSV permits anonymous CORS access and a five-minute HTTP cache.
+      const response=await fetch(source,{cache:'default',signal:controller.signal});
+      if(!response.ok)throw new Error('献立データを取得できませんでした');
+      return await response.text();
+    }finally{clearTimeout(timer);}
   }
   async function refresh(){
     if(pending)return pending;
     if(!index)setStatus('献立データを確認中…');
     pending=(async()=>{
       try{
-        const response=await loadPublished(signature);
-        if(response.status==='error'&&response.errors?.some(x=>x.reason==='not_modified'))return;
-        const rows=core.gvizRows(response);index=core.build(rows);signature=response.sig||'';
+        const csv=await loadPublished();
+        if(index&&csv===snapshot)return;
+        const rows=core.csvRows(csv);index=core.build(rows);snapshot=csv;
         render();
       }catch(error){setStatus(index?'最新データを確認できません。前回取得した結果を表示しています':'献立データを取得できませんでした。量計算はそのまま使えます');}
       finally{pending=null;}

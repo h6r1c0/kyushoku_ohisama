@@ -68,5 +68,25 @@
     const rows=response.table.rows.map(row=>row.c.map(cell=>cell?.v??''));
     return rows[0]?.[0]==='年度'?rows.slice(1):rows;
   }
-  return {categories,categoryOf,parts,dateKey,normalizeSearch,build,search,gvizRows};
+  function csvRows(text){
+    const rows=[];let row=[],field='',quoted=false;
+    const input=String(text||'').replace(/^\uFEFF/,'');
+    for(let i=0;i<input.length;i++){
+      const ch=input[i];
+      if(ch==='"'){
+        if(quoted&&input[i+1]==='"'){field+='"';i++;}
+        else quoted=!quoted;
+      }else if(ch===','&&!quoted){row.push(field);field='';}
+      else if((ch==='\n'||ch==='\r')&&!quoted){
+        if(ch==='\r'&&input[i+1]==='\n')i++;
+        row.push(field);rows.push(row);row=[];field='';
+      }else field+=ch;
+    }
+    if(quoted)throw new Error('献立データのCSV形式が不正です');
+    if(row.length||field){row.push(field);rows.push(row);}
+    const headers=['年度','月','日','区分','料理名','記載順'];
+    if(!rows.length||rows[0].length!==6||headers.some((h,i)=>rows[0][i]!==h)||rows.some(r=>r.length!==6))throw new Error('献立データの列構成が不正です');
+    return rows.slice(1);
+  }
+  return {categories,categoryOf,parts,dateKey,normalizeSearch,build,search,gvizRows,csvRows};
 });

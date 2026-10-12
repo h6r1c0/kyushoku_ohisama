@@ -28,4 +28,7 @@ assert.equal(menu.search(index,'おやつ','','count')[0].dates.length,2);
 assert.equal(menu.dateKey(2026,2,30),null);
 assert.deepEqual(menu.parts('サラダ（レタス／トマト）／みそ汁','おやつ'),['サラダ（レタス／トマト）','みそ汁']);
 assert.deepEqual(menu.gvizRows({status:'ok',table:{rows:[{c:[{v:'年度'}]},{c:[{v:2026},{v:9},{v:7},{v:'メイン'},{v:'豆腐ハンバーグ'},{v:2}]}]}}),[[2026,9,7,'メイン','豆腐ハンバーグ',2]]);
+assert.deepEqual(menu.csvRows('年度,月,日,区分,料理名,記載順\r\n2026,9,7,サラダ,"野菜,豆（ごま）",1\r\n'),[['2026','9','7','サラダ','野菜,豆（ごま）','1']]);
+assert.deepEqual(menu.csvRows('年度,月,日,区分,料理名,記載順\n2026,9,7,サラダ,"野菜""豆\n和え",1'),[['2026','9','7','サラダ','野菜"豆\n和え','1']]);
+assert.throws(()=>menu.csvRows('年度,月,日,区分,料理名,記載順\n2026,9,7,サラダ,野菜,1,extra'));
 console.log('menu-search core: OK');
