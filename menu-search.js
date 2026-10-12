@@ -118,6 +118,7 @@
   function renderDetail(initialDate){
     const dish=index?.dishes.find(x=>x.key===selected);
     if(!dish){selected=null;render();return;}
+    yearButton.classList.add('hidden');
     controls.classList.toggle('hidden',yearMode);
     const previousDate=detail.dataset.dishKey===dish.key?detail.querySelector('.menu-date')?.value:null;
     results.classList.add('hidden');yearView.classList.add('hidden');detail.classList.remove('hidden');detail.replaceChildren();

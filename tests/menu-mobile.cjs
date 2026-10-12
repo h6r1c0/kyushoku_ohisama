@@ -51,6 +51,7 @@ const original=[
    await page.getByRole('status').getByText('2件の料理').waitFor();
    await page.locator('#menuQuery').fill('赤玉ねぎ');
    await page.getByRole('button',{name:/コーンのサラダ/}).click();
+   assert.equal(await page.getByRole('button',{name:'前年同時期'}).isVisible(),false,'料理詳細では前年ボタンを隠す');
    assert.equal(await page.locator('#menuResults').evaluate(e=>getComputedStyle(e).display),'none','詳細では結果一覧を隠す');
    assert.equal(await page.locator('.menu-date option').count(),2);
    assert.match(await page.locator('#menuDetail').innerText(),/2回提供|2026年9月8日/);
