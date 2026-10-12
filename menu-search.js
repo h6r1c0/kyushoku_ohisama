@@ -31,6 +31,7 @@
   function button(label,className,action){const b=document.createElement('button');b.type='button';b.className=className;b.textContent=label;b.addEventListener('click',action);return b;}
   function setStatus(value){status.textContent=value;}
   const yearButton=button('前年同時期','menu-year-trigger',()=>{yearMode=true;yearButton.classList.add('hidden');renderYear(true);});
+  yearButton.classList.add('hidden');
   controls.after(yearButton);
   const yearView=document.createElement('div');yearView.id='menuYear';yearView.className='menu-year hidden';results.after(yearView);
   function validTab(id){return tabs.find(tab=>tab.id===id&&document.getElementById(tab.getAttribute('aria-controls')));}
@@ -100,7 +101,8 @@
     const heading=document.createElement('strong');heading.textContent=`前年同時期｜${category}`;
     const head=document.createElement('div');head.className='menu-year-head';head.append(back,heading);yearView.append(head);
     const period=core.previousYear(index,category);
-    setStatus(period.dates.length?`${period.dates.length}日分の実績`:'前年の実績はありません');
+    const anchor=period.anchor?`${Number(period.anchor.slice(5,7))}/${Number(period.anchor.slice(8,10))}`:'';
+    setStatus(period.dates.length?`${period.dates.length}日分・${period.target.replace(/-/g,'/')}以前の直近：${anchor}`:'前年の実績はありません');
     for(const date of period.dates){
       const dayItems=index.dates.get(date).filter(item=>item.category===category);
       for(const item of dayItems){
