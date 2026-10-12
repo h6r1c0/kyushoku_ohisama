@@ -31,6 +31,7 @@
   function button(label,className,action){const b=document.createElement('button');b.type='button';b.className=className;b.textContent=label;b.addEventListener('click',action);return b;}
   function setStatus(value){status.textContent=value;}
   const yearButton=button('前年同時期','menu-year-trigger',()=>{yearMode=true;yearButton.classList.add('hidden');renderYear(true);});
+  yearButton.classList.add('hidden');
   controls.after(yearButton);
   const yearView=document.createElement('div');yearView.id='menuYear';yearView.className='menu-year hidden';results.after(yearView);
   function validTab(id){return tabs.find(tab=>tab.id===id&&document.getElementById(tab.getAttribute('aria-controls')));}

@@ -39,6 +39,7 @@ const original=[
    });
    await page.goto(`http://127.0.0.1:${server.address().port}/`);
    assert.equal(requests,0,'量計算中は献立を取得しない');
+   assert.equal(await page.locator('.menu-year-trigger').evaluate(e=>e.classList.contains('hidden')),true,'取得前は前年ボタンを隠す');
    const count=await page.locator('#allMealCount').innerText();
    await page.getByRole('tab',{name:'献立検索'}).click();
    const sortLabel=()=>page.locator('.menu-controls .soft-select-button').innerText();
