@@ -19,6 +19,9 @@
     if(direction==='new'||direction==='old')dateDirection=direction;
     else if(sort.value==='old')dateDirection='old';
   }catch(_){}
+  // The select is enhanced by the main page before this module loads. Sync its
+  // visible button after restoring the native value from local storage.
+  sort.dispatchEvent(new Event('change'));
   const dateLabel=s=>`${Number(s.slice(0,4))}年${Number(s.slice(5,7))}月${Number(s.slice(8,10))}日`;
   function briefDate(s){
     const now=new Date(),date=new Date(Number(s.slice(0,4)),Number(s.slice(5,7))-1,Number(s.slice(8,10)));
@@ -85,7 +88,9 @@
   function renderDetail(){
     const dish=index?.dishes.find(x=>x.key===selected);
     if(!dish){selected=null;render();return;}
+    const previousDate=detail.dataset.dishKey===dish.key?detail.querySelector('.menu-date')?.value:null;
     results.classList.add('hidden');detail.classList.remove('hidden');detail.replaceChildren();
+    detail.dataset.dishKey=dish.key;
     detail.append(button('‹ 検索結果へ戻る','menu-back',()=>{selected=null;results.classList.remove('hidden');render();}));
     const title=document.createElement('h3');title.textContent=dish.display;detail.append(title);
     const picker=document.createElement('label');picker.className='menu-date-picker';picker.textContent='提供日';
@@ -96,6 +101,7 @@
     function showDate(date){
       day.replaceChildren();
       const own=(index.dates.get(date)||[]).filter(item=>item.key===dish.key);
+      const recordLabel=document.createElement('strong');recordLabel.textContent='その日の記録';day.append(recordLabel);
       const original=document.createElement('div');original.className='menu-original';
       original.textContent=own.map(item=>item.name).join('／');day.append(original);
       const others=(index.dates.get(date)||[]).filter(item=>item.key!==dish.key);
@@ -105,7 +111,8 @@
       }
     }
     dates.addEventListener('change',()=>showDate(dates.value));
-    if(dish.dates.length)showDate(dish.dates[0]);
+    if(previousDate&&dish.dates.includes(previousDate))dates.value=previousDate;
+    if(dish.dates.length)showDate(dates.value);
     setStatus(`${dish.dates.length}回提供`);
   }
   controls.classList.remove('hidden');
