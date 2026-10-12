@@ -112,6 +112,15 @@
       b.dates[0].localeCompare(a.dates[0])||cmp(a,b));
     return list;
   }
+  function previousYear(index,category,today=new Date()){
+    if(!categories.includes(category))return {target:'',anchor:'',dates:[]};
+    // Use the device's calendar day. UTC conversion can shift the day in Japan.
+    const year=today.getFullYear()-1;
+    const target=`${year}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    const dates=[...index.dates.keys()].filter(date=>date.startsWith(`${year}-`)&&
+      index.dates.get(date).some(item=>item.category===category)).sort((a,b)=>b.localeCompare(a));
+    return {target,anchor:dates.find(date=>date<=target)||dates.at(-1)||'',dates};
+  }
   function gvizRows(response){
     if(response.status!=='ok'||!response.table||!Array.isArray(response.table.rows))throw new Error('献立データを取得できませんでした');
     const rows=response.table.rows.map(row=>row.c.map(cell=>cell?.v??''));
@@ -137,5 +146,5 @@
     if(!rows.length||rows[0].length!==6||headers.some((h,i)=>rows[0][i]!==h)||rows.some(r=>r.length!==6))throw new Error('献立データの列構成が不正です');
     return rows.slice(1);
   }
-  return {categories,categoryOf,parts,dateKey,normalizeSearch,identity,build,search,gvizRows,csvRows};
+  return {categories,categoryOf,parts,dateKey,normalizeSearch,identity,build,search,previousYear,gvizRows,csvRows};
 });
