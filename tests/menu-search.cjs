@@ -3,6 +3,7 @@ const menu=require('../menu-search-core.js');
 const fs=require('node:fs'),path=require('node:path');
 assert.match(fs.readFileSync(path.join(__dirname,'../index.html'),'utf8'),/<script src="menu-search-config\.js"><\/script>\s*<script src="menu-search\.js"><\/script>/);
 const rows=[
+  [2026,9,6,'サラダ','古い野菜サラダ',1],
   [2026,9,7,'サラダ','コーンのサラダ（きゅうり・赤玉ねぎ）',1],
   [2026,9,7,'主菜','豆腐ハンバーグ',2],
   [2026,9,7,'おやつ（1・2歳）','梅酢人参／みそ汁／焼きおにぎり',3],
@@ -35,7 +36,8 @@ assert.equal(menu.search(index,'おやつ','みそ汁').length,0);
 assert.equal(menu.search(index,'ご飯','')[0].dates[0],'2026-09-10');
 assert.equal(menu.search(index,'果物').length,0);
 assert.equal(index.dates.get('2026-09-07').filter(x=>x.name==='梅酢人参').length,0);
-assert.equal(menu.search(index,'サラダ','','old')[0].dates.at(-1),'2026-09-07');
+assert.equal(menu.search(index,'サラダ','','old')[0].dates[0],'2026-09-06');
+assert.equal(menu.search(index,'サラダ','','new')[0].dates[0],'2026-09-14');
 assert.equal(menu.search(index,'煮物','','count')[0].name,'じゃが煮');
 assert.equal(menu.search(index,'煮物','','few').at(0).dates.length,1);
 assert.equal(menu.search(index,'','大根人参').length,2);

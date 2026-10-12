@@ -104,7 +104,7 @@
     const cmp=(a,b)=>a.display.localeCompare(b.display,'ja');
     list.sort((a,b)=>sort==='count'?b.dates.length-a.dates.length||b.dates[0].localeCompare(a.dates[0])||cmp(a,b):
       sort==='few'?a.dates.length-b.dates.length||b.dates[0].localeCompare(a.dates[0])||cmp(a,b):
-      sort==='old'?a.dates.at(-1).localeCompare(b.dates.at(-1))||cmp(a,b):
+      sort==='old'?a.dates[0].localeCompare(b.dates[0])||cmp(a,b):
       b.dates[0].localeCompare(a.dates[0])||cmp(a,b));
     return list;
   }
