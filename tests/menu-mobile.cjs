@@ -27,12 +27,13 @@ const original=[
  const browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH||undefined});
  try{
   for(const width of [320,375,430,768]){
-   let version='v1',requests=0,fail=false;
+   let version='v1',requests=0,fail=false,hold=null;
    const context=await browser.newContext({viewport:{width,height:800},deviceScaleFactor:1,timezoneId:'Asia/Tokyo'});const page=await context.newPage();
    await page.clock.setFixedTime(new Date('2026-10-11T15:30:00Z'));
    await page.addInitScript(()=>{window.OHISAMA_MENU_FEED={url:'https://example.invalid/menu.csv'};});
-   await page.route('**/menu.csv',route=>{
+   await page.route('**/menu.csv',async route=>{
     requests++;if(fail)return route.abort();
+    if(hold)await hold;
     const rows=version==='v1'?original:original.map(r=>r[0]===2026&&r[1]===9&&r[2]===8&&r[3]==='サラダ'?row(2026,9,8,'サラダ','修正したコーンのサラダ（きゅうり・赤玉ねぎ）',1):r);
     const body=['年度,月,日,区分,料理名,記載順',...rows.map(r=>r.join(','))].join('\n');
     route.fulfill({status:200,headers:{'access-control-allow-origin':'*','cache-control':'private, max-age=300'},contentType:'text/csv',body});
@@ -41,7 +42,12 @@ const original=[
    assert.equal(requests,0,'量計算中は献立を取得しない');
    assert.equal(await page.locator('.menu-year-trigger').evaluate(e=>e.classList.contains('hidden')),true,'取得前は前年ボタンを隠す');
    const count=await page.locator('#allMealCount').innerText();
+   let release;hold=new Promise(resolve=>release=resolve);
    await page.getByRole('tab',{name:'献立検索'}).click();
+   await page.locator('#menuQuery').fill('じゃがいも');
+   assert.match(await page.locator('#menuStatus').innerText(),/確認中/,'初回の通信待ち');
+   assert.equal(await page.locator('#menuResults button').count(),0,'初回は保存データなし');
+   release();hold=null;
    const sortLabel=()=>page.locator('.menu-controls .soft-select-button').innerText();
    assert.equal(await sortLabel(),'新しい順','初回の並び替え表示');
    await page.locator('#menuQuery').fill('じゃがいも');
@@ -131,8 +137,14 @@ const original=[
    await page.screenshot({path:path.join(out,`menu-${width}.png`),fullPage:true});
    const overflow=await page.evaluate(()=>[...document.querySelectorAll('#menuPanel button,#menuPanel input,#menuPanel select')].filter(e=>{if(e.closest('.hidden'))return false;const b=e.getBoundingClientRect();return b.width&&b.height&&(b.left< -2||b.right>innerWidth+2);}).map(e=>e.textContent||e.id));
    assert.deepEqual(overflow,[],`${width}px menu overflow`);
+   hold=new Promise(resolve=>release=resolve);
    await page.reload();
    assert.equal(await page.getByRole('tab',{name:'献立検索'}).getAttribute('aria-selected'),'true');
+   await page.locator('#menuQuery').fill('じゃがいも');
+   assert.equal(await page.locator('#menuResults button').count(),2,'再訪時は通信中でも即座に保存データで検索');
+   assert.match(await page.locator('#menuStatus').innerText(),/更新確認中/);
+   release();hold=null;
+   await page.getByRole('status').getByText('2件の料理',{exact:true}).waitFor();
    assert.equal(await page.locator('#menuSort').inputValue(),'few');
    assert.equal(await sortLabel(),'少ない順','再読込後の見える並び替え表示');
    assert.equal(await page.evaluate(()=>localStorage.getItem('ohisama-menu-date-direction')),'old');
@@ -153,7 +165,8 @@ const original=[
    await page.getByRole('button',{name:/修正したコーンのサラダ/}).waitFor();
    assert.equal(requests,6,'古い提供日を保持した訂正にも更新を検知する');
    fail=true;await page.getByRole('tab',{name:'量計算'}).click();await page.getByRole('tab',{name:'献立検索'}).click();
-   await page.getByRole('status').getByText(/最新データを確認できません/).waitFor();
+   await page.getByRole('status').getByText(/更新未確認/).waitFor();
+   assert.equal(await page.locator('#menuQuery').fill('修正した').then(()=>page.locator('#menuResults button').count()),1,'通信失敗中も保存済みの検索を継続');
    await page.getByRole('tab',{name:'量計算'}).click();assert.equal(await page.locator('#allMealCount').innerText(),count);
    assert.ok(requests>=5);await context.close();
   }
