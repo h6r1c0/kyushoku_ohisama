@@ -49,12 +49,12 @@ const pantry=menu.build([
  [2026,9,7,'おやつ','スイートポテト',1],[2026,9,8,'おやつ','蒸かし芋',1],
  [2026,9,9,'おやつ','ハッシュドポテト',1],[2026,9,10,'サラダ','ポテトサラダ',1],
  [2026,9,11,'メイン','ささ身ののり巻き',1],[2026,9,12,'サラダ','白和え（人参）',1],
- [2026,9,13,'汁物','コーンスープ',1]
+ [2026,9,13,'汁物','コーンスープ',1],[2026,9,14,'サラダ','焼きじゃがサラダ',1]
 ]);
 assert.deepEqual(menu.search(pantry,'','ご飯').map(x=>x.name).sort(),['いなり寿司','キンパ','五平餅']);
 assert.deepEqual(menu.search(pantry,'','米飯').map(x=>x.name).sort(),['いなり寿司','キンパ','五平餅']);
 assert.deepEqual(menu.search(pantry,'','さつまいも').map(x=>x.name).sort(),['スイートポテト','大学芋','鬼まんじゅう']);
-assert.deepEqual(menu.search(pantry,'','じゃがいも').map(x=>x.name).sort(),['ハッシュドポテト','ポテトサラダ']);
+assert.deepEqual(menu.search(pantry,'','じゃがいも').map(x=>x.name).sort(),['ハッシュドポテト','ポテトサラダ','焼きじゃがサラダ']);
 assert.deepEqual(menu.search(pantry,'','豆腐').map(x=>x.name),['白和え（人参）']);
 assert.deepEqual(menu.search(pantry,'','とうもろこし').map(x=>x.name),['コーンスープ']);
 assert.equal(menu.search(index,'煮物','玉ねぎ').some(x=>x.name==='じゃが煮'),true);

@@ -87,9 +87,9 @@
     if(/(?:おむすび|おにぎり|キンパ|巻き寿司|ちらし寿司|いなり寿司|稲荷寿司|おいなりさん|^いなり$|五平餅|おはぎ|ごはん|ご飯|菜めし|七草粥)/.test(title)||
       (category==='おやつ'||category==='ご飯')&&/(?:海苔巻き|のり巻き)/.test(title))terms.push('ご飯','米飯');
     if(/(?:大学芋|鬼まんじゅう|スイートポテト|紫芋羊羹|^焼き芋$)/.test(name))terms.push('さつまいも');
-    if(/ポテト/.test(name.replace(/スイートポテト/g,''))||/ポテサラ/.test(name))terms.push('じゃがいも');
+    if(/(?:ポテト|ポテサラ|じゃが)/.test(name.replace(/スイートポテト/g,'')))terms.push('じゃがいも');
     if(/(?:白和え|飛龍頭|飛竜頭)/.test(name))terms.push('豆腐');
-    if(/(?:コーンスープ|コーンごはん|コーンのサラダ)/.test(name))terms.push('とうもろこし');
+    if(/コーン/.test(name))terms.push('とうもろこし');
     return terms;
   }
   function build(rows){
