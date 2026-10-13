@@ -48,6 +48,7 @@
       // A dish listing both dried and fresh daikon still contains the latter.
       .replace(/切(?:り)?干(?:し)?大根/g,'\uE000')
       .replace(/じゃが芋|ジャガイモ/g,'じゃがいも')
+      .replace(/さつま芋|サツマイモ|薩摩芋/g,'さつまいも')
       .replace(/玉ネギ|たまねぎ/g,'玉ねぎ')
       .replace(/インゲン/g,'いんげん')
       .replace(/\s+/g,'')
@@ -79,6 +80,18 @@
     }
     return {key:name,display:name,alias:''};
   }
+  // Add only ingredients inherent in these named dishes. Variable recipes and
+  // ambiguous labels (e.g. 蒸かし芋 or 蒸しパン) remain searchable by their record.
+  function ingredientAliases(name,category){
+    const terms=[],title=name.split(/[（(]/)[0];
+    if(/(?:おむすび|おにぎり|キンパ|巻き寿司|ちらし寿司|いなり寿司|稲荷寿司|おいなりさん|^いなり$|五平餅|おはぎ|ごはん|ご飯|菜めし|七草粥)/.test(title)||
+      (category==='おやつ'||category==='ご飯')&&/(?:海苔巻き|のり巻き)/.test(title))terms.push('ご飯','米飯');
+    if(/(?:大学芋|鬼まんじゅう|スイートポテト|紫芋羊羹|^焼き芋$)/.test(name))terms.push('さつまいも');
+    if(/(?:ポテト|ポテサラ|じゃが)/.test(name.replace(/スイートポテト/g,'')))terms.push('じゃがいも');
+    if(/(?:白和え|飛龍頭|飛竜頭)/.test(name))terms.push('豆腐');
+    if(/コーン/.test(name))terms.push('とうもろこし');
+    return terms;
+  }
   function build(rows){
     const dates=new Map(),dishes=new Map();
     for(const source of rows){
@@ -90,7 +103,7 @@
         const id=identity(name,category),key=`${category}\u0000${id.key}`;
         let dish=dishes.get(key);
         if(!dish){dish={key,category,name:id.key,display:id.display,dates:[],search:''};dishes.set(key,dish);}
-        dish.search+=` ${normalizeSearch(name)} ${normalizeSearch(id.alias)}`;
+        dish.search+=` ${normalizeSearch(name)} ${normalizeSearch(id.alias)} ${ingredientAliases(name,category).map(normalizeSearch).join(' ')}`;
         if(!dish.dates.includes(date))dish.dates.push(date);
         let dayList=dates.get(date);
         if(!dayList){dayList=[];dates.set(date,dayList);}
@@ -146,5 +159,5 @@
     if(!rows.length||rows[0].length!==6||headers.some((h,i)=>rows[0][i]!==h)||rows.some(r=>r.length!==6))throw new Error('献立データの列構成が不正です');
     return rows.slice(1);
   }
-  return {categories,categoryOf,parts,dateKey,normalizeSearch,identity,build,search,previousYear,gvizRows,csvRows};
+  return {categories,categoryOf,parts,dateKey,normalizeSearch,identity,ingredientAliases,build,search,previousYear,gvizRows,csvRows};
 });

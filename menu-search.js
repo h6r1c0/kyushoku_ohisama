@@ -11,6 +11,8 @@
   const status=document.getElementById('menuStatus'),results=document.getElementById('menuResults'),detail=document.getElementById('menuDetail');
   let index=null,snapshot='',pending=null,category='',selected=null,yearMode=false,listScroll=0;
   const sortKey='ohisama-menu-sort',directionKey='ohisama-menu-date-direction',tabKey='ohisama-active-feature-tab';
+  const cacheKey='ohisama-menu-public-csv-v1',maxCacheBytes=2*1024*1024;
+  let cacheLoaded=false,cacheState='',baseStatus='';
   let dateDirection='new';
   try{
     const saved=localStorage.getItem(sortKey);
@@ -29,7 +31,30 @@
     return now<anniversary?`${Number(s.slice(5,7))}/${Number(s.slice(8,10))}`:`${s.slice(0,4)}年`;
   }
   function button(label,className,action){const b=document.createElement('button');b.type='button';b.className=className;b.textContent=label;b.addEventListener('click',action);return b;}
-  function setStatus(value){status.textContent=value;}
+  function setStatus(value){baseStatus=value;status.textContent=value+(cacheState?`・${cacheState}`:'');}
+  function setCacheState(value){cacheState=value;setStatus(baseStatus);}
+  function checksum(text){let value=2166136261;for(let i=0;i<text.length;i++)value=Math.imul(value^text.charCodeAt(i),16777619);return value>>>0;}
+  function restoreCache(){
+    if(cacheLoaded)return;
+    cacheLoaded=true;
+    try{
+      const raw=localStorage.getItem(cacheKey);
+      if(!raw)return;
+      if(raw.length>maxCacheBytes)throw new Error('large cache');
+      const saved=JSON.parse(raw);
+      if(saved.version!==1||saved.source!==source||typeof saved.csv!=='string'||!saved.csv.length||saved.checksum!==checksum(saved.csv))throw new Error('invalid cache');
+      const rows=core.csvRows(saved.csv);
+      const restored=core.build(rows);
+      if(!restored.dishes.length)throw new Error('empty cache');
+      index=restored;snapshot=saved.csv;cacheState='更新確認中';
+    }catch(_){try{localStorage.removeItem(cacheKey);}catch(_){} }
+  }
+  function saveCache(csv){
+    try{
+      const raw=JSON.stringify({version:1,source,csv,checksum:checksum(csv)});
+      if(raw.length<=maxCacheBytes)localStorage.setItem(cacheKey,raw);
+    }catch(_){/* Storage may be full or disabled; the in-memory index still works. */}
+  }
   const yearButton=button('前年同時期','menu-year-trigger',()=>{yearMode=true;yearButton.classList.add('hidden');renderYear(true);});
   yearButton.classList.add('hidden');
   controls.after(yearButton);
@@ -44,7 +69,7 @@
       if(panel){panel.hidden=!selected;panel.classList.toggle('hidden',!selected);}
     }
     try{localStorage.setItem(tabKey,active.id);}catch(_){}
-    if(active===menuTab){refresh().catch(()=>{});render();}
+    if(active===menuTab){restoreCache();render();refresh().catch(()=>{});}
   }
   async function loadPublished(){
     if(!source)return Promise.reject(new Error('献立データの接続が未設定です'));
@@ -59,13 +84,19 @@
   async function refresh(){
     if(pending)return pending;
     if(!index)setStatus('献立データを確認中…');
+    else if(cacheState)setCacheState('更新確認中');
     pending=(async()=>{
       try{
         const csv=await loadPublished();
-        if(index&&csv===snapshot)return;
-        const rows=core.csvRows(csv);index=core.build(rows);snapshot=csv;
+        if(index&&csv===snapshot){setCacheState('');return;}
+        const rows=core.csvRows(csv),updated=core.build(rows);
+        if(!updated.dishes.length)throw new Error('empty feed');
+        index=updated;snapshot=csv;saveCache(csv);setCacheState('');
         render();
-      }catch(error){setStatus(index?'最新データを確認できません。前回取得した結果を表示しています':'献立データを取得できませんでした。量計算はそのまま使えます');}
+      }catch(error){
+        if(index)setCacheState('更新未確認');
+        else setStatus('献立データを取得できませんでした。量計算はそのまま使えます');
+      }
       finally{pending=null;}
     })();
     return pending;
@@ -161,7 +192,7 @@
     const toggle=button('献立検索','help-feature-button menu-help-button',()=>{const open=copy.classList.toggle('hidden');toggle.setAttribute('aria-expanded',String(!open));});
     toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls','menuHelpCopy');
     const copy=document.createElement('div');copy.id='menuHelpCopy';copy.className='menu-help-copy hidden';
-    copy.textContent='カテゴリーを選ぶと候補が出ます。選ばずに料理名・食材名から全カテゴリーを検索することもできます。カテゴリー選択中の「前年同時期」から、前年の同じ季節の料理を見られます。料理を選び、提供日と同日の献立を確認できます。';
+    copy.textContent='カテゴリーを選ぶと候補が出ます。選ばずに料理名・食材名から全カテゴリーを検索することもできます。カテゴリー選択中の「前年同時期」から、前年の同じ季節の料理を見られます。料理を選び、提供日と同日の献立を確認できます。検索データは端末に保存され、次回はすぐ表示します。「更新未確認」は通信できず前回取得分を表示している状態です。';
     help.append(toggle,copy);
   }
 })();
