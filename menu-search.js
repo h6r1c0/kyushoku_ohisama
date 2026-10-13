@@ -192,7 +192,7 @@
     const toggle=button('献立検索','help-feature-button menu-help-button',()=>{const open=copy.classList.toggle('hidden');toggle.setAttribute('aria-expanded',String(!open));});
     toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls','menuHelpCopy');
     const copy=document.createElement('div');copy.id='menuHelpCopy';copy.className='menu-help-copy hidden';
-    copy.textContent='カテゴリーを選ぶと候補が出ます。選ばずに料理名・食材名から全カテゴリーを検索することもできます。カテゴリー選択中の「前年同時期」から、前年の同じ季節の料理を見られます。料理を選び、提供日と同日の献立を確認できます。';
+    copy.textContent='カテゴリーを選ぶと候補が出ます。選ばずに料理名・食材名から全カテゴリーを検索することもできます。カテゴリー選択中の「前年同時期」から、前年の同じ季節の料理を見られます。料理を選び、提供日と同日の献立を確認できます。検索データは端末に保存され、次回はすぐ表示します。「更新未確認」は通信できず前回取得分を表示している状態です。';
     help.append(toggle,copy);
   }
 })();
