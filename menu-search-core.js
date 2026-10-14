@@ -61,6 +61,8 @@
       // "あげ" as a separate ingredient, not in 揚げ餅/唐揚げ/厚揚げ.
       .replace(/(^|[（(・、,／/\\s])あげ(?=$|[）)・、,／/\\s])/g,'$1油揚げ')
       .replace(/とあげ(?=の|と|$)/g,'と油揚げ')
+      // Kanji 揚げ is ambiguous in a dish title; only map it as a list ingredient.
+      .replace(/([（(・、,／/\\s])揚げ(?=[）)・、,／/\\s])/g,'$1油揚げ')
       .replace(/じゃが芋|ジャガイモ/g,'じゃがいも')
       .replace(/さつま芋|サツマイモ|薩摩芋/g,'さつまいも')
       .replace(/玉ネギ|たまねぎ/g,'玉ねぎ')
