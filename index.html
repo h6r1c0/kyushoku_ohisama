@@ -633,23 +633,23 @@ select,.soft-select-button{border-radius:10px}
  <div id="cutContext" class="cut-context" aria-label="切り分け計算の人数区分"><button type="button" data-context="meal" aria-pressed="true">給食</button><button type="button" data-context="snack" aria-pressed="false">おやつ</button></div>
  <div id="snackPeople" class="snack-people hidden"><div class="snack-people-head"><strong>おやつ人数</strong><button type="button" class="btn secondary" id="snackPeopleReset">今日の人数に戻す</button></div><div id="snackPeopleGrid" class="snack-people-grid"></div><p class="cut-status">給食の人数は変わりません。学童は「食べる」に関係なく含みます。</p></div>
  <p id="cutPeopleNote" class="cut-status">給食：今日の人数を自動使用（0歳を除く）</p>
+ <div id="cutRatesArea" class="hidden"><div class="cut-control-guide"><p id="cutInstruction">マスを左右になぞって切れ数を変更</p><div class="cut-batch-row"><span>まとめて変更：年齢を複数選択</span><button id="cutSelectionClear" class="cut-clear-selection" type="button" disabled>選択解除</button></div></div>
+ <div id="cutAges" class="cut-ages" aria-label="年齢ごとの1人量を直接変更"></div></div>
  <div id="formingArea" class="hidden"><div id="formingRows" class="forming-rows"></div><div id="formingResult" class="cut-total" aria-live="polite"></div></div>
  <div id="cutStandardArea">
  <div id="cutTotal" class="cut-total" aria-live="polite"></div>
  <div id="cutPack" class="cut-pack"></div>
  <div id="fractionResult" class="fraction-result hidden"></div>
- <div class="cut-control-guide"><p id="cutInstruction">マスを左右になぞって切れ数を変更</p><div class="cut-batch-row"><span>まとめて変更：年齢を複数選択</span><button id="cutSelectionClear" class="cut-clear-selection" type="button" disabled>選択解除</button></div></div>
- <div id="cutAges" class="cut-ages" aria-label="年齢ごとの1人量を直接変更"></div>
  </div><div id="cutDiagramArea" class="hidden">
  <details id="flatGrid" class="cut-options" open><summary>型なし生地（クラッカー・フォカッチャ）</summary>
  <label>生地を何等分？<input id="flatGridSheets" type="number" min="1" max="100" step="1" inputmode="numeric" value="1"></label>
  <div id="flatGridResult" aria-live="polite"></div></details>
  <p class="cut-status">スクエアケーキは型の寸法・厚みを確認してから対応します。</p></div>
- <details class="cut-options"><summary>名前・1個からの切数（任意）</summary>
+ <details id="cutExtras" class="cut-options"><summary>名前・1個からの切数（任意）</summary>
  <label>食材名／メモ<input id="cutMemo" maxlength="24" placeholder="例：なす"></label>
  <label id="cutYieldLabel">1個（1本・1丁など）から何切れ？<input id="cutYield" type="number" min="1" step="1" inputmode="numeric" placeholder="入力しなくても使えます"></label>
  </details>
- <div class="actions"><button class="btn secondary" onclick="resetCutSlot()">この枠をクリア</button></div>
+ <div id="cutReset" class="actions"><button class="btn secondary" onclick="resetCutSlot()">この計算をクリア</button></div>
  <p class="cut-status">計算内容はこのタブを閉じるまで保持します。</p>
  </div></div></div>
 <div class="card settings-card dry-calculator-card">
@@ -1654,10 +1654,13 @@ function renderCutResults(){
  document.getElementById("cutKind").classList.toggle("hidden",cutMode!=="portion");
  document.querySelectorAll("#cutKind button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.kind===current.type)));
  document.getElementById("formingArea").classList.toggle("hidden",cutMode!=="forming");
+ document.getElementById("cutRatesArea").classList.toggle("hidden",cutMode==="forming");
+ document.getElementById("cutExtras").classList.toggle("hidden",cutMode==="forming");
+ document.getElementById("cutReset").classList.toggle("hidden",cutMode==="forming");
  document.getElementById("cutStandardArea").classList.toggle("hidden",cutMode!=="portion");
  document.getElementById("cutDiagramArea").classList.toggle("hidden",cutMode!=="diagram");
  document.getElementById("cutSaved").classList.toggle("hidden",cutMode!=="portion");
- renderSnackPeople();if(cutMode==="forming"){renderForming(people);return}
+ renderSnackPeople();document.getElementById("cutPeopleNote").textContent=cutContext==="snack"?"おやつ：調整した人数を使用":"給食：今日の人数を自動使用（0歳を除く・学童は「食べる」と連動）";if(cutMode==="forming"){renderForming(people);return}
  document.querySelectorAll("#cutContext button").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.context===cutContext)));document.getElementById("cutPeopleNote").textContent=cutContext==="snack"?"おやつ：調整した人数を使用":"給食：今日の人数を自動使用（0歳を除く・学童は「食べる」と連動）";
  slots.replaceChildren();cutSlots.forEach((row,i)=>{const button=document.createElement("button"),icon=document.createElement("img");icon.className="slot-icon";icon.src=i<2?"icon_norimaki_fraction.png":"11_切り分け計算アイコン.png";icon.alt="";button.append(icon,document.createTextNode(["① 分数","② 分数","③ 切れ数","④ 切れ数"][i]+(row.memo?` ${row.memo}`:"")));button.setAttribute("aria-pressed",String(i===cutSlot));button.onclick=()=>selectCutSlot(i);slots.append(button)});
  const total=cutTotalFor(current,people),fraction=current.type==="fraction";document.getElementById("cutTotal").classList.toggle("hidden",fraction);document.getElementById("cutPack").classList.toggle("hidden",fraction);document.getElementById("cutInstruction").textContent=fraction?"バーを左右に動かして量を変更":"マスを左右になぞって切れ数を変更";document.getElementById("cutYieldLabel").classList.toggle("hidden",fraction);
