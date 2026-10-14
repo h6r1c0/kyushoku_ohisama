@@ -488,6 +488,13 @@ select,.soft-select-button{border-radius:10px}
 .menu-date-picker .soft-select-wrap{flex:1;max-width:230px;margin-top:0}
 .menu-date-picker .soft-select-button{min-height:40px;padding:6px 30px 6px 9px;border-color:#a9d3e3;border-radius:10px;background:#f4fbfe;color:#265f77;font-size:16px}
 .menu-search .soft-select-button:focus-visible,.menu-search .soft-select-button[aria-expanded="true"]{border-color:#348cb0;outline:3px solid #d3edf8}
+
+.cut-mode-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:4px 0 8px}
+.cut-mode-nav button{min-width:0;min-height:52px;padding:6px 3px;border:1px solid #dcc8a9;border-radius:10px;background:#fffaf1;color:#654a2c;font:800 12px/1.3 inherit}
+.cut-mode-nav button[aria-pressed="true"]{background:#f6d7a3;border:2px solid var(--orange)}
+.forming-rows{display:grid;gap:6px;margin:10px 0}.forming-row{display:grid;grid-template-columns:minmax(52px,1fr) minmax(0,1fr) minmax(0,1fr);gap:6px;align-items:center}
+.forming-row label{display:grid;gap:2px;font-size:11px;color:#766955}.forming-row input{min-width:0;width:100%;min-height:42px;border:1px solid #dcc8a9;border-radius:8px;padding:4px 6px;font-size:16px}
+.forming-age{font-size:13px;font-weight:800}.forming-age small{display:block;font-size:10px;font-weight:500}
 </style>
 </head>
 <body>
@@ -617,27 +624,34 @@ select,.soft-select-button{border-radius:10px}
 </div>
 
 <div class="card settings-card cut-calculator-card">
- <div class="section-head" onclick="handleSettingsHeaderClick(event)"><div class="settings-title"><span class="settings-icon cut-icon" aria-hidden="true"></span><strong>切り分け計算</strong></div><button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="cutCalculator" aria-label="切り分け計算を開く" data-label="切り分け計算" onclick="toggleSection('cutCalculator',this)"><span class="chevron" aria-hidden="true"></span></button></div>
+ <div class="section-head" onclick="handleSettingsHeaderClick(event)"><div class="settings-title"><span class="settings-icon cut-icon" aria-hidden="true"></span><strong>取り分け計算</strong></div><button class="btn secondary toggle-btn" aria-expanded="false" aria-controls="cutCalculator" aria-label="取り分け計算を開く" data-label="取り分け計算" onclick="toggleSection('cutCalculator',this)"><span class="chevron" aria-hidden="true"></span></button></div>
  <div id="cutCalculator" class="hidden editor-row">
- <div id="cutSlots" class="cut-slots" aria-label="一時保存する計算枠"></div>
+ <nav id="cutModes" class="cut-mode-nav" aria-label="計算方法"><button type="button" data-mode="portion">分数・切れ数</button><button type="button" data-mode="forming">成形する</button><button type="button" data-mode="diagram">切り方の図</button></nav>
+ <div id="cutModePanel" class="hidden">
+ <div id="cutKind" class="cut-context hidden"><button type="button" data-kind="fraction">分数</button><button type="button" data-kind="pieces">切れ数</button></div>
+ <details id="cutSaved" class="cut-options"><summary>別の計算を使う（保存枠）</summary><div id="cutSlots" class="cut-slots" aria-label="一時保存する計算枠"></div></details>
  <div id="cutContext" class="cut-context" aria-label="切り分け計算の人数区分"><button type="button" data-context="meal" aria-pressed="true">給食</button><button type="button" data-context="snack" aria-pressed="false">おやつ</button></div>
  <div id="snackPeople" class="snack-people hidden"><div class="snack-people-head"><strong>おやつ人数</strong><button type="button" class="btn secondary" id="snackPeopleReset">今日の人数に戻す</button></div><div id="snackPeopleGrid" class="snack-people-grid"></div><p class="cut-status">給食の人数は変わりません。学童は「食べる」に関係なく含みます。</p></div>
  <p id="cutPeopleNote" class="cut-status">給食：今日の人数を自動使用（0歳を除く）</p>
+ <div id="formingArea" class="hidden"><div id="formingRows" class="forming-rows"></div><div id="formingResult" class="cut-total" aria-live="polite"></div></div>
+ <div id="cutStandardArea">
  <div id="cutTotal" class="cut-total" aria-live="polite"></div>
  <div id="cutPack" class="cut-pack"></div>
  <div id="fractionResult" class="fraction-result hidden"></div>
  <div class="cut-control-guide"><p id="cutInstruction">マスを左右になぞって切れ数を変更</p><div class="cut-batch-row"><span>まとめて変更：年齢を複数選択</span><button id="cutSelectionClear" class="cut-clear-selection" type="button" disabled>選択解除</button></div></div>
  <div id="cutAges" class="cut-ages" aria-label="年齢ごとの1人量を直接変更"></div>
- <details id="flatGrid" class="cut-options"><summary>生地を四角く切る（クラッカー・フォカッチャ）</summary>
+ </div><div id="cutDiagramArea" class="hidden">
+ <details id="flatGrid" class="cut-options" open><summary>型なし生地（クラッカー・フォカッチャ）</summary>
  <label>生地を何等分？<input id="flatGridSheets" type="number" min="1" max="100" step="1" inputmode="numeric" value="1"></label>
  <div id="flatGridResult" aria-live="polite"></div></details>
+ <p class="cut-status">スクエアケーキは型の寸法・厚みを確認してから対応します。</p></div>
  <details class="cut-options"><summary>名前・1個からの切数（任意）</summary>
  <label>食材名／メモ<input id="cutMemo" maxlength="24" placeholder="例：なす"></label>
  <label id="cutYieldLabel">1個（1本・1丁など）から何切れ？<input id="cutYield" type="number" min="1" step="1" inputmode="numeric" placeholder="入力しなくても使えます"></label>
  </details>
  <div class="actions"><button class="btn secondary" onclick="resetCutSlot()">この枠をクリア</button></div>
- <p class="cut-status">①〜④で計算を保持し、おやつ人数は4枠で共通です。日付が変わるか、このタブを閉じるとリセットします。</p>
- </div></div>
+ <p class="cut-status">計算内容はこのタブを閉じるまで保持します。</p>
+ </div></div></div>
 <div class="card settings-card dry-calculator-card">
   <div class="section-head settings-accordion-head" onclick="handleSettingsHeaderClick(event)">
     <div class="settings-title"><span class="settings-icon dry-settings-icon" aria-hidden="true"></span><strong>乾物計算</strong></div>
@@ -1572,6 +1586,8 @@ function normalizeCutSlot(row,type,index){
  if(type==="fraction")return{...base,type,rates:CUT_IDS.map((_,j)=>FRACTION_DENOMS.includes(Number(row?.rates?.[j]))?Number(row.rates[j]):0),memo,shape:row?.shape==="circle"?"circle":"square"};
  return{...base,type,rates:CUT_IDS.map((_,j)=>Math.max(1,Math.floor(Number(row?.rates?.[j])||1))),memo,yield:String(row?.yield||""),sheets:Math.min(100,Math.max(1,Math.floor(Number(row?.sheets)||1)))};
 }
+let cutMode=null,formingValues=Array.from({length:7},()=>({grams:"",pieces:""}));
+try{const saved=JSON.parse(sessionStorage.getItem("kyushokuFormingV1"));if(Array.isArray(saved)&&saved.length===7)formingValues=saved.map(x=>({grams:String(x?.grams??""),pieces:String(x?.pieces??"")}))}catch(e){}
 let cutSlots=Array.from({length:4},(_,i)=>emptyCut(i)),cutSlot=0,cutContext="meal",snackPeopleState=null,selectedCutAges=new Set(),activeCutGesture=null,pieceRangeState=Array.from({length:4},()=>Array(7).fill(5));
 try{
  const savedV2=JSON.parse(sessionStorage.getItem("kyushokuCutSessionV2")),legacy=JSON.parse(sessionStorage.getItem("kyushokuCutSession"));
@@ -1626,15 +1642,27 @@ function cutValueFromPointer(gesture,event){const control=gesture.control,rect=c
 function finishCutGesture(commit){const gesture=activeCutGesture;if(!gesture)return;stopCutEdgeTimer(gesture);activeCutGesture=null;if(commit){saveCutSlots();clearCutAgeSelection(false);renderCutResults()}else{gesture.originals.forEach((value,index)=>{cutSlots[cutSlot].rates[index]=value;updateCutControl(index)})}}
 function bindCutControl(control,index,type){control.addEventListener("pointerdown",event=>{if(activeCutGesture||event.button>0)return;const targets=cutChangeTargets(index);activeCutGesture={control,index,type,pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,targets,value:cutSlots[cutSlot].rates[index],originals:new Map(targets.map(i=>[i,cutSlots[cutSlot].rates[i]])),dragging:false,vertical:false,edgeTimer:null}});control.addEventListener("pointermove",event=>{const gesture=activeCutGesture;if(!gesture||gesture.pointerId!==event.pointerId||gesture.control!==control)return;const dx=event.clientX-gesture.startX,dy=event.clientY-gesture.startY;if(!gesture.dragging){if(Math.abs(dx)<7&&Math.abs(dy)<7)return;if(Math.abs(dy)>Math.abs(dx)){gesture.vertical=true;return}gesture.dragging=true;try{control.setPointerCapture?.(event.pointerId)}catch(e){}}if(gesture.vertical)return;event.preventDefault();previewCutValue(gesture,cutValueFromPointer(gesture,event))});control.addEventListener("pointerup",event=>{const gesture=activeCutGesture;if(!gesture||gesture.pointerId!==event.pointerId||gesture.control!==control)return;if(gesture.vertical)return finishCutGesture(false);if(!gesture.dragging)previewCutValue(gesture,cutValueFromPointer(gesture,event));finishCutGesture(true)});control.addEventListener("pointercancel",()=>finishCutGesture(false));control.addEventListener("keydown",event=>{const current=cutSlots[cutSlot].rates[index];let value=current;if(type==="fraction"){let pos=Math.max(0,FRACTION_STEPS.indexOf(current));if(event.key==="ArrowRight")pos=Math.min(FRACTION_STEPS.length-1,pos+1);else if(event.key==="ArrowLeft")pos=Math.max(0,pos-1);else if(event.key==="Home")pos=0;else if(event.key==="End")pos=FRACTION_STEPS.length-1;else return;value=FRACTION_STEPS[pos]}else{if(event.key==="ArrowRight"||event.key==="ArrowUp")value=current+1;else if(event.key==="ArrowLeft"||event.key==="ArrowDown")value=Math.max(1,current-1);else if(event.key==="Home")value=1;else return}event.preventDefault();const targets=cutChangeTargets(index);targets.forEach(i=>cutSlots[cutSlot].rates[i]=value);saveCutSlots();clearCutAgeSelection(false);renderCutResults()})}
 function renderCutAgeRows(current,people){const ages=document.getElementById("cutAges"),fraction=current.type==="fraction";ages.replaceChildren();CUT_IDS.forEach((id,index)=>{const row=document.createElement("div"),age=document.createElement("button"),control=document.createElement("div"),value=document.createElement("strong");row.className="cut-age-row";row.dataset.ageIndex=index;age.type="button";age.className="cut-age-select";age.innerHTML=`<span>${CUT_LABELS[index]}</span><small>${people[index]}人</small>`;age.setAttribute("aria-pressed",String(selectedCutAges.has(index)));age.setAttribute("aria-label",`${CUT_LABELS[index]}をまとめて変更する対象に${selectedCutAges.has(index)?"選択中":"追加"}`);age.onclick=()=>toggleCutAgeSelection(index);value.className="cut-control-value";age.append(value);if(fraction){control.className="fraction-control";control.innerHTML='<div class="fraction-track"><div class="fraction-fill"></div><div class="fraction-thumb"></div></div>';control.setAttribute("role","slider");control.setAttribute("aria-valuemin","0");control.setAttribute("aria-valuemax",String(FRACTION_STEPS.length-1));control.setAttribute("aria-label",`${CUT_LABELS[index]}の分数`)}else{control.className="pieces-scroll";control.innerHTML='<div class="pieces-cells"></div>';control.setAttribute("role","slider");control.setAttribute("aria-valuemin","1");control.setAttribute("aria-label",`${CUT_LABELS[index]}の切れ数`)}control.tabIndex=0;row.append(age,control);ages.append(row);bindCutControl(control,index,current.type);updateCutControl(index)});refreshCutAgeSelection()}
-function selectCutSlot(i){document.getElementById("flatGrid").open=false;clearCutAgeSelection(false);cutSlot=i;document.getElementById("cutMemo").value=cutSlots[i].memo;document.getElementById("cutYield").value=cutSlots[i].yield||"";renderCutResults()}
+function selectCutSlot(i){clearCutAgeSelection(false);cutSlot=i;cutMode="portion";document.getElementById("cutMemo").value=cutSlots[i].memo;document.getElementById("cutYield").value=cutSlots[i].yield||"";renderCutResults()}
+function selectCutMode(mode){cutMode=cutMode===mode?null:mode;if(cutMode==="portion")cutSlot=cutSlots[cutSlot].type==="fraction"?0:2;if(cutMode==="diagram")cutSlot=3;clearCutAgeSelection(false);document.getElementById("cutSaved").open=false;document.getElementById("cutMemo").value=cutSlots[cutSlot].memo;document.getElementById("cutYield").value=cutSlots[cutSlot].yield||"";renderCutResults()}
+function updateFormingResult(people){let pieces=0,grams=0,unset=false;people.forEach((count,i)=>{if(!count)return;const g=Number(formingValues[i].grams),n=Number(formingValues[i].pieces);if(formingValues[i].grams===""||formingValues[i].pieces===""){unset=true;return}pieces+=count*n;grams+=count*n*g});document.getElementById("formingResult").textContent=`必要 ${pieces}個 ／ ${Number(grams.toFixed(1))}g`+(unset?"（未入力の年齢あり）":"")}
+function renderForming(people){const wrap=document.getElementById("formingRows");wrap.replaceChildren();CUT_LABELS.forEach((label,i)=>{const row=document.createElement("div");row.className="forming-row";const age=document.createElement("div");age.className="forming-age";age.textContent=label;const count=document.createElement("small");count.textContent=people[i]+"人";age.append(count);row.append(age);[["grams","1個の重さ（g）"],["pieces","1人の個数"]].forEach(([key,title])=>{const holder=document.createElement("label");holder.textContent=title;const input=document.createElement("input");input.type="number";input.min="0";input.step=key==="grams"?"0.5":"1";input.inputMode="decimal";input.placeholder="—";input.value=formingValues[i][key];input.addEventListener("input",()=>{const v=input.value,n=Number(v);if(v!==""&&(!Number.isFinite(n)||n<0||(key==="pieces"&&!Number.isInteger(n))))return;formingValues[i][key]=v;sessionStorage.setItem("kyushokuFormingV1",JSON.stringify(formingValues));updateFormingResult(cutPeople())});holder.append(input);row.append(holder)});wrap.append(row)});updateFormingResult(people)}
+
 function renderCutResults(){
- const current=cutSlots[cutSlot],people=cutPeople(),slots=document.getElementById("cutSlots");if(!slots)return;renderSnackPeople();
- document.querySelectorAll("#cutContext button").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.context===cutContext)));document.getElementById("cutPeopleNote").textContent=cutContext==="snack"?"おやつ：調整した人数を4枠で共通利用":"給食：今日の人数を自動使用（0歳を除く・学童は「食べる」と連動）";
+ const current=cutSlots[cutSlot],people=cutPeople(),slots=document.getElementById("cutSlots");if(!slots)return;
+ document.querySelectorAll("#cutModes button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===cutMode)));
+ document.getElementById("cutModePanel").classList.toggle("hidden",!cutMode);if(!cutMode)return;
+ document.getElementById("cutKind").classList.toggle("hidden",cutMode!=="portion");
+ document.querySelectorAll("#cutKind button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.kind===current.type)));
+ document.getElementById("formingArea").classList.toggle("hidden",cutMode!=="forming");
+ document.getElementById("cutStandardArea").classList.toggle("hidden",cutMode!=="portion");
+ document.getElementById("cutDiagramArea").classList.toggle("hidden",cutMode!=="diagram");
+ document.getElementById("cutSaved").classList.toggle("hidden",cutMode!=="portion");
+ renderSnackPeople();if(cutMode==="forming"){renderForming(people);return}
+ document.querySelectorAll("#cutContext button").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.context===cutContext)));document.getElementById("cutPeopleNote").textContent=cutContext==="snack"?"おやつ：調整した人数を使用":"給食：今日の人数を自動使用（0歳を除く・学童は「食べる」と連動）";
  slots.replaceChildren();cutSlots.forEach((row,i)=>{const button=document.createElement("button"),icon=document.createElement("img");icon.className="slot-icon";icon.src=i<2?"icon_norimaki_fraction.png":"11_切り分け計算アイコン.png";icon.alt="";button.append(icon,document.createTextNode(["① 分数","② 分数","③ 切れ数","④ 切れ数"][i]+(row.memo?` ${row.memo}`:"")));button.setAttribute("aria-pressed",String(i===cutSlot));button.onclick=()=>selectCutSlot(i);slots.append(button)});
  const total=cutTotalFor(current,people),fraction=current.type==="fraction";document.getElementById("cutTotal").classList.toggle("hidden",fraction);document.getElementById("cutPack").classList.toggle("hidden",fraction);document.getElementById("cutInstruction").textContent=fraction?"バーを左右に動かして量を変更":"マスを左右になぞって切れ数を変更";document.getElementById("cutYieldLabel").classList.toggle("hidden",fraction);
  if(fraction)renderFractionResult(current,people);else{document.getElementById("fractionResult").classList.add("hidden");document.getElementById("cutTotal").innerHTML=`必要 <strong>${total}</strong>切れ`;const per=Number(current.yield);document.getElementById("cutPack").textContent=Number.isInteger(per)&&per>0?`必要 ${Math.ceil(total/per)}個分`:""}
- renderCutAgeRows(current,people);
- renderFlatGrid(total);
+ renderCutAgeRows(current,people);renderFlatGrid(total);
 }
 
 function flatGridPlan(required,sheets){
@@ -1650,8 +1678,8 @@ function flatGridPlan(required,sheets){
 }
 function renderFlatGrid(required){
  const details=document.getElementById("flatGrid"),slot=cutSlots[cutSlot];
- details.classList.toggle("hidden",slot.type!=="pieces");
- if(slot.type!=="pieces")return;
+ details.classList.toggle("hidden",cutMode!=="diagram"||slot.type!=="pieces");
+ if(slot.type!=="pieces"||cutMode!=="diagram")return;
  document.getElementById("flatGridSheets").value=String(slot.sheets||1);
  if(!details.open)return;
  const target=document.getElementById("flatGridResult");target.replaceChildren();
@@ -1670,6 +1698,8 @@ function renderFlatGrid(required){
 }
 function resetCutSlot(){document.getElementById("flatGrid").open=false;cutSlots[cutSlot]=emptyCut(cutSlot);clearCutAgeSelection(false);document.getElementById("cutMemo").value="";document.getElementById("cutYield").value="";saveCutSlots();renderCutResults()}
 function initCut(){
+ document.querySelectorAll("#cutModes button").forEach(b=>b.addEventListener("click",()=>selectCutMode(b.dataset.mode)));
+ document.querySelectorAll("#cutKind button").forEach(b=>b.addEventListener("click",()=>{cutSlot=b.dataset.kind==="fraction"?0:2;clearCutAgeSelection(false);document.getElementById("cutMemo").value=cutSlots[cutSlot].memo;document.getElementById("cutYield").value=cutSlots[cutSlot].yield||"";renderCutResults()}));
  document.getElementById("flatGrid").addEventListener("toggle",()=>{if(document.getElementById("flatGrid").open)renderFlatGrid(cutTotalFor(cutSlots[cutSlot],cutPeople()))});
  document.getElementById("flatGridSheets").addEventListener("change",event=>{
   const n=Number(event.target.value);
