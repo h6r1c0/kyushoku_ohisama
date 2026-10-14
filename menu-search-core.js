@@ -32,7 +32,17 @@
       else part+=ch;
     }
     if(part.trim())result.push(part.trim());
-    return result.map(s=>{
+    // Split only known pairs of independent snack dishes, not every "と" or "・".
+    const separate=[];
+    for(const entry of result){
+      const match=entry.match(/^(いなり寿司|稲荷寿司|おいなりさん|いなり)と(空豆|そら豆|枝豆)$/)||
+        entry.match(/^(おいなりさん|いなり寿司|稲荷寿司|いなり)・(かき氷)$/)||
+        entry.match(/^(じゃが芋餅|じゃがいも餅)・(かき氷)$/)||
+        entry.match(/^(とうもろこし|トウモロコシ)と(梅おむすび)$/);
+      if(match)separate.push(match[1],match[2]);
+      else separate.push(entry);
+    }
+    return separate.map(s=>{
       const prefix=s.match(/^([^・]+)・(.+)$/);
       return prefix&&chewing.test(prefix[1])?prefix[2].trim():s;
     }).filter(s=>s&&!chewing.test(s)&&!/^みそ汁$|^味噌汁$/.test(s));
@@ -47,15 +57,35 @@
       // Keep dried daikon as its own ingredient token before joining delimiters.
       // A dish listing both dried and fresh daikon still contains the latter.
       .replace(/切(?:り)?干(?:し)?大根/g,'\uE000')
+      .replace(/油あげ|油揚(?!げ)|あぶらあげ|あぶら揚げ/g,'油揚げ')
+      // "あげ" as a separate ingredient, not in 揚げ餅/唐揚げ/厚揚げ.
+      .replace(/(^|[（(・、,／/\\s])あげ(?=$|[）)・、,／/\\s])/g,'$1油揚げ')
+      .replace(/とあげ(?=の|と|$)/g,'と油揚げ')
       .replace(/じゃが芋|ジャガイモ/g,'じゃがいも')
       .replace(/さつま芋|サツマイモ|薩摩芋/g,'さつまいも')
       .replace(/玉ネギ|たまねぎ/g,'玉ねぎ')
       .replace(/インゲン/g,'いんげん')
+      .replace(/ごはん/g,'ご飯')
+      .replace(/法蓮草|ホウレンソウ/g,'ほうれん草')
+      .replace(/人参|ニンジン/g,'にんじん')
+      .replace(/だいこん|ダイコン/g,'大根')
+      .replace(/蓮根|レンコン/g,'れんこん')
+      .replace(/南瓜|カボチャ/g,'かぼちゃ')
+      .replace(/茄子|ナス/g,'なす')
+      .replace(/きゃべつ/g,'キャベツ')
+      .replace(/味噌/g,'みそ')
+      .replace(/椎茸|シイタケ/g,'しいたけ')
+      .replace(/舞茸|マイタケ/g,'まいたけ')
+      .replace(/胡麻/g,'ごま')
+      .replace(/きな粉/g,'きなこ')
+      .replace(/ミョウガ|茗荷/g,'みょうが')
       .replace(/\s+/g,'')
       .replace(conjunction,'$1')
       .replace(/[\s\u3000・／/、,()（）「」『』［］\[\]]+/g,'');
   }
   function identity(name,category){
+    if(/^(?:いなり寿司|稲荷寿司|おいなりさん|いなり)$/.test(name))
+      return {key:'いなり寿司',display:'いなり寿司',alias:'おいなりさん 稲荷寿司 いなり'};
     if(category==='煮物'&&/^じゃが煮(?:[（(].*[）)])?$/.test(name)){
       const konjac=/こんにゃく/.test(name);
       return konjac?{key:'じゃが煮（こんにゃく入り）',display:'じゃが煮（こんにゃく入り）',alias:'じゃがいも'}:
@@ -90,6 +120,7 @@
     if(/(?:ポテト|ポテサラ|じゃが)/.test(name.replace(/スイートポテト/g,'')))terms.push('じゃがいも');
     if(/(?:白和え|飛龍頭|飛竜頭)/.test(name))terms.push('豆腐');
     if(/コーン/.test(name))terms.push('とうもろこし');
+    if(/(?:いなり寿司|稲荷寿司|おいなりさん|^いなり$)/.test(title))terms.push('油揚げ','油あげ','あぶらあげ');
     return terms;
   }
   function build(rows){
@@ -115,7 +146,7 @@
     return {categories,dates,dishes:[...dishes.values()]};
   }
   function search(index,category='',query='',sort='new',dateDirection='new'){
-    const q=normalizeSearch(query);
+    const q=normalizeSearch(query).replace(/^あげ$/,'油揚げ');
     const list=index.dishes.filter(x=>(!category||x.category===category)&&(!q||x.search.includes(q)));
     const cmp=(a,b)=>a.display.localeCompare(b.display,'ja');
     const byDate=(a,b)=>dateDirection==='old'?a.dates[0].localeCompare(b.dates[0]):b.dates[0].localeCompare(a.dates[0]);
