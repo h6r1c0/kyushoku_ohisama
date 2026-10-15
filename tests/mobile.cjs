@@ -106,6 +106,7 @@ async function verticalGesture(page,rowIndex){
         await page.locator('#fractionResult').getByRole('button',{name:'丸型'}).click();assert.ok(await page.locator('#fractionResult svg circle').count());
         await page.locator('.cut-calculator-card').screenshot({path:path.join(out,`${width}-fraction.png`)});await noOverflow(page,'fraction '+width);
         await page.locator('#cutModes [data-mode="forming"]').click();
+        assert.equal(await page.locator('#cutKind').isVisible(),false);
         await page.locator('#formingRows .forming-group').first().locator('input').first().fill('20');
         await page.locator('#formingRows .forming-group').first().locator('input').nth(1).fill('2');
         assert.ok((await page.locator('#formingResult').innerText()).includes('未入力の年齢あり'));
