@@ -1663,7 +1663,17 @@ function bindCutControl(control,index,type){control.addEventListener("pointerdow
 function renderCutAgeRows(current,people){const ages=document.getElementById("cutAges"),fraction=current.type==="fraction";ages.replaceChildren();CUT_IDS.forEach((id,index)=>{const row=document.createElement("div"),age=document.createElement("button"),control=document.createElement("div"),value=document.createElement("strong");row.className="cut-age-row";row.dataset.ageIndex=index;age.type="button";age.className="cut-age-select";age.innerHTML=`<span>${CUT_LABELS[index]}</span><small>${people[index]}人</small>`;age.setAttribute("aria-pressed",String(selectedCutAges.has(index)));age.setAttribute("aria-label",`${CUT_LABELS[index]}をまとめて変更する対象に${selectedCutAges.has(index)?"選択中":"追加"}`);age.onclick=()=>toggleCutAgeSelection(index);value.className="cut-control-value";age.append(value);if(fraction){control.className="fraction-control";control.innerHTML='<div class="fraction-track"><div class="fraction-fill"></div><div class="fraction-thumb"></div></div>';control.setAttribute("role","slider");control.setAttribute("aria-valuemin","0");control.setAttribute("aria-valuemax",String(FRACTION_STEPS.length-1));control.setAttribute("aria-label",`${CUT_LABELS[index]}の分数`)}else{control.className="pieces-scroll";control.innerHTML='<div class="pieces-cells"></div>';control.setAttribute("role","slider");control.setAttribute("aria-valuemin","1");control.setAttribute("aria-label",`${CUT_LABELS[index]}の切れ数`)}control.tabIndex=0;row.append(age,control);ages.append(row);bindCutControl(control,index,current.type);updateCutControl(index)});refreshCutAgeSelection()}
 function selectCutSlot(i){clearCutAgeSelection(false);cutSlot=i;cutMode="portion";document.getElementById("cutMemo").value=cutSlots[i].memo;document.getElementById("cutYield").value=cutSlots[i].yield||"";renderCutResults()}
 function selectCutMode(mode){cutMode=cutMode===mode?null:mode;if(cutMode==="portion")cutSlot=cutSlots[cutSlot].type==="fraction"?0:2;clearCutAgeSelection(false);document.getElementById("cutSaved").open=false;document.getElementById("cutMemo").value=cutSlots[cutSlot].memo;document.getElementById("cutYield").value=cutSlots[cutSlot].yield||"";renderCutResults()}
-function updateFormingResult(people){let pieces=0,grams=0,unset=false;people.forEach((count,i)=>{if(!count)return;const g=Number(formingValues[i].grams),n=Number(formingValues[i].pieces);if(formingValues[i].grams===""||formingValues[i].pieces===""){unset=true;return}pieces+=count*n;grams+=count*n*g});document.getElementById("formingResult").textContent=`必要 ${pieces}個 ／ ${Number(grams.toFixed(1))}g`+(unset?"（未入力の年齢あり）":"")}
+function updateFormingResult(people){
+ let pieces=0,grams=0,unset=false,entered=false;
+ people.forEach((count,i)=>{
+  if(!count)return;
+  const rawGrams=formingValues[i].grams,rawPieces=formingValues[i].pieces,g=Number(rawGrams),n=Number(rawPieces);
+  if(rawGrams===""||rawPieces===""||!Number.isFinite(g)||g<0||!Number.isSafeInteger(n)||n<0){unset=true;return}
+  entered=true;pieces+=count*n;grams+=count*n*g;
+ });
+ const result=document.getElementById("formingResult");
+ result.textContent=!entered&&unset?"1個の重さ・1人の個数を入力":`${unset?"入力済み分 ":"必要 "}${pieces}個 ／ ${Number(grams.toFixed(1))}g`+(unset?"（未入力の年齢あり）":"");
+}
 function moveFormingAge(age,group){
  if(formingGroupIds[age]===group){formingPickedAge=null;renderForming(cutPeople());return}
  const representative=formingGroupIds.findIndex((id,i)=>id===group&&i!==age);
@@ -1695,7 +1705,7 @@ function renderForming(people){
   const rep=members[0],fields=document.createElement("div");fields.className="forming-fields";
   [["grams","1個の重さ（g）"],["pieces","1人の個数"]].forEach(([key,title])=>{
    const holder=document.createElement("label");holder.textContent=title;
-   const input=document.createElement("input");input.type="number";input.min="0";input.step=key==="grams"?"0.5":"1";input.inputMode="decimal";input.placeholder="—";input.value=rep===undefined?"":formingValues[rep][key];
+   const input=document.createElement("input");input.type="number";input.min="0";input.step=key==="grams"?"0.5":"1";input.inputMode=key==="grams"?"decimal":"numeric";input.placeholder="—";input.value=rep===undefined?"":formingValues[rep][key];
    input.addEventListener("input",()=>{const v=input.value,n=Number(v);if(v!==""&&(!Number.isFinite(n)||n<0||(key==="pieces"&&!Number.isInteger(n))))return;members.forEach(i=>formingValues[i][key]=v);sessionStorage.setItem("kyushokuFormingV1",JSON.stringify(formingValues));updateFormingResult(cutPeople())});
    holder.append(input);fields.append(holder)
   });box.append(fields);wrap.append(box);
