@@ -1603,9 +1603,10 @@ function normalizeCutSlot(row,type,index){
  if(type==="fraction")return{...base,type,rates:CUT_IDS.map((_,j)=>FRACTION_DENOMS.includes(Number(row?.rates?.[j]))?Number(row.rates[j]):0),memo,shape:row?.shape==="circle"?"circle":"square"};
  return{...base,type,rates:CUT_IDS.map((_,j)=>Math.max(1,Math.floor(Number(row?.rates?.[j])||1))),memo,yield:String(row?.yield||""),sheets:Math.min(100,Math.max(1,Math.floor(Number(row?.sheets)||1)))};
 }
-let cutMode=null,formingValues=Array.from({length:7},()=>({grams:"",pieces:""})),formingGroupIds=[0,0,1,1,1,1,2],formingPickedAge=null;
+let cutMode=null,formingValues=Array.from({length:7},()=>({grams:"",pieces:""})),formingGroupIds=[0,0,1,1,1,1,2],formingPickedAge=null,formingExtraVisible=false;
 try{const saved=JSON.parse(sessionStorage.getItem("kyushokuFormingV1"));if(Array.isArray(saved)&&saved.length===7)formingValues=saved.map(x=>({grams:String(x?.grams??""),pieces:String(x?.pieces??"")}))}catch(e){}
 try{const ids=JSON.parse(sessionStorage.getItem("kyushokuFormingGroupsV1"));if(Array.isArray(ids)&&ids.length===7&&ids.every(n=>Number.isInteger(n)&&n>=0&&n<4))formingGroupIds=ids}catch(e){}
+formingExtraVisible=formingGroupIds.includes(3);
 let cutSlots=Array.from({length:4},(_,i)=>emptyCut(i)),cutSlot=0,cutContext="meal",snackPeopleState=null,selectedCutAges=new Set(),activeCutGesture=null,pieceRangeState=Array.from({length:4},()=>Array(7).fill(5));
 try{
  const savedV2=JSON.parse(sessionStorage.getItem("kyushokuCutSessionV2")),legacy=JSON.parse(sessionStorage.getItem("kyushokuCutSession"));
@@ -1676,10 +1677,10 @@ function renderForming(people){
  const wrap=document.getElementById("formingRows");wrap.replaceChildren();
  for(let group=0;group<4;group++){
   const members=formingGroupIds.map((g,i)=>g===group?i:-1).filter(i=>i>=0);
-  if(group===3&&!members.length){const add=document.createElement("button");add.type="button";add.className="btn secondary";add.textContent="＋別のサイズを追加";add.onclick=()=>{formingGroupIds[6]=3;sessionStorage.setItem("kyushokuFormingGroupsV1",JSON.stringify(formingGroupIds));renderForming(cutPeople())};wrap.append(add);continue}
+  if(group===3&&!members.length&&!formingExtraVisible){const add=document.createElement("button");add.type="button";add.className="btn secondary";add.textContent="＋別のサイズを追加";add.onclick=()=>{formingExtraVisible=true;renderForming(cutPeople())};wrap.append(add);continue}
   const box=document.createElement("div");box.className="forming-group";box.dataset.formingGroup=String(group);
   const title=document.createElement("div");title.className="forming-group-title";title.textContent="サイズ "+(group+1);box.append(title);
-  const chips=document.createElement("div");chips.className="forming-chips";box.append(chips);
+  const chips=document.createElement("div");chips.className="forming-chips";box.append(chips);if(!members.length){const hint=document.createElement("span");hint.className="cut-status";hint.textContent="年齢をここへ移動";chips.append(hint)}
   members.forEach(i=>{
    const chip=document.createElement("button");chip.type="button";chip.className="forming-chip";chip.textContent=CUT_LABELS[i]+" "+people[i]+"人";chip.setAttribute("aria-label",CUT_LABELS[i]+"を移動");
    chip.setAttribute("aria-pressed",String(formingPickedAge===i));
@@ -1803,6 +1804,7 @@ function renderDryFoods(preferredId){
   dryState.selectedFoodId=select.value;document.getElementById("drySnack").checked=Boolean(dryState.snack);refreshSoftSelects();saveDryState();
 }
 function updateDryResult(){
+ refreshLiquidCount();
  const food=selectedDryFood(),input=document.getElementById("dryPeople"),snack=document.getElementById("drySnack").checked;
  input.value=String(snack?snackPeopleTotal():dryInitialPeople());input.readOnly=true;
  document.getElementById("dryPeopleLabel").textContent=snack?"おやつ人数":"食事人数";
