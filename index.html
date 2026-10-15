@@ -494,6 +494,11 @@ select,.soft-select-button{border-radius:10px}
 .cut-mode-nav button[aria-pressed="true"]{background:#f6d7a3;border:2px solid var(--orange)}
 .forming-rows{display:grid;gap:6px;margin:10px 0}.forming-row{display:grid;grid-template-columns:minmax(52px,1fr) minmax(0,1fr) minmax(0,1fr);gap:6px;align-items:center}
 .forming-row label{display:grid;gap:2px;font-size:11px;color:#766955}.forming-row input{min-width:0;width:100%;min-height:42px;border:1px solid #dcc8a9;border-radius:8px;padding:4px 6px;font-size:16px}
+.liquid-inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.liquid-inputs label{min-width:0;font-size:12px;font-weight:700;color:var(--muted)}
+.liquid-inputs input{display:block;width:100%;min-width:0;min-height:44px;margin-top:5px}
+.liquid-headcount{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:12px}
+.liquid-headcount label{display:flex;align-items:center;gap:5px}
 .forming-group{padding:8px;border:1px solid #e4d6be;border-radius:10px;background:#fffaf1}
 .forming-group-title{font-weight:800;font-size:13px;margin-bottom:6px}
 .forming-chips{display:flex;flex-wrap:wrap;gap:6px;min-height:32px}
@@ -646,7 +651,7 @@ select,.soft-select-button{border-radius:10px}
  <div id="cutPack" class="cut-pack"></div>
  <div id="fractionResult" class="fraction-result hidden"></div>
  </div><div id="cutDiagramArea" class="hidden">
- <details id="flatGrid" class="cut-options" open><summary>型なし生地（クラッカー・フォカッチャ）</summary>
+ <details id="flatGrid" class="cut-options"><summary>切り方の図を表示（クラッカー・フォカッチャ）</summary>
  <label>生地を何等分？<input id="flatGridSheets" type="number" min="1" max="100" step="1" inputmode="numeric" value="1"></label>
  <div id="flatGridResult" aria-live="polite"></div></details>
  <p class="cut-status">スクエアケーキは型の寸法・厚みを確認してから対応します。</p></div>
@@ -665,7 +670,8 @@ select,.soft-select-button{border-radius:10px}
   <div id="dryCalculator" class="hidden editor-row">
     <div id="materialModes" class="cut-mode-nav" aria-label="材料の計算方法"><button type="button" data-material="dry" aria-pressed="true">乾物</button><button type="button" data-material="liquid" aria-pressed="false">液量・配合</button></div>
     <div id="liquidCalculator" class="hidden">
-      <div class="dry-flow"><label>1個に注ぐ量（mL）<input id="liquidPer" type="number" min="0" step="0.1" inputmode="decimal" placeholder="例：80"></label><label>必要個数<input id="liquidCount" type="number" min="0" step="1" inputmode="numeric" placeholder="例：30"></label></div>
+      <div class="liquid-inputs"><label>1個に注ぐ量（mL）<input id="liquidPer" type="number" min="0" step="0.1" inputmode="decimal" placeholder="例：80"></label><label>必要個数<input id="liquidCount" type="number" min="0" step="1" inputmode="numeric"></label></div>
+      <div class="liquid-headcount"><label><input id="liquidSnack" type="checkbox"> おやつ人数を使う</label><button id="liquidResetCount" class="btn secondary" type="button">今日の人数に戻す</button></div>
       <div class="dry-result" aria-live="polite"><div class="dry-result-label">必要な総液量</div><div id="liquidResultValue" class="dry-result-value">—</div><div id="liquidResultNote" class="dry-result-note">容器に実際に注ぐ量を入力</div></div>
       <p class="cut-status">寒天などの配合量は、使用する材料の配合条件が決まってから追加します。</p>
     </div>
@@ -1759,6 +1765,15 @@ function initCut(){
   cutSlots[cutSlot].sheets=n;saveCutSlots();renderFlatGrid(cutTotalFor(cutSlots[cutSlot],cutPeople()));
  });
  document.getElementById("cutMemo").value=cutSlots[cutSlot].memo;document.getElementById("cutYield").value=cutSlots[cutSlot].yield||"";document.querySelectorAll("#cutContext button").forEach(button=>button.addEventListener("click",()=>{cutContext=button.dataset.context;clearCutAgeSelection(false);saveCutSlots();renderCutResults();updateDryResult()}));document.getElementById("cutSelectionClear").addEventListener("click",()=>clearCutAgeSelection());document.getElementById("snackPeopleReset").addEventListener("click",resetSnackPeople);["cutMemo","cutYield"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{const el=document.getElementById(id);if(id==="cutYield"&&el.value!=="")el.value=String(Math.max(1,Math.floor(Number(el.value)||1)));cutSlots[cutSlot][id==="cutMemo"?"memo":"yield"]=el.value;saveCutSlots();renderCutResults()}));renderCutResults()}
+function refreshLiquidCount(){
+ const count=document.getElementById("liquidCount");
+ if(!count)return;
+ if(count.dataset.manual!=="true")count.value=String(document.getElementById("liquidSnack")?.checked?snackPeopleTotal():dryInitialPeople());
+ const per=document.getElementById("liquidPer"),out=document.getElementById("liquidResultValue");
+ if(!per||!out)return;
+ const a=Number(per.value),b=Number(count.value),total=a*b;
+ out.textContent=per.value!==""&&count.value!==""&&Number.isFinite(a)&&a>=0&&Number.isSafeInteger(b)&&b>=0&&Number.isFinite(total)?`${Number(total.toFixed(1)).toLocaleString("ja-JP")} mL`:"—";
+}
 function initMaterialModes(){
  const nav=document.getElementById("materialModes"),liquid=document.getElementById("liquidCalculator"),dry=document.getElementById("dryFoodPanel");
  if(!nav||!liquid||!dry)return;
@@ -1767,13 +1782,17 @@ function initMaterialModes(){
   nav.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b===button)));
   liquid.classList.toggle("hidden",!isLiquid);dry.classList.toggle("hidden",isLiquid);
  }));
- const calculate=()=>{const a=document.getElementById("liquidPer"),b=document.getElementById("liquidCount"),out=document.getElementById("liquidResultValue");const per=Number(a.value),count=Number(b.value);out.textContent=a.value!==""&&b.value!==""&&Number.isFinite(per)&&per>=0&&Number.isSafeInteger(count)&&count>=0?`${Number((per*count).toFixed(1)).toLocaleString("ja-JP")} mL`:"—"};
- ["liquidPer","liquidCount"].forEach(id=>document.getElementById(id).addEventListener("input",calculate));
+ const count=document.getElementById("liquidCount");
+ count.addEventListener("input",()=>{count.dataset.manual="true";refreshLiquidCount()});
+ document.getElementById("liquidPer").addEventListener("input",refreshLiquidCount);
+ document.getElementById("liquidSnack").addEventListener("change",()=>{count.dataset.manual="false";refreshLiquidCount()});
+ document.getElementById("liquidResetCount").addEventListener("click",()=>{count.dataset.manual="false";refreshLiquidCount()});
+ refreshLiquidCount();
 }
 function dryInitialPeople(){const c=counts();return c.c1+c.c2+c.c3+c.c4+c.c5+c.ca+(document.getElementById("cgEats").checked?c.cg:0)}
 function snackPeopleTotal(){return syncSnackPeople().reduce((sum,value)=>sum+value,0)}
 function toggleDryCalculator(button){
-  if(toggleSection("dryCalculator",button)){document.getElementById("dryPeople").value=dryState.snack?String(snackPeopleTotal()):String(dryInitialPeople());renderDryFoods(dryState.selectedFoodId);updateDryResult()}
+  if(toggleSection("dryCalculator",button)){document.getElementById("dryPeople").value=dryState.snack?String(snackPeopleTotal()):String(dryInitialPeople());renderDryFoods(dryState.selectedFoodId);updateDryResult();refreshLiquidCount()}
 }
 function selectedDryFood(){return dryFoods.find(food=>food.id===document.getElementById("dryFood").value)||dryFoods[0]}
 function renderDryFoods(preferredId){
