@@ -73,6 +73,7 @@ async function verticalGesture(page,rowIndex){
         await page.reload();assert.equal(await page.locator('#c5Other').inputValue(),'14');assert.equal(await page.locator('#caOther').inputValue(),'20');
         await page.locator('[aria-controls="cutCalculator"]').click();
         await page.locator('#cutModes [data-mode="portion"]').click();
+        await page.locator('#cutSaved summary').click();
         await page.locator('#cutSlots button').nth(2).click();
         await page.locator('#cutAges .cut-age-select').nth(2).click();await page.locator('#cutAges .cut-age-select').nth(3).click();await page.locator('#cutAges .cut-age-select').nth(4).click();
         await tapCutCell(page,2,3);assert.deepEqual(await page.evaluate(()=>cutSlots[2].rates.slice(2,5)),[3,3,3]);assert.equal(await page.locator('#cutSelectionClear').isDisabled(),true);
@@ -81,7 +82,7 @@ async function verticalGesture(page,rowIndex){
         assert.equal(total,await page.evaluate(()=>counts().c1+counts().c2+2*(counts().c3+counts().c4+counts().c5)+3*counts().ca));
         await dragPiecesPastEdge(page,0);assert.ok(await page.evaluate(()=>cutSlots[2].rates[0]>=10));assert.ok(await page.locator('#cutAges .pieces-scroll').first().getAttribute('aria-valuemax').then(Number)>=10);await tapCutCell(page,0,10);assert.equal(await page.evaluate(()=>cutSlots[2].rates[0]),10);
         await tapCutCell(page,0,1);
-        await page.locator('.cut-options summary').click();await page.locator('#cutMemo').fill('なす');await page.locator('#cutYield').fill('8');
+        await page.locator('#cutExtras summary').click();await page.locator('#cutMemo').fill('なす');await page.locator('#cutYield').fill('8');
         assert.equal(await page.locator('#cutPack').innerText(),`必要 ${Math.ceil(total/8)}個分`);
         await page.locator('#cutSlots button').nth(3).click();await page.locator('#cutMemo').fill('厚揚げ');
         await page.locator('#cutSlots button').nth(2).click();assert.equal(await page.locator('#cutMemo').inputValue(),'なす');
